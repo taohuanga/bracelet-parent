@@ -1,0 +1,195 @@
+package os.bracelets.parents;
+
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
+import android.support.multidex.MultiDex;
+
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.clj.fastble.BleManager;
+import com.clj.fastble.data.BleDevice;
+import com.huichenghe.bleControl.Ble.BluetoothLeService;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import aio.health2world.SApplication;
+import aio.health2world.utils.AppManager;
+import aio.health2world.utils.Logger;
+import aio.health2world.utils.SPUtils;
+import os.bracelets.parents.service.AppService;
+
+/**
+ * Created by lishiyou on 2019/1/24.
+ */
+
+public class MyApplication extends Application implements AMapLocationListener {
+
+    public static MyApplication INSTANCE;
+
+    private Context mContext;
+
+    private boolean isBleConnect = false;
+    //扫描到的蓝牙设备的集合
+    private List<BleDevice> deviceList = new ArrayList<>();
+
+    //声明mlocationClient对象
+    public AMapLocationClient mlocationClient;
+    //声明mLocationOption对象
+    public AMapLocationClientOption mLocationOption = null;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        INSTANCE = this;
+        mContext = this;
+        SApplication.init(mContext, AppConfig.isDebug);
+        initLocation();
+//        initBle();
+        startService(new Intent(this, AppService.class));
+        startService(new Intent(this, BluetoothLeService.class));
+    }
+
+    public static MyApplication getInstance() {
+        return INSTANCE;
+    }
+
+    //登录者的tokenId
+    public String getTokenId() {
+        return (String) SPUtils.get(this, AppConfig.TOKEN_ID, "");
+    }
+
+    //医服服务器地址
+    public String getServerUrl() {
+        return AppConfig.SERVER_URL;
+    }
+
+    public List<BleDevice> getDeviceList() {
+        return deviceList;
+    }
+
+    public boolean isBleConnect() {
+        return isBleConnect;
+    }
+
+    public void setBleConnect(boolean bleConnect) {
+        isBleConnect = bleConnect;
+    }
+
+    //退出当前程序 回到登录界面
+    public void logout() {
+        SPUtils.put(this, AppConfig.IS_LOGIN, false);
+        AppManager.getInstance().finishAllActivity();
+        Intent intent = new Intent("os.bracelets.parents.login");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
+    /**
+     * 蓝牙初始化
+     */
+    private void initBle() {
+        BleManager.getInstance().init(this);
+        BleManager.getInstance()
+                .enableLog(AppConfig.isDebug)
+                .setReConnectCount(3, 5000)
+                .setSplitWriteNum(20)
+                .setConnectOverTime(10000)
+                .setOperateTimeout(5000);
+    }
+
+    /**
+     * 添加设备到集合
+     *
+     * @param bleDevice
+     */
+    public void addDevice(BleDevice bleDevice) {
+        removeDevice(bleDevice);
+        deviceList.add(bleDevice);
+    }
+
+    /**
+     * 移除设备
+     *
+     * @param bleDevice
+     */
+    public void removeDevice(BleDevice bleDevice) {
+        for (int i = 0; i < deviceList.size(); i++) {
+            BleDevice device = deviceList.get(i);
+            if (bleDevice.getKey().equals(device.getKey())) {
+                deviceList.remove(i);
+            }
+        }
+    }
+
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mlocationClient.stopLocation();
+        mlocationClient.onDestroy();
+    }
+
+    private void initLocation() {
+        mlocationClient = new AMapLocationClient(this);
+        //初始化定位参数
+        mLocationOption = new AMapLocationClientOption();
+        //设置定位监听
+        mlocationClient.setLocationListener(this);
+        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(60 * 1000);
+        //设置定位参数
+        mlocationClient.setLocationOption(mLocationOption);
+        // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+        // 注意设置合适的定位时间的间隔（最小间隔支持为1000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+        // 在定位结束后，在合适的生命周期调用onDestroy()方法
+        // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+        //启动定位
+        mlocationClient.startLocation();
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation amapLocation) {
+        if (amapLocation != null) {
+            if (amapLocation.getErrorCode() == 0) {
+                //定位成功回调信息，设置相关消息
+                amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
+                //获取纬度
+                SPUtils.put(this, AppConfig.LATITUDE, amapLocation.getLatitude());
+                //获取经度
+                SPUtils.put(this, AppConfig.LONGITUDE, amapLocation.getLongitude());
+                //城市编码
+                SPUtils.put(this, AppConfig.CITY_CODE, amapLocation.getAdCode());
+                //获取精度信息
+                float accuracy = amapLocation.getAccuracy();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = new Date(amapLocation.getTime());
+                String time = df.format(date);//定位时间
+
+                Logger.i("lsy", "定位时间：" + time + ",纬度："
+                        + amapLocation.getLatitude() + ",经度："
+                        + amapLocation.getLongitude()
+                        + ",城市：" + amapLocation.getCity()
+                        + ",城市代码：" + amapLocation.getAdCode());
+            } else {
+                //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                Logger.e("AmapError", "location Error, ErrCode:"
+                        + amapLocation.getErrorCode() + ", errInfo:"
+                        + amapLocation.getErrorInfo());
+            }
+        }
+    }
+}

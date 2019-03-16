@@ -1,0 +1,104 @@
+apply plugin: 'com.android.application'
+
+static def packageTime() {
+    return new Date().format("MM_dd_HHmm", TimeZone.getTimeZone("GMT+8"))
+}
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "27.0.3"
+
+    defaultConfig {
+        applicationId "os.bracelets.parents"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.aio.pro'
+        }
+    }
+    sourceSets {
+        main {
+            //jni库的调用会到资源文件夹下libs里面找so文件
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs' // aar目录
+        }
+    }
+
+    //分包兼容低版本
+    dexOptions {
+        javaMaxHeapSize "1g"
+        jumboMode = true
+    }
+
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
+
+    signingConfigs {
+        config {
+            keyAlias 'yftx'
+            keyPassword 'yftx2017'
+            storeFile file('E:/workspace_studio1/Bracelets/health2world.jks')
+            storePassword 'yftx2017'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            multiDexEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        release {
+            minifyEnabled false
+            multiDexEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+    }
+}
+
+// 自定义APK安装包名
+android.applicationVariants.all {
+    variant ->
+        variant.outputs.each {
+            output ->
+                if (buildType.name.equals("debug")) {
+//                    output.outputFile = new File(output.outputFile.parent,
+//                            "app_debug_" + packageTime() + ".apk");
+                }
+                if (buildType.name.equals("release")) {
+                    output.outputFile = new File(output.outputFile.parent,
+                            "app_release_" + packageTime() + ".apk");
+                }
+        }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:multidex:1.0.1'
+    compile project(path: ':commonlib')
+    //蓝牙库
+    compile 'com.clj.fastble:FastBleLib:2.3.4'
+    //高德定位
+    compile 'com.amap.api:location:3.3.0'
+    compile 'com.amap.api:search:5.0.0'
+    compile 'no.nordicsemi.android.support.v18:scanner:0.1.1'
+}
