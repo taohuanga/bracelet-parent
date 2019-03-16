@@ -1,8 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include layout="@layout/layout_titlebar"/>
+    <include layout="@layout/layout_titlebar" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_18"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="设备休眠，解除保护"
+            android:textColor="@color/black6"
+            android:textSize="@dimen/sp16" />
+
+        <Switch
+            android:id="@+id/switchSleep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnAlert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_18"
+        android:background="@drawable/shape_button_bg"
+        android:text="人工报警"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp16" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_18"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="强制上传原始数据"
+            android:textColor="@color/black6"
+            android:textSize="@dimen/sp16" />
+
+        <Switch
+            android:id="@+id/switchUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnTestBle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_18"
+        android:background="@drawable/shape_button_bg"
+        android:text="测试蓝牙"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp16" />
+
+    <TextView
+        android:id="@+id/tvAlertSensor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_18"
+        android:textSize="@dimen/sp15" />
+
+    <TextView
+        android:id="@+id/tvTestSensor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_18"
+        android:textSize="@dimen/sp15" />
 </LinearLayout>

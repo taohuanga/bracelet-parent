@@ -32,11 +32,6 @@ public class AppConfig {
     //标记当前程序是否登录
     public static final String IS_LOGIN = "is_login";
 
-    //发送测量数据
-    public static final int MSG_BLE_DATA = 65;
-    //数据通知
-    public static final int MSG_BLE_NOTIFY = 66;
-
 
     //蓝牙连接成功
     public static final int MSG_DEVICE_CONNECT = 10;

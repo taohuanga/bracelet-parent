@@ -21,6 +21,10 @@ public class MsgEvent<T> implements Serializable {
         this.t = t;
     }
 
+    public MsgEvent(T t) {
+        this.t = t;
+    }
+
     public int getAction() {
         return action;
     }

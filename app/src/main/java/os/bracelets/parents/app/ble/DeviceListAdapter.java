@@ -42,7 +42,6 @@ public class DeviceListAdapter extends BaseQuickAdapter<LocalDeviceEntity, BaseV
             helper.setImageResource(R.id.imgConnect,R.mipmap.switch_off);
         }
 
-
-        helper.addOnClickListener(R.id.imgConnect);
+//        helper.addOnClickListener(R.id.imgConnect);
     }
 }

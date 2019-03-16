@@ -37,7 +37,7 @@ import rx.functions.Action1;
  * Created by lishiyou on 2019/3/15.
  */
 
-public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter.OnItemChildClickListener {
+public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter.OnItemClickListener {
 
     private TextView tvTitle, tvScan;
 
@@ -104,7 +104,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
 
     @Override
     protected void initListener() {
-        listAdapter.setOnItemChildClickListener(this);
+        listAdapter.setOnItemClickListener(this);
         ivBack.setOnClickListener(this);
         tvTitle.setOnClickListener(this);
         tvScan.setOnClickListener(this);
@@ -112,7 +112,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
     }
 
     @Override
-    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).stopScan();
         entity = (LocalDeviceEntity) adapter.getItem(position);
         if (BluetoothLeService.getInstance() != null) {

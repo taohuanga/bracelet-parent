@@ -156,6 +156,7 @@ public class AppService extends Service implements DataSendCallback {
             sb.delete(0, sb.length());
             sb.append(data + "\n");
             startTime = currentTime;
+            EventBus.getDefault().post(new MsgEvent<>(data));
         } else if (data.contains("68a80c00015453aa")) {//结束写入
             sb.append(data + "\n");
             String content = sb.toString();
@@ -164,6 +165,7 @@ public class AppService extends Service implements DataSendCallback {
             uploadFile();
         } else if (data.substring(10, 14).equals("5453")) {//若第11位至第14位是5453，则原始数据上传
             sb.append(data + "\n");
+            EventBus.getDefault().post(new MsgEvent<>(data));
         } else if (data.substring(10, 14).equals("5454")) {//跌倒报警，并上传报警信息
             sb.append(data + "\n");
         } else if (currentTime - lastTime > 5000 && lastTime != 0L) {
@@ -174,6 +176,7 @@ public class AppService extends Service implements DataSendCallback {
         } else {
             //拼接数据
             sb.append(accXD + "," + accYD + "," + accZD + "," + gyrXD + "," + gyrYD + "," + gyrZD + "\n");
+            EventBus.getDefault().post(new MsgEvent<>("X轴角速度：" + accXD + "\n" + "Y轴角速度：" + accYD + "\n" + "Z轴角速度：" + accZD + "\n" + "X轴加速度：" + gyrXD + "\n" + "Y轴加速度：" + gyrYD + "\n" + "Z轴加速度：" + gyrZD));
         }
         lastTime = currentTime;
     }

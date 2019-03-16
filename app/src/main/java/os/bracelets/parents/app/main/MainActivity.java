@@ -267,22 +267,22 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         syn.setDataSendCallback(new DataSendCallback() {
             @Override
             public void sendSuccess(byte[] bytes) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtil.showShort("校时成功");
-                    }
-                });
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ToastUtil.showShort("校时成功");
+//                    }
+//                });
             }
 
             @Override
             public void sendFailed() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtil.showShort("校时失败");
-                    }
-                });
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ToastUtil.showShort("校时失败");
+//                    }
+//                });
             }
 
             @Override
