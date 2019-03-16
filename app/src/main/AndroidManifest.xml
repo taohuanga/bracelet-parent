@@ -66,8 +66,6 @@
 
         <activity android:name=".app.account.ResetPwdActivity" />
 
-        <activity android:name=".app.ble.BleDeviceActivity" />
-
         <activity android:name=".app.ble.DeviceListActivity"/>
 
         <activity android:name=".app.news.HealthInfoActivity" />
@@ -88,6 +86,8 @@
 
         <activity android:name=".app.about.FeedBackActivity" />
 
+        <activity android:name=".app.setting.SensorMsgActivity"/>
+
         <receiver android:name=".receiver.BleReceiver">
             <intent-filter>
                 <action android:name="device_connecte_and_notify_ok"/>
@@ -98,7 +98,7 @@
 
         <service android:name=".service.AppService" />
 
-        <service android:name=".blelib.ble.BluetoothLeService" />
+        <service android:name="com.huichenghe.bleControl.Ble.BluetoothLeService" />
 
         <service android:name="com.amap.api.location.APSService" />
 

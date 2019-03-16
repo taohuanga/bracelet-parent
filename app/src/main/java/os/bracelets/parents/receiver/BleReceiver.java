@@ -1,20 +1,26 @@
 package os.bracelets.parents.receiver;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothGatt;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
 import com.google.gson.Gson;
+import com.huichenghe.bleControl.Ble.BleGattHelperListener;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.DeviceConfig;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
+import os.bracelets.parents.app.ble.MyBleGattHelper;
 import os.bracelets.parents.app.main.MainActivity;
+import os.bracelets.parents.common.MsgEvent;
 
 /**
  * Created by lishiyou on 2019/3/2.
@@ -32,18 +38,25 @@ public class BleReceiver extends BroadcastReceiver {
                 //把设备信息转换成json存储在sp中
                 SPUtils.put(MyApplication.getInstance(), AppConfig.CURRENT_DEVICE, new Gson().toJson(device));
                 //连接成功后，对设备进行一系列检测请求，如电池电量等
-                //设置已连接设备名称
+                EventBus.getDefault().post(new MsgEvent<LocalDeviceEntity>(AppConfig.MSG_DEVICE_CONNECT));
                 break;
             case BluetoothAdapter.ACTION_STATE_CHANGED:
                 if (BluetoothAdapter.getDefaultAdapter() != null) {
-                    //蓝牙开启
-                    if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                        Logger.i("lsy", "开始扫描蓝牙");
+                    LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+                    if (entity != null) {
+                        if (BluetoothLeService.getInstance() != null) {
+                            boolean isConnect = BluetoothLeService.getInstance().isDeviceConnected(entity);
+                            MyApplication.getInstance().setBleConnect(isConnect);
+                            if (!isConnect)
+                                MyApplication.getInstance().setDeviceEntity(null);
+                        }
                     } else {
-                        //未开启蓝牙
-                        Logger.i("lsy", "蓝牙未开启");
+                        MyApplication.getInstance().setBleConnect(false);
                     }
+                    EventBus.getDefault().post(new MsgEvent<LocalDeviceEntity>(AppConfig.MSG_DEVICE_CHANGED));
                 }
+                break;
+            case DeviceConfig.DEVICE_CONNECTING_AUTO:
                 break;
         }
     }

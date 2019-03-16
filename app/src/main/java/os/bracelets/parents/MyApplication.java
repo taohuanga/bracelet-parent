@@ -9,9 +9,8 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.clj.fastble.BleManager;
-import com.clj.fastble.data.BleDevice;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
+import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,8 +35,9 @@ public class MyApplication extends Application implements AMapLocationListener {
 
     private boolean isBleConnect = false;
     //扫描到的蓝牙设备的集合
-    private List<BleDevice> deviceList = new ArrayList<>();
-
+    private List<LocalDeviceEntity> deviceList = new ArrayList<>();
+    //记录已连接的设备
+    private LocalDeviceEntity deviceEntity;
     //声明mlocationClient对象
     public AMapLocationClient mlocationClient;
     //声明mLocationOption对象
@@ -51,8 +51,8 @@ public class MyApplication extends Application implements AMapLocationListener {
         SApplication.init(mContext, AppConfig.isDebug);
         initLocation();
 //        initBle();
-        startService(new Intent(this, AppService.class));
         startService(new Intent(this, BluetoothLeService.class));
+        startService(new Intent(this, AppService.class));
     }
 
     public static MyApplication getInstance() {
@@ -69,8 +69,16 @@ public class MyApplication extends Application implements AMapLocationListener {
         return AppConfig.SERVER_URL;
     }
 
-    public List<BleDevice> getDeviceList() {
+    public List<LocalDeviceEntity> getDeviceList() {
         return deviceList;
+    }
+
+    public LocalDeviceEntity getDeviceEntity() {
+        return deviceEntity;
+    }
+
+    public void setDeviceEntity(LocalDeviceEntity deviceEntity) {
+        this.deviceEntity = deviceEntity;
     }
 
     public boolean isBleConnect() {
@@ -96,17 +104,11 @@ public class MyApplication extends Application implements AMapLocationListener {
         MultiDex.install(this);
     }
 
-    /**
-     * 蓝牙初始化
-     */
-    private void initBle() {
-        BleManager.getInstance().init(this);
-        BleManager.getInstance()
-                .enableLog(AppConfig.isDebug)
-                .setReConnectCount(3, 5000)
-                .setSplitWriteNum(20)
-                .setConnectOverTime(10000)
-                .setOperateTimeout(5000);
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mlocationClient.stopLocation();
+        mlocationClient.onDestroy();
     }
 
     /**
@@ -114,7 +116,7 @@ public class MyApplication extends Application implements AMapLocationListener {
      *
      * @param bleDevice
      */
-    public void addDevice(BleDevice bleDevice) {
+    public void addDevice(LocalDeviceEntity bleDevice) {
         removeDevice(bleDevice);
         deviceList.add(bleDevice);
     }
@@ -124,21 +126,13 @@ public class MyApplication extends Application implements AMapLocationListener {
      *
      * @param bleDevice
      */
-    public void removeDevice(BleDevice bleDevice) {
+    public void removeDevice(LocalDeviceEntity bleDevice) {
         for (int i = 0; i < deviceList.size(); i++) {
-            BleDevice device = deviceList.get(i);
-            if (bleDevice.getKey().equals(device.getKey())) {
+            LocalDeviceEntity device = deviceList.get(i);
+            if (bleDevice.getAddress().equals(device.getAddress())) {
                 deviceList.remove(i);
             }
         }
-    }
-
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mlocationClient.stopLocation();
-        mlocationClient.onDestroy();
     }
 
     private void initLocation() {

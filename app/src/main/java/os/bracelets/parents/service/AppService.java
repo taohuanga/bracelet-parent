@@ -1,6 +1,5 @@
 package os.bracelets.parents.service;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -14,8 +13,8 @@ import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.NotificationCompat;
 
-import com.clj.fastble.BleManager;
-import com.clj.fastble.data.BleDevice;
+import com.huichenghe.bleControl.Ble.BleDataForDayData;
+import com.huichenghe.bleControl.Ble.DataSendCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,7 +31,7 @@ import aio.health2world.utils.SPUtils;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
-import os.bracelets.parents.app.ble.BleNotifyCallbackWrap;
+import os.bracelets.parents.app.ble.BleDataForSensor;
 import os.bracelets.parents.common.MsgEvent;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
@@ -43,7 +42,7 @@ import os.bracelets.parents.utils.StringUtils;
  * Created by lishiyou on 2019/1/27.
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class AppService extends Service {
+public class AppService extends Service implements DataSendCallback {
 
     private NotificationManager notificationManager;
 
@@ -92,7 +91,7 @@ public class AppService extends Service {
                     .IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }
-        EventBus.getDefault().register(this);
+        initData();
     }
 
     //计时器 十分钟执行一次数据上传操作
@@ -109,40 +108,29 @@ public class AppService extends Service {
         }
     };
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMsgEvent(MsgEvent event) {
 
-        if (event.getAction() == AppConfig.MSG_BLE_NOTIFY) {
-            bleNotify();
-        }
-
-        //蓝牙设备数据
-        if (event.getAction() == AppConfig.MSG_BLE_DATA) {
-            handleData(event);
-        }
+    private void initData() {
+        BleDataForSensor.getInstance().setSensorListener(this);
     }
 
-    private void bleNotify() {
-        List<BleDevice> deviceList = MyApplication.getInstance().getDeviceList();
-        for (BleDevice bleDevice : deviceList) {
-            if (BleManager.getInstance().isConnected(bleDevice)) {
-                BleManager.getInstance().notify(bleDevice, AppConfig.UUID_SERVICE, AppConfig.UUID_NOTIFY,
-                        new BleNotifyCallbackWrap() {
-                            @Override
-                            public void onCharacteristicChanged(byte[] bytes) {
-                                EventBus.getDefault().post(new MsgEvent<>(AppConfig.MSG_BLE_DATA, bytes));
-                            }
-                        });
-                break;
-            }
-        }
+    @Override
+    public void sendSuccess(byte[] bytes) {
+        handleData(bytes);
     }
 
+    @Override
+    public void sendFailed() {
 
-    private void handleData(MsgEvent msgEvent) {
-        byte[] bytes = (byte[]) msgEvent.getT();
+    }
+
+    @Override
+    public void sendFinished() {
+
+    }
+
+    private void handleData(byte[] bytes) {
         String data = StringUtils.bytesToHexString(bytes);
-        Logger.i("bleData", data);
+        Logger.i("lsy", data);
         if (bytes.length < 10)
             return;
         if (!data.substring(0, 4).equals("68a8"))

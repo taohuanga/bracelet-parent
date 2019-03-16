@@ -32,21 +32,18 @@ public class AppConfig {
     //标记当前程序是否登录
     public static final String IS_LOGIN = "is_login";
 
-
-    //蓝牙连接状态发生变化
-    public static final int MSG_CONNECTION_CHANGED = 61;
-    //蓝牙连接失败
-    public static final int MSG_CONNECTION_FAIL = 62;
-    //蓝牙扫描完成
-    public static final int MSG_SCAN_FINISH = 63;
-    //扫描到新设备
-    public static final int MSG_DEVICE_DISCOVERY = 64;
     //发送测量数据
     public static final int MSG_BLE_DATA = 65;
     //数据通知
     public static final int MSG_BLE_NOTIFY = 66;
 
-    public static final int MSG_BLE_MESSAGE = 67;
+
+    //蓝牙连接成功
+    public static final int MSG_DEVICE_CONNECT = 10;
+    //蓝牙失去连接
+    public static final int MSG_DEVICE_DISCONNECT = 11;
+    //蓝牙连接状态发生变化
+    public static final int MSG_DEVICE_CHANGED = 12;
 
     //手环UUID
     public static final String BLUETOOTH_NAME = "DFZ";
@@ -54,4 +51,6 @@ public class AppConfig {
     public static final String UUID_NOTIFY = "0000fff1-0000-1000-8000-00805f9b34fb";
     public static final String UUID_READ_SERVICE = "00001800-0000-1000-8000-00805f9b34fb";
     public static final String UUID_READ_NOTIFY = "00002a00-0000-1000-8000-00805f9b34fb";
+
+
 }

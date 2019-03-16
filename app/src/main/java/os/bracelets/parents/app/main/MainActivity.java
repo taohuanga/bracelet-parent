@@ -1,29 +1,50 @@
 package os.bracelets.parents.app.main;
 
 import android.Manifest;
+import android.bluetooth.BluetoothGatt;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.huichenghe.bleControl.Ble.BleDataForBattery;
+import com.huichenghe.bleControl.Ble.BleDataforSyn;
+import com.huichenghe.bleControl.Ble.BleGattHelperListener;
+import com.huichenghe.bleControl.Ble.BluetoothLeService;
+import com.huichenghe.bleControl.Ble.DataSendCallback;
+import com.huichenghe.bleControl.Ble.IServiceCallback;
+import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
+import com.huichenghe.bleControl.Utils.FormatUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import aio.health2world.rx.rxpermissions.RxPermissions;
+import aio.health2world.utils.Logger;
 import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
 import os.bracelets.parents.app.ble.DeviceListActivity;
+import os.bracelets.parents.app.ble.MyBleGattHelper;
 import os.bracelets.parents.app.contact.ContactActivity;
 import os.bracelets.parents.app.navigate.NavigateActivity;
 import os.bracelets.parents.app.nearby.NearbyActivity;
@@ -51,10 +72,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
     private View bleLayout;
 
-    private String date = "";
-    private String week = "";
-    private String weather = "";
-    private String day = "";
+    private Handler handler;
 
     @Override
     protected MainContract.Presenter getPresenter() {
@@ -90,7 +108,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
     @Override
     protected void initData() {
-
+        handler = new Handler();
         tvConnect.setText(MyApplication.getInstance().isBleConnect() ? "已连接" : "未连接");
         //星期
         tvWeek.setText(DataString.getWeek());
@@ -102,7 +120,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         remindAdapter.setEmptyView(R.layout.layout_empty_text);
 
         mPresenter.homeMsg();
-//        mPresenter.remindList();
         mPresenter.getWeather();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -118,21 +135,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                             }
                         }
                     });
-        }
-    }
-
-
-    //蓝牙设备扫描完成之后回调
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMsgEvent(MsgEvent event) {
-        //设备连接状态改变
-        if (event.getAction() == AppConfig.MSG_CONNECTION_CHANGED
-                || event.getAction() == AppConfig.MSG_CONNECTION_FAIL) {
-            if (MyApplication.getInstance().isBleConnect()) {
-                tvConnect.setText("已连接");
-            } else {
-                tvConnect.setText("未连接");
-            }
         }
     }
 
@@ -182,92 +184,114 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                 startActivity(new Intent(this, NearbyActivity.class));
                 break;
             case R.id.bleLayout:
-//                startActivity(new Intent(this, BleDeviceActivity.class));
                 startActivity(new Intent(this, DeviceListActivity.class));
                 break;
 
         }
     }
 
+    //蓝牙设备扫描完成之后回调
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMsgEvent(MsgEvent event) {
+        //设备已连接
+        if (event.getAction() == AppConfig.MSG_DEVICE_CONNECT) {
+            tvConnect.setText("已连接");
+            onResume();
+        } else {
+            boolean isConnect = MyApplication.getInstance().isBleConnect();
+            if (isConnect)
+                tvConnect.setText("已连接");
+            else
+                tvConnect.setText("未连接");
+        }
+    }
 
-//    /**
-//     * 注册广播
-//     */
-//    private void registerBleReceiver() {
-//        IntentFilter filter = new IntentFilter();
-//        filter.addAction(DeviceConfig.DEVICE_CONNECTE_AND_NOTIFY_SUCESSFUL);
-//        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-//        filter.addAction(DeviceConfig.DEVICE_CONNECTING_AUTO);
-//        registerReceiver(bleReceiver, filter);
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (MyApplication.getInstance().isBleConnect()) {
+                    BluetoothLeService.getInstance().addCallback(
+                            MyBleGattHelper.getInstance(getApplicationContext(), new GattHelperListener()));
+                    getBraceletData();
+                }
+            }
+        }, 500);
+    }
 
-//    /**
-//     * 广播接收器
-//     */
-//    private BroadcastReceiver bleReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, final Intent intent) {
-//            switch (intent.getAction()) {
-//                //设备已连接的广播
-//                case DeviceConfig.DEVICE_CONNECTE_AND_NOTIFY_SUCESSFUL:
-//                    //获取当前已连接的设备currentDevice
-//                    LocalDeviceEntity device = BluetoothLeService.getInstance().getCurrentDevice();
-//                    //把设备信息转换成json存储在sp中
-//                    SPUtils.put(MainActivity.this, AppConfig.CURRENT_DEVICE, new Gson().toJson(device));
-//                    //连接成功后，对设备进行一系列检测请求，如电池电量等
-//                    //设置已连接设备名称
-//                    tvConnect.setText("已连接");
-//                    Logger.i("lsy", "设备已连接==" + device.getName());
-//                    //获取手环数据
-//                    getBraceletData();
-//                    break;
-//                case BluetoothAdapter.ACTION_STATE_CHANGED:
-//                    if (BluetoothAdapter.getDefaultAdapter() != null) {
-//                        //蓝牙开启
-//                        if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-//                            startScan();
-//                            Logger.i("lsy", "开始扫描蓝牙");
-//                        } else {
-//                            //未开启蓝牙
-//                            Logger.i("lsy", "蓝牙未开启");
-//                        }
-//                    }
-//                    break;
-//            }
-//        }
-//    };
 
     /**
      * 获取手环数据
      */
     private void getBraceletData() {
-
+        checkTime();
+        getBattery();
     }
 
-//    private void startScan() {
-//        BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).stopScan();
-//        //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
-//        BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).setmOnDeviceScanFoundListener(deviceFoundListener);
-//        BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).scanDevice(null);
-//    }
-//
-//
-//    /**
-//     * 实例化设备监听器，并对扫描到的设备进行监听
-//     */
-//    private BleScanUtils.OnDeviceScanFoundListener deviceFoundListener = new BleScanUtils.OnDeviceScanFoundListener() {
-//        @Override
-//        public void OnDeviceFound(LocalDeviceEntity mLocalDeviceEntity) {
-//            String deviceName = mLocalDeviceEntity.getName();
-//            if (deviceName != null && deviceName.startsWith("DFZ")) {
-//                Logger.i("lsy", "扫描到设备" + deviceName);
-//            }
-//        }
-//
-//        @Override
-//        public void onScanStateChange(boolean isChange) {
-//        }
-//    };
+    private void getBattery() {
+        //获取电量
+        BleDataForBattery.getInstance().setBatteryListener(new DataSendCallback() {
+            @Override
+            public void sendSuccess(final byte[] bytes) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String data = FormatUtils.bytesToHexString(bytes);
+                        Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
+                        Logger.i("lsy", "data=" + data);
+                        int batteryInt = batteryLong.intValue();
+                        tvBattery.setText(String.valueOf(batteryInt) + "%");
+                        Logger.i("lsy", "设备电量" + batteryInt);
+                    }
+                });
+
+            }
+
+            @Override
+            public void sendFailed() {
+            }
+
+            @Override
+            public void sendFinished() {
+
+            }
+        });
+        BleDataForBattery.getInstance().getBatteryPx();
+    }
+
+    //校验时间
+    private void checkTime() {
+        BleDataforSyn syn = BleDataforSyn.getSynInstance();
+        syn.setDataSendCallback(new DataSendCallback() {
+            @Override
+            public void sendSuccess(byte[] bytes) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showShort("校时成功");
+                    }
+                });
+            }
+
+            @Override
+            public void sendFailed() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showShort("校时失败");
+                    }
+                });
+            }
+
+            @Override
+            public void sendFinished() {
+
+            }
+        });
+        syn.syncCurrentTime();
+    }
 
     @Override
     public void onBackPressed() {
@@ -289,10 +313,25 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                 .show();
     }
 
+    private class GattHelperListener implements BleGattHelperListener {
+        @Override
+        public void onDeviceStateChangeUI(LocalDeviceEntity device,
+                                          BluetoothGatt gatt,
+                                          final String uuid, final byte[] value) {
+        }
+
+        @Override
+        public void onDeviceConnectedChangeUI(final LocalDeviceEntity device,
+                                              boolean showToast,
+                                              final boolean fromServer) {
+        }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
         EventBus.getDefault().unregister(this);
+//        countDownTimer.cancel();
     }
 }

@@ -42,7 +42,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
 
-    private View layoutUpdatePwd, layoutUpdatePhone, layoutUpdateMsg, layoutFeedBack,layoutAbout;
+    private View layoutUpdatePwd, layoutSensorMsg, layoutUpdateMsg, layoutFeedBack,layoutAbout;
 
     @Override
     protected SettingContract.Presenter getPresenter() {
@@ -62,7 +62,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
         tvTime = findView(R.id.tvTime);
         btnLogout = findView(R.id.btnLogout);
         layoutUpdatePwd = findView(R.id.layoutUpdatePwd);
-        layoutUpdatePhone = findView(R.id.layoutUpdatePhone);
+        layoutSensorMsg = findView(R.id.layoutSensorMsg);
         layoutUpdateMsg = findView(R.id.layoutUpdateMsg);
         layoutFeedBack = findView(R.id.layoutFeedBack);
         layoutAbout = findView(R.id.layoutAbout);
@@ -95,7 +95,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
         setOnClickListener(btnLogout);
         setOnClickListener(layoutUpdatePwd);
-        setOnClickListener(layoutUpdatePhone);
+        setOnClickListener(layoutSensorMsg);
         setOnClickListener(layoutUpdateMsg);
         setOnClickListener(layoutFeedBack);
         setOnClickListener(layoutAbout);
@@ -120,11 +120,11 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
             case R.id.layoutUpdatePwd:
                 startActivity(new Intent(this, UpdatePwdActivity.class));
                 break;
-            case R.id.layoutUpdatePhone:
-                startActivity(new Intent(this, UpdatePhoneActivity.class));
-                break;
             case R.id.layoutUpdateMsg:
                 startActivity(new Intent(this, PersonalMsgActivity.class));
+                break;
+            case R.id.layoutSensorMsg:
+                startActivity(new Intent(this, SensorMsgActivity.class));
                 break;
             case R.id.layoutFeedBack:
                 startActivity(new Intent(this, FeedBackActivity.class));

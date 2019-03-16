@@ -113,7 +113,7 @@
 
 
     <LinearLayout
-        android:id="@+id/layoutUpdatePhone"
+        android:id="@+id/layoutSensorMsg"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/selector_item_click_bg"
@@ -126,14 +126,14 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_bind_phone" />
+            android:src="@mipmap/icon_bluetooth_blue" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_12"
             android:layout_weight="1"
-            android:text="修改手机号"
+            android:text="蓝牙调试"
             android:textColor="@color/black6"
             android:textSize="@dimen/sp_16" />
 

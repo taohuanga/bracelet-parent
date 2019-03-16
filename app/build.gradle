@@ -95,8 +95,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:multidex:1.0.1'
     compile project(path: ':commonlib')
-    //蓝牙库
-    compile 'com.clj.fastble:FastBleLib:2.3.4'
+//    //蓝牙库
+//    compile 'com.clj.fastble:FastBleLib:2.3.4'
     //高德定位
     compile 'com.amap.api:location:3.3.0'
     compile 'com.amap.api:search:5.0.0'

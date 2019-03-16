@@ -12,22 +12,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.clj.fastble.BleManager;
-
-import java.text.SimpleDateFormat;
-
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.MD5Util;
 import aio.health2world.utils.MatchUtil;
 import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
-import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
-import os.bracelets.parents.app.ble.BleUtil;
-import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.app.main.MainActivity;
-import os.bracelets.parents.utils.FileUtils;
+import os.bracelets.parents.common.MVPBaseActivity;
 import rx.functions.Action1;
 
 /**
@@ -89,7 +82,6 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
     @Override
     protected void initData() {
         edAccount.setSelection(edAccount.getText().length());
-        initBle();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RxPermissions rxPermissions = new RxPermissions(this);
@@ -115,22 +107,6 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
         btnForgetPwd.setOnClickListener(this);
         layoutMsg.setOnClickListener(this);
         layoutPwd.setOnClickListener(this);
-    }
-
-    private void initBle() {
-        BleManager.getInstance().init(MyApplication.getInstance());
-        BleManager.getInstance()
-                .enableLog(AppConfig.isDebug)
-                .setReConnectCount(3, 5000)
-                .setSplitWriteNum(20)
-                .setConnectOverTime(10000)
-                .setOperateTimeout(5000);
-
-        //开机自动扫描蓝牙设备
-        if (BleManager.getInstance().isSupportBle()) {
-            if (!BleManager.getInstance().isBlueEnable())
-                BleManager.getInstance().enableBluetooth();
-        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package os.bracelets.parents.app.ble;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.os.Build;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,7 +12,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.huichenghe.bleControl.Ble.BleScanUtils;
+import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +26,18 @@ import aio.health2world.brvah.BaseQuickAdapter;
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.ToastUtil;
+import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
 import os.bracelets.parents.common.BaseActivity;
+import os.bracelets.parents.common.MsgEvent;
 import rx.functions.Action1;
 
 /**
  * Created by lishiyou on 2019/3/15.
  */
 
-public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter.OnItemChildClickListener{
+public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter.OnItemChildClickListener {
 
     private TextView tvTitle, tvScan;
 
@@ -41,7 +49,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
 
     private DeviceListAdapter listAdapter;
 
-    private List<LocalDeviceEntity> deviceEntityList = new ArrayList<>();
+    private LocalDeviceEntity entity;
 
     @Override
     protected int getLayoutId() {
@@ -60,7 +68,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
 
     @Override
     protected void initData() {
-        listAdapter = new DeviceListAdapter(deviceEntityList);
+        listAdapter = new DeviceListAdapter(MyApplication.getInstance().getDeviceList());
         recyclerView.setAdapter(listAdapter);
 
         //如果手机系统大于大于等于6.0 动态申请权限
@@ -84,8 +92,8 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             if (BluetoothAdapter.getDefaultAdapter() != null) {
                 //蓝牙开启
                 if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                    startScan();
-                    ToastUtil.showShort("开始扫描蓝牙设备");
+                    if (!MyApplication.getInstance().isBleConnect())
+                        startScan();
                 } else {
                     //未开启蓝牙
                     ToastUtil.showShort("蓝牙未开启");
@@ -100,14 +108,55 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
         ivBack.setOnClickListener(this);
         tvTitle.setOnClickListener(this);
         tvScan.setOnClickListener(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).stopScan();
+        entity = (LocalDeviceEntity) adapter.getItem(position);
+        if (BluetoothLeService.getInstance() != null) {
+            if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
+                BluetoothLeService.getInstance().disconnect();
+            } else {
+                ToastUtil.showShort("开始连接设备");
+                BluetoothLeService.getInstance().connect(entity);
+            }
+        }
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMsgEvent(MsgEvent event) {
+        //设备连接成功
+        if (event.getAction() == AppConfig.MSG_DEVICE_CONNECT) {
+            MyApplication.getInstance().setBleConnect(true);
+            MyApplication.getInstance().setDeviceEntity(entity);
+            listAdapter.notifyDataSetChanged();
+            this.finish();
+        }
+        //设备状态发生变化
+        if (event.getAction() == AppConfig.MSG_DEVICE_CHANGED) {
+            listAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()) {
+            case R.id.tvTitle:
+            case R.id.ivBack:
+                finish();
+                break;
+            case R.id.tvScan:
+                startScan();
+                break;
+        }
     }
 
     private void startScan() {
+        ToastUtil.showShort("开始扫描蓝牙设备");
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
         //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).setmOnDeviceScanFoundListener(deviceFoundListener);
@@ -123,10 +172,8 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             String deviceName = mLocalDeviceEntity.getName();
             if (deviceName != null && deviceName.startsWith("DFZ")) {
                 Logger.i("lsy", "扫描到设备" + deviceName);
-                if (!deviceEntityList.contains(mLocalDeviceEntity)) {
-                    deviceEntityList.add(mLocalDeviceEntity);
-                    listAdapter.notifyDataSetChanged();
-                }
+                MyApplication.getInstance().addDevice(mLocalDeviceEntity);
+                listAdapter.notifyDataSetChanged();
             }
         }
 
@@ -135,4 +182,10 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
         }
 
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }
