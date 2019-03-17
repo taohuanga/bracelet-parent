@@ -12,6 +12,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/personImage"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginLeft="@dimen/dp_4"
@@ -27,7 +28,7 @@
                 android:id="@+id/personName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="菲儿"
+                android:text=""
                 android:textColor="@color/black6"
                 android:textSize="@dimen/sp16" />
 
@@ -37,18 +38,19 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/personName"
                 android:layout_marginTop="@dimen/dp_8"
-                android:text="女"
+                android:text="---"
                 android:textColor="@color/black9"
                 android:textSize="@dimen/sp15" />
 
             <TextView
+                android:id="@+id/personAge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/personName"
                 android:layout_marginStart="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_8"
                 android:layout_toEndOf="@id/personSex"
-                android:text="25岁"
+                android:text=""
                 android:textColor="@color/black9"
                 android:textSize="@dimen/sp15" />
 
@@ -67,7 +69,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_4"
                 android:layout_marginRight="@dimen/dp_4"
-                android:text="500m"
+                android:text="----"
                 android:textColor="@color/black9"
                 android:textSize="@dimen/sp15" />
 

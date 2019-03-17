@@ -10,6 +10,8 @@ import java.io.Serializable;
  */
 
 public class NearbyPerson implements Serializable {
+
+    private int accountId;
     //    头像
     private String profile;
     //            昵称
@@ -22,7 +24,15 @@ public class NearbyPerson implements Serializable {
     private String sexDesc;
 
     //    距离（m）
-    private String distance;
+    private int distance;
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
 
     public String getProfile() {
         return profile;
@@ -64,11 +74,11 @@ public class NearbyPerson implements Serializable {
         this.sexDesc = sexDesc;
     }
 
-    public String getDistance() {
+    public int getDistance() {
         return distance;
     }
 
-    public void setDistance(String distance) {
+    public void setDistance(int distance) {
         this.distance = distance;
     }
 
@@ -79,7 +89,7 @@ public class NearbyPerson implements Serializable {
         person.setAge(object.optInt("age", 0));
         person.setSex(object.optInt("sex", 0));
         person.setSexDesc(object.optString("sexDesc", ""));
-        person.setDistance(object.optString("distance", ""));
+        person.setDistance(object.optInt("distance", 0));
         return person;
     }
 }
