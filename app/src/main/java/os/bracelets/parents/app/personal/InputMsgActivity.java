@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
@@ -61,6 +62,7 @@ public class InputMsgActivity extends BaseActivity {
         if (type == PersonalMsgActivity.ITEM_HEIGHT || type == PersonalMsgActivity.ITEM_WEIGHT
                 || type == PersonalMsgActivity.ITEM_PHONE) {
             editText.setFilters(new InputFilter[]{numberFilter, new InputFilter.LengthFilter(5)});
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
     }
 

@@ -21,7 +21,7 @@ public class DataString {
         mDay = String.valueOf(c.get(Calendar.DAY_OF_MONTH));// 获取当前月份的日期号码
         mWay = String.valueOf(c.get(Calendar.DAY_OF_WEEK));
         if ("1".equals(mWay)) {
-            mWay = "天";
+            mWay = "日";
         } else if ("2".equals(mWay)) {
             mWay = "一";
         } else if ("3".equals(mWay)) {
@@ -41,12 +41,9 @@ public class DataString {
     public static String getWeek() {
         final Calendar c = Calendar.getInstance();
         c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-//        mYear = String.valueOf(c.get(Calendar.YEAR)); // 获取当前年份
-//        mMonth = String.valueOf(c.get(Calendar.MONTH) + 1);// 获取当前月份
-//        mDay = String.valueOf(c.get(Calendar.DAY_OF_MONTH));// 获取当前月份的日期号码
         mWay = String.valueOf(c.get(Calendar.DAY_OF_WEEK));
         if ("1".equals(mWay)) {
-            mWay = "天";
+            mWay = "日";
         } else if ("2".equals(mWay)) {
             mWay = "一";
         } else if ("3".equals(mWay)) {

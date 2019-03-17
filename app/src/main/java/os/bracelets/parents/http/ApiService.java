@@ -127,4 +127,10 @@ interface ApiService {
      */
     @POST("parent/setting/modifiedData")
     Observable<HttpResult> updateMsg(@Body Map<String, Object> map);
+
+    /**
+     * 关于我们
+     */
+    @POST("sys/app/about")
+    Observable<HttpResult> aboutApp(@Body Map<String, Object> map);
 }

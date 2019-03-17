@@ -2,8 +2,11 @@ package os.bracelets.parents.app.about;
 
 import android.view.View;
 
+import aio.health2world.http.HttpResult;
 import os.bracelets.parents.R;
 import os.bracelets.parents.common.BaseActivity;
+import os.bracelets.parents.http.ApiRequest;
+import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
 

@@ -3,6 +3,7 @@ package os.bracelets.parents.app.ble;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +51,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
     private DeviceListAdapter listAdapter;
 
     private LocalDeviceEntity entity;
+
 
     @Override
     protected int getLayoutId() {
