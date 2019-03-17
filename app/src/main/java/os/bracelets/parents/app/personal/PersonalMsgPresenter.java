@@ -116,8 +116,8 @@ public class PersonalMsgPresenter extends PersonalMsgContract.Presenter {
 
     @Override
     void updateMsg(String profile, String nickName, final String realName, int sex, String birthday,
-                   String height, String weight, String location) {
-        ApiRequest.updateMsg(profile, nickName, realName, sex, birthday, height, weight, location,
+                   String height, String weight, String address) {
+        ApiRequest.updateMsg(profile, nickName, realName, sex, birthday, height, weight, address,
                 new HttpSubscriber() {
 
                     @Override

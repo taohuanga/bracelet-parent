@@ -81,11 +81,11 @@ android.applicationVariants.all {
             output ->
                 if (buildType.name.equals("debug")) {
 //                    output.outputFile = new File(output.outputFile.parent,
-//                            "app_debug_" + packageTime() + ".apk");
+//                            "parents_debug_" + packageTime() + ".apk");
                 }
                 if (buildType.name.equals("release")) {
                     output.outputFile = new File(output.outputFile.parent,
-                            "app_release_" + packageTime() + ".apk");
+                            "parents_release_" + packageTime() + ".apk");
                 }
         }
 }

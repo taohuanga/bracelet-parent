@@ -55,6 +55,7 @@ import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.common.MsgEvent;
 import os.bracelets.parents.utils.DataString;
+import os.bracelets.parents.view.BatteryView;
 import rx.functions.Action1;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -71,6 +72,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     private List<RemindBean> remindList;
 
     private View bleLayout;
+
+    private BatteryView batteryView;
 
     private Handler handler;
 
@@ -100,6 +103,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         tvBattery = findView(R.id.tvBattery);
         tvStep = findView(R.id.tvStep);
         bleLayout = findView(R.id.bleLayout);
+        batteryView = findView(R.id.batteryView);
 
         recyclerView = findView(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -240,10 +244,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                     public void run() {
                         String data = FormatUtils.bytesToHexString(bytes);
                         Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
-                        Logger.i("lsy", "data=" + data);
                         int batteryInt = batteryLong.intValue();
                         tvBattery.setText(String.valueOf(batteryInt) + "%");
-                        Logger.i("lsy", "设备电量" + batteryInt);
+                        batteryView.setPower(batteryInt);
                     }
                 });
 

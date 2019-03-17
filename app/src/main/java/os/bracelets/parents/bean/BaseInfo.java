@@ -76,6 +76,7 @@ public class BaseInfo {
         info.setIcon(object.optString("icon"));
         info.setUserId(object.optInt("userId"));
         info.setNickName(object.optString("nickName"));
+        info.setRealName(object.optString("realName"));
         return info;
     }
 }

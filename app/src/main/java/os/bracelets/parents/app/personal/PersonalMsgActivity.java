@@ -14,9 +14,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import aio.health2world.DataEntity;
 import aio.health2world.glide_transformations.CropCircleTransformation;
+import aio.health2world.pickeview.OptionsPickerView;
 import aio.health2world.pickeview.TimePickerView;
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.DateUtil;
@@ -25,6 +29,7 @@ import aio.health2world.utils.TimePickerUtil;
 import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.R;
 import os.bracelets.parents.app.about.FeedBackActivity;
+import os.bracelets.parents.app.setting.UpdatePhoneActivity;
 import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.http.ApiRequest;
@@ -37,7 +42,7 @@ import rx.functions.Action1;
  */
 
 public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Presenter>
-        implements PersonalMsgContract.View, TimePickerView.OnTimeSelectListener {
+        implements PersonalMsgContract.View, TimePickerView.OnTimeSelectListener, OptionsPickerView.OnOptionsSelectListener {
 
     private String headImageUrl;
 
@@ -49,7 +54,7 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
     public static final int ITEM_WEIGHT = 0x06;
     public static final int ITEM_HEIGHT = 0x07;
     public static final int ITEM_PHONE = 0x08;
-    public static final int ITEM_LOCATION = 0x09;
+    public static final int ITEM_ADDRESS = 0x09;
 
     private TitleBar titleBar;
 
@@ -63,6 +68,10 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
     private RxPermissions rxPermissions;
 
     private TimePickerView pickerView;
+
+    private OptionsPickerView optionsPicker;
+
+    private List<String> listSex = new ArrayList<>();
 
     @Override
     protected PersonalMsgContract.Presenter getPresenter() {
@@ -105,6 +114,10 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
         mPresenter.userInfo();
         rxPermissions = new RxPermissions(this);
         pickerView = TimePickerUtil.init(this, this);
+        optionsPicker = TimePickerUtil.initOptions(this, this);
+        listSex.add("男");
+        listSex.add("女");
+        optionsPicker.setPicker(listSex);
     }
 
 
@@ -138,6 +151,11 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
     public void onTimeSelect(Date date, View v) {
         String time = DateUtil.getTime(date);
         tvBirthday.setText(time);
+    }
+
+    @Override
+    public void onOptionsSelect(int options1, int options2, int options3, View v) {
+        tvSex.setText(listSex.get(options1));
     }
 
     @Override
@@ -189,21 +207,35 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
                 break;
             case R.id.layoutSex:
                 //修改性别
+                optionsPicker.show();
                 break;
             case R.id.layoutBirthday:
                 //修改生日
                 pickerView.show();
                 break;
-            case R.id.layoutWeight:
-                //修改身高
-                break;
             case R.id.layoutHeight:
+                //修改身高
+                Intent intentHeight = new Intent(this, InputMsgActivity.class);
+                intentHeight.putExtra(InputMsgActivity.KEY, "修改身高");
+                intentHeight.putExtra(InputMsgActivity.TYPE, ITEM_HEIGHT);
+                startActivityForResult(intentHeight, ITEM_HEIGHT);
+                break;
+            case R.id.layoutWeight:
                 //修改体重
+                Intent intentWeight = new Intent(this, InputMsgActivity.class);
+                intentWeight.putExtra(InputMsgActivity.KEY, "修改体重");
+                intentWeight.putExtra(InputMsgActivity.TYPE, ITEM_WEIGHT);
+                startActivityForResult(intentWeight, ITEM_WEIGHT);
                 break;
             case R.id.layoutPhone:
+                Intent intentPhone = new Intent(this, UpdatePhoneActivity.class);
+                startActivityForResult(intentPhone, ITEM_PHONE);
                 //修改手机号
                 break;
             case R.id.layoutHomeAddress:
+                Intent intentAddress = new Intent(this, InputMsgActivity.class);
+                intentAddress.putExtra(InputMsgActivity.KEY, "修改住址");
+                startActivityForResult(intentAddress, ITEM_ADDRESS);
                 //修改家庭住址
                 break;
 
@@ -217,7 +249,6 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
             return;
         switch (requestCode) {
             case ITEM_HEAD:
-
                 Uri uri = data.getData();
                 if (uri != null) {
                     String imagePath = FilePathUtil.getRealPathFromURI(PersonalMsgActivity.this, uri);
@@ -238,6 +269,18 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
             case ITEM_NAME:
                 tvName.setText(data.getStringExtra("data"));
                 break;
+            case ITEM_WEIGHT:
+                tvWeight.setText(data.getStringExtra("data"));
+                break;
+            case ITEM_HEIGHT:
+                tvHeight.setText(data.getStringExtra("data"));
+                break;
+            case ITEM_PHONE:
+                tvPhone.setText(data.getStringExtra("data"));
+                break;
+            case ITEM_ADDRESS:
+                tvHomeAddress.setText(data.getStringExtra("data"));
+                break;
         }
     }
 
@@ -248,9 +291,28 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
             return;
         }
         String nickName = tvNickName.getText().toString().trim();
-        String name = tvName.getText().toString().trim();
+        if (TextUtils.isEmpty(nickName)) {
+            ToastUtil.showShort("昵称不能为空");
+            return;
+        }
+        //0未知 1男 2女
+        String sex = tvSex.getText().toString().trim();
+        if (TextUtils.isEmpty(sex)) {
+            ToastUtil.showShort("性别不能为空");
+            return;
+        }
+        int sexType = 0;
+        if (sex.equals("男")) {
+            sexType = 1;
+        } else if (sex.equals("女")) {
+            sexType = 2;
+        }
+        String realName = tvName.getText().toString().trim();
         String birthday = tvBirthday.getText().toString().trim();
-        mPresenter.updateMsg(headImageUrl, nickName, name, 0, birthday, "", "", "");
+        String height = tvHeight.getText().toString().trim();
+        String weight = tvWeight.getText().toString().trim();
+        String address = tvHomeAddress.getText().toString().trim();
+        mPresenter.updateMsg(headImageUrl, nickName, realName, sexType, birthday, height, weight, address);
     }
 
     @Override
@@ -261,5 +323,12 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
     @Override
     public void uploadImageSuccess(String imageUrl) {
         headImageUrl = imageUrl;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        pickerView = null;
     }
 }

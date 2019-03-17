@@ -64,7 +64,6 @@ public class MyApplication extends Application implements AMapLocationListener {
         return (String) SPUtils.get(this, AppConfig.TOKEN_ID, "");
     }
 
-    //医服服务器地址
     public String getServerUrl() {
         return AppConfig.SERVER_URL;
     }

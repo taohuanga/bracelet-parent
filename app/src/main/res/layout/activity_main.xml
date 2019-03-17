@@ -118,23 +118,23 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginBottom="20dp"
             android:layout_marginRight="10dp"
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@mipmap/icon_energy" />
+            <os.bracelets.parents.view.BatteryView
+                android:id="@+id/batteryView"
+                android:layout_width="28dp"
+                android:layout_height="14dp" />
 
             <TextView
                 android:id="@+id/tvBattery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="--"
+                android:text="无信息"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
         </LinearLayout>

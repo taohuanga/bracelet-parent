@@ -77,6 +77,7 @@
                     android:layout_weight="1" />
 
                 <TextView
+                    android:gravity="right"
                     android:id="@+id/tvNickName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -120,6 +121,7 @@
                     android:layout_weight="1" />
 
                 <TextView
+                    android:gravity="right"
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -166,6 +168,7 @@
                     android:id="@+id/tvSex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
                     android:textColor="@color/black6"
@@ -206,6 +209,7 @@
                     android:layout_weight="1" />
 
                 <TextView
+                    android:gravity="right"
                     android:id="@+id/tvBirthday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -249,6 +253,7 @@
                     android:layout_weight="1" />
 
                 <TextView
+                    android:gravity="right"
                     android:id="@+id/tvWeight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -292,6 +297,7 @@
                     android:layout_weight="1" />
 
                 <TextView
+                    android:gravity="right"
                     android:id="@+id/tvHeight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -335,6 +341,7 @@
                     android:layout_weight="1" />
 
                 <TextView
+                    android:gravity="right"
                     android:id="@+id/tvPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -378,6 +385,7 @@
                     android:layout_weight="1" />
 
                 <TextView
+                    android:gravity="right"
                     android:id="@+id/tvHomeAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

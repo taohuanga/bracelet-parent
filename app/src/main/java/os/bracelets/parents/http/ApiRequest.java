@@ -262,7 +262,7 @@ public class ApiRequest {
         if (!TextUtils.isEmpty(realName))
             map.put("realName", realName);
 
-        if (sex != -1)
+        if (sex != 0)
             map.put("sex", String.valueOf(sex));
 
         if (!TextUtils.isEmpty(birthday))
