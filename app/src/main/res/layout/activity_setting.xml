@@ -133,7 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_12"
             android:layout_weight="1"
-            android:text="蓝牙调试"
+            android:text="传感器"
             android:textColor="@color/black6"
             android:textSize="@dimen/sp_16" />
 
