@@ -201,12 +201,14 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         if (event.getAction() == AppConfig.MSG_DEVICE_CONNECT) {
             tvConnect.setText("已连接");
             onResume();
-        } else {
-            boolean isConnect = MyApplication.getInstance().isBleConnect();
-            if (isConnect)
-                tvConnect.setText("已连接");
-            else
-                tvConnect.setText("未连接");
+        }
+        //设备失去连接
+        if (event.getAction() == AppConfig.MSG_DEVICE_DISCONNECT) {
+            MyApplication.getInstance().setBleConnect(false);
+            MyApplication.getInstance().setDeviceEntity(null);
+            tvConnect.setText("未连接");
+            batteryView.setPower(10);
+            tvBattery.setText("---");
         }
     }
 

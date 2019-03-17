@@ -93,6 +93,7 @@
                 <action android:name="device_connecte_and_notify_ok"/>
                 <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
                 <action android:name="device_connecting_auto"/>
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED"/>
             </intent-filter>
         </receiver>
 

@@ -136,8 +136,10 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             listAdapter.notifyDataSetChanged();
             this.finish();
         }
-        //设备状态发生变化
-        if (event.getAction() == AppConfig.MSG_DEVICE_CHANGED) {
+        //设备失去连接
+        if (event.getAction() == AppConfig.MSG_DEVICE_DISCONNECT) {
+            MyApplication.getInstance().setBleConnect(false);
+            MyApplication.getInstance().setDeviceEntity(null);
             listAdapter.notifyDataSetChanged();
         }
     }

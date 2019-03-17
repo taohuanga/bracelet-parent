@@ -1,6 +1,7 @@
 package os.bracelets.parents.receiver;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
+import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.app.ble.MyBleGattHelper;
@@ -57,6 +59,13 @@ public class BleReceiver extends BroadcastReceiver {
                 }
                 break;
             case DeviceConfig.DEVICE_CONNECTING_AUTO:
+                break;
+            case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
+                ToastUtil.showShort("扫描完成");
+                break;
+            case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                ToastUtil.showShort("失去连接");
+                EventBus.getDefault().post(new MsgEvent<LocalDeviceEntity>(AppConfig.MSG_DEVICE_DISCONNECT));
                 break;
         }
     }
