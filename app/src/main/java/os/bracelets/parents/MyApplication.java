@@ -1,8 +1,11 @@
 package os.bracelets.parents;
 
 import android.app.Application;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.multidex.MultiDex;
 
 import com.amap.api.location.AMapLocation;
@@ -10,6 +13,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
+import com.huichenghe.bleControl.Ble.DeviceConfig;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 
 import java.text.SimpleDateFormat;
@@ -21,6 +25,8 @@ import aio.health2world.SApplication;
 import aio.health2world.utils.AppManager;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
+import cn.jpush.android.api.JPushInterface;
+import os.bracelets.parents.receiver.BleReceiver;
 import os.bracelets.parents.service.AppService;
 
 /**
@@ -49,10 +55,12 @@ public class MyApplication extends Application implements AMapLocationListener {
         INSTANCE = this;
         mContext = this;
         SApplication.init(mContext, AppConfig.isDebug);
+        initApp();
         initLocation();
-//        initBle();
         startService(new Intent(this, BluetoothLeService.class));
         startService(new Intent(this, AppService.class));
+        JPushInterface.init(this);
+        JPushInterface.setDebugMode(AppConfig.isDebug);
     }
 
     public static MyApplication getInstance() {
@@ -88,6 +96,10 @@ public class MyApplication extends Application implements AMapLocationListener {
         isBleConnect = bleConnect;
     }
 
+    public void clearEntityList() {
+        deviceList.clear();
+    }
+
     //退出当前程序 回到登录界面
     public void logout() {
         SPUtils.put(this, AppConfig.IS_LOGIN, false);
@@ -95,6 +107,16 @@ public class MyApplication extends Application implements AMapLocationListener {
         Intent intent = new Intent("os.bracelets.parents.login");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    private void initApp() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(DeviceConfig.DEVICE_CONNECTING_AUTO);
+        filter.addAction(DeviceConfig.DEVICE_CONNECTE_AND_NOTIFY_SUCESSFUL);
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        registerReceiver(new BleReceiver(), filter);
     }
 
     @Override

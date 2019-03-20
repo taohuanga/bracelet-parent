@@ -12,15 +12,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import aio.health2world.rx.rxpermissions.RxPermissions;
+import aio.health2world.utils.DeviceUtil;
+import aio.health2world.utils.Logger;
 import aio.health2world.utils.MD5Util;
 import aio.health2world.utils.MatchUtil;
 import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
+import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.app.main.MainActivity;
 import os.bracelets.parents.common.MVPBaseActivity;
+import os.bracelets.parents.jpush.JPushUtil;
+import os.bracelets.parents.jpush.TagAliasOperatorHelper;
 import rx.functions.Action1;
 
 /**
@@ -81,6 +89,14 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
 
     @Override
     protected void initData() {
+
+//        JPushInterface.init(this);
+//        JPushUtil.setJPushAlias(TagAliasOperatorHelper.ACTION_SET, DeviceUtil.getAndroidId(this));
+//        Set<String> set = new HashSet<>();
+//        set.add("android");
+//        JPushUtil.setJPushTags(TagAliasOperatorHelper.ACTION_SET, set);
+//        Logger.i("lsy", DeviceUtil.getAndroidId(this));
+
         edAccount.setSelection(edAccount.getText().length());
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

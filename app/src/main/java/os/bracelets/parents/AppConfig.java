@@ -37,8 +37,8 @@ public class AppConfig {
     public static final int MSG_DEVICE_CONNECT = 10;
     //蓝牙失去连接
     public static final int MSG_DEVICE_DISCONNECT = 11;
-    //蓝牙连接状态发生变化
-    public static final int MSG_DEVICE_CHANGED = 12;
+    //蓝牙状态发生变化
+    public static final int MSG_STATE_CHANGED = 12;
 
     //手环UUID
     public static final String BLUETOOTH_NAME = "DFZ";

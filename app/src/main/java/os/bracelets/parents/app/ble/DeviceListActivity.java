@@ -1,6 +1,7 @@
 package os.bracelets.parents.app.ble;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.os.Build;
 import android.os.Handler;
@@ -27,6 +28,8 @@ import aio.health2world.brvah.BaseQuickAdapter;
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.ToastUtil;
+import aio.health2world.view.LoadingDialog;
+import aio.health2world.view.MyProgressDialog;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
@@ -44,14 +47,13 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
 
     private ImageView ivBack;
 
-    private ProgressBar progressBar;
-
     private RecyclerView recyclerView;
 
     private DeviceListAdapter listAdapter;
 
     private LocalDeviceEntity entity;
 
+    private LoadingDialog dialog;
 
     @Override
     protected int getLayoutId() {
@@ -63,9 +65,9 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
         tvScan = findView(R.id.tvScan);
         tvTitle = findView(R.id.tvTitle);
         ivBack = findView(R.id.ivBack);
-        progressBar = findView(R.id.progressBar);
         recyclerView = findView(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        dialog = new LoadingDialog(this);
     }
 
     @Override
@@ -117,18 +119,27 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).stopScan();
         entity = (LocalDeviceEntity) adapter.getItem(position);
-        if (BluetoothLeService.getInstance() != null) {
-            if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
-                BluetoothLeService.getInstance().disconnect();
-            } else {
-                ToastUtil.showShort("开始连接设备");
-                BluetoothLeService.getInstance().connect(entity);
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            ToastUtil.showShort("请开启蓝牙");
+            return;
+        }
+        if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
+            dialog.showDialog(false,"正在断开设备");
+            BluetoothLeService.getInstance().disconnect();
+        } else {
+            if (MyApplication.getInstance().isBleConnect()) {
+                ToastUtil.showShort("请先断开已连接的设备");
+                return;
             }
+            dialog.showDialog(false,"正在连接设备");
+            BluetoothLeService.getInstance().connect(entity);
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMsgEvent(MsgEvent event) {
+        if (dialog != null && dialog.isShowing())
+            dialog.dismiss();
         //设备连接成功
         if (event.getAction() == AppConfig.MSG_DEVICE_CONNECT) {
             MyApplication.getInstance().setBleConnect(true);
@@ -136,10 +147,11 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             listAdapter.notifyDataSetChanged();
             this.finish();
         }
+        if (event.getAction() == AppConfig.MSG_STATE_CHANGED) {
+            listAdapter.notifyDataSetChanged();
+        }
         //设备失去连接
         if (event.getAction() == AppConfig.MSG_DEVICE_DISCONNECT) {
-            MyApplication.getInstance().setBleConnect(false);
-            MyApplication.getInstance().setDeviceEntity(null);
             listAdapter.notifyDataSetChanged();
         }
     }
@@ -160,6 +172,12 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
     }
 
     private void startScan() {
+        if (BluetoothAdapter.getDefaultAdapter() == null)
+            return;
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            ToastUtil.showShort("请开启蓝牙");
+            return;
+        }
         ToastUtil.showShort("开始扫描蓝牙设备");
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
         //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接

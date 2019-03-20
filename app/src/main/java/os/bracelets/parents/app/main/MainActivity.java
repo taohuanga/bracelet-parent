@@ -40,6 +40,7 @@ import java.util.TimerTask;
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.ToastUtil;
+import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
@@ -204,8 +205,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         }
         //设备失去连接
         if (event.getAction() == AppConfig.MSG_DEVICE_DISCONNECT) {
-            MyApplication.getInstance().setBleConnect(false);
-            MyApplication.getInstance().setDeviceEntity(null);
             tvConnect.setText("未连接");
             batteryView.setPower(10);
             tvBattery.setText("---");
