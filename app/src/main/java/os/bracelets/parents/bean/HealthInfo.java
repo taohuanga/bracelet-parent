@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class HealthInfo implements Serializable {
 
     private String title;
+    private String informationId;
     private String imageUrl;
     private String createDate;
 
@@ -35,6 +36,14 @@ public class HealthInfo implements Serializable {
         return createDate;
     }
 
+    public String getInformationId() {
+        return informationId;
+    }
+
+    public void setInformationId(String informationId) {
+        this.informationId = informationId;
+    }
+
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
@@ -44,6 +53,7 @@ public class HealthInfo implements Serializable {
         info.setTitle(object.optString("title"));
         info.setImageUrl(object.optString("imageUrl"));
         info.setCreateDate(object.optString("createDate"));
+        info.setInformationId(object.optString("informationId"));
         return info;
     }
 }

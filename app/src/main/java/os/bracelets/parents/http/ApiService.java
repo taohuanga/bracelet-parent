@@ -109,6 +109,11 @@ interface ApiService {
     @POST("parent/information/list")
     Observable<HttpResult> informationList(@Body Map<String, Object> map);
 
+    /**
+     * 资讯详情
+     */
+    @POST("parent/information/info")
+    Observable<HttpResult> infoDetail(@Body Map<String, Object> map);
 
     /**
      * 附近的人列表

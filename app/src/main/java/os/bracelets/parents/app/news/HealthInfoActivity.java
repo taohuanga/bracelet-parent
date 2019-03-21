@@ -1,15 +1,18 @@
 package os.bracelets.parents.app.news;
 
 import android.content.Intent;
+import android.support.v4.util.TimeUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import aio.health2world.brvah.BaseQuickAdapter;
+import aio.health2world.utils.DateUtil;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.bean.HealthInfo;
@@ -36,7 +39,10 @@ public class HealthInfoActivity extends MVPBaseActivity<HealthInfoContract.Prese
 
     private int pageNo = 1;
 
-    private int infoType = 0;
+    //0历史  1 最新
+    private int infoType = 1;
+
+    private String releaseTime="";
 
     @Override
     protected HealthInfoContract.Presenter getPresenter() {
@@ -54,6 +60,7 @@ public class HealthInfoActivity extends MVPBaseActivity<HealthInfoContract.Prese
         refreshLayout = findView(R.id.refreshLayout);
         recyclerView = findView(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        releaseTime = DateUtil.getCurrentTime(new Date(System.currentTimeMillis()));
     }
 
     @Override
@@ -87,14 +94,18 @@ public class HealthInfoActivity extends MVPBaseActivity<HealthInfoContract.Prese
     @Override
     public void onRefresh() {
         pageNo = 1;
+        infoType = 1;
         refreshLayout.setRefreshing(true);
-        mPresenter.informationList(infoType, pageNo, "");
+//        releaseTime = DateUtil.getCurrentTime(new Date(System.currentTimeMillis()));
+        mPresenter.informationList(infoType, pageNo, releaseTime);
     }
 
     @Override
     public void onLoadMoreRequested() {
-        pageNo++;
-        mPresenter.informationList(infoType, pageNo, "");
+        pageNo = 1;
+        infoType = 0;
+//        releaseTime = infoList.get(infoList.size()-1).getCreateDate();
+        mPresenter.informationList(infoType, pageNo, releaseTime);
     }
 
     @Override
@@ -121,6 +132,8 @@ public class HealthInfoActivity extends MVPBaseActivity<HealthInfoContract.Prese
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         HealthInfo info = (HealthInfo) adapter.getItem(position);
-        startActivity(new Intent(this, InfoDetailActivity.class));
+        Intent intent = new Intent(this,InfoDetailActivity.class);
+        intent.putExtra(InfoDetailActivity.INFO_ID,info.getInformationId());
+        startActivity(intent);
     }
 }

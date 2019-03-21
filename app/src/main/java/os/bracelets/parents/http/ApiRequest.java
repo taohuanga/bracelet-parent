@@ -127,7 +127,7 @@ public class ApiRequest {
     }
 
 
-    //首页获取步数
+    //首页首页信息
     public static Subscription homeMsg(Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
@@ -222,6 +222,7 @@ public class ApiRequest {
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("type", String.valueOf(type));
         map.put("pageNo", String.valueOf(pageNo));
+        map.put("type", "1");
         map.put("pageSize", String.valueOf(AppConfig.PAGE_SIZE));
         if (!TextUtils.isEmpty(releaseTime))
             map.put("releaseTime", releaseTime);
@@ -232,6 +233,17 @@ public class ApiRequest {
                 .subscribe(subscriber);
     }
 
+    //资讯详情
+    public static Subscription infoDetail(String informationId,Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("informationId", informationId);
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .infoDetail(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
 
     //附近的人
     public static Subscription nearbyList(int pageNo, Subscriber<HttpResult> subscriber) {
