@@ -87,6 +87,22 @@ public class ApiRequest {
                 .subscribe(subscriber);
     }
 
+    //绑定手机号
+    public static Subscription updatePhone(String oldPhone, String code, String pwd, String newPhone,
+                                           Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("oldPhone", oldPhone);
+        map.put("newPhone", newPhone);
+        map.put("loginPass", pwd);
+        map.put("securityCode", code);
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .phoneExist(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
     //修改密码
     public static Subscription updatePwd(String oldPwd, String newPwd, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
@@ -234,7 +250,7 @@ public class ApiRequest {
     }
 
     //资讯详情
-    public static Subscription infoDetail(String informationId,Subscriber<HttpResult> subscriber) {
+    public static Subscription infoDetail(String informationId, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("informationId", informationId);

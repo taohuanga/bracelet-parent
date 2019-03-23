@@ -144,9 +144,11 @@ public class PersonalMsgPresenter extends PersonalMsgContract.Presenter {
                             try {
                                 JSONObject object = new JSONObject(new Gson().toJson(result.data));
                                 String nickName = object.optString("nickName");
-                                String portrait = object.optString("portrait");
+                                String portrait = object.optString("profile");
                                 SPUtils.put(MyApplication.getInstance(), AppConfig.USER_IMG, portrait);
                                 SPUtils.put(MyApplication.getInstance(), AppConfig.USER_NICK, nickName);
+                                if(mView!=null)
+                                    mView.updateMsgSuccess();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

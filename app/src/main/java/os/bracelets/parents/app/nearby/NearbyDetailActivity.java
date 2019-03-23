@@ -97,8 +97,8 @@ public class NearbyDetailActivity extends MVPBaseActivity {
     private void initPersonMsg(NearbyPerson person){
         tvName.setText(person.getNickName());
         tvSex.setText(AppUtils.getSex(person.getSex()));
-        tvHeight.setText(String.valueOf(person.getHeight()));
-        tvWeight.setText(String.valueOf(person.getWeight()));
+        tvHeight.setText(String.valueOf(person.getHeight())+"cm");
+        tvWeight.setText(String.valueOf(person.getWeight())+"kg");
         Glide.with(mContext)
                 .load(person.getProfile())
                 .placeholder(R.mipmap.ic_default_portrait)

@@ -36,6 +36,7 @@ import os.bracelets.parents.app.setting.UpdatePhoneActivity;
 import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.http.ApiRequest;
+import os.bracelets.parents.hx.parse.UserProfileManager;
 import os.bracelets.parents.utils.AppUtils;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
@@ -77,6 +78,8 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
     private OptionsPickerView optionsPicker;
 
     private List<String> listSex = new ArrayList<>();
+
+//    private UserProfileManager manager = new UserProfileManager();
 
     @Override
     protected PersonalMsgContract.Presenter getPresenter() {
@@ -125,6 +128,7 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
         listSex.add("男");
         listSex.add("女");
         optionsPicker.setPicker(listSex);
+//        manager.init(this);
     }
 
 
@@ -292,7 +296,7 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
                 tvHeight.setText(data.getStringExtra("data"));
                 break;
             case ITEM_PHONE:
-                tvPhone.setText(data.getStringExtra("data"));
+                tvPhone.setText(data.getStringExtra("newPhone"));
                 break;
             case ITEM_ADDRESS:
                 tvHomeAddress.setText(data.getStringExtra("data"));
@@ -333,12 +337,15 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
 
     @Override
     public void updateMsgSuccess() {
-
+        String userNick = tvNickName.getText().toString();
+//        manager.getCurrentUserInfo().setNickname(userNick);
     }
 
     @Override
     public void uploadImageSuccess(String imageUrl) {
         headImageUrl = imageUrl;
+        //修改环信头像
+//        manager.getCurrentUserInfo().setAvatar(headImageUrl);
     }
 
 
