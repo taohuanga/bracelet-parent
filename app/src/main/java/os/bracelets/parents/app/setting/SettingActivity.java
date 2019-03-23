@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,7 +44,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
 
-    private View layoutUpdatePwd, layoutSensorMsg, layoutUpdateMsg, layoutFeedBack,layoutAbout;
+    private View layoutUpdatePwd, layoutSensorMsg, layoutUpdateMsg, layoutFeedBack, layoutAbout;
 
     @Override
     protected SettingContract.Presenter getPresenter() {
@@ -152,6 +154,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
                         AppManager.getInstance().finishAllActivity();
                         startActivity(new Intent(SettingActivity.this, LoginActivity.class));
                         finish();
+                        logoutHx();
                     }
                 })
                 .create()
@@ -161,5 +164,25 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
     @Override
     public void loadInfoSuccess(BaseInfo info) {
 
+    }
+
+    private void logoutHx() {
+        EMClient.getInstance()
+                .logout(true, new EMCallBack() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+
+                    }
+
+                    @Override
+                    public void onProgress(int i, String s) {
+
+                    }
+                });
     }
 }

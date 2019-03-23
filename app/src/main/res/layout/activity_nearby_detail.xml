@@ -151,4 +151,14 @@
             android:text="--" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_18"
+        android:background="@drawable/shape_button_bg"
+        android:text="打招呼"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp16" />
+
 </LinearLayout>

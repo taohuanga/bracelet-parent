@@ -28,6 +28,7 @@ public class AppConfig {
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
     public static final String CITY_CODE = "city_code";
+    public static final String ADDRESS = "address";
     public static final String CURRENT_DEVICE = "current_device";
     //标记当前程序是否登录
     public static final String IS_LOGIN = "is_login";

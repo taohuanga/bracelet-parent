@@ -257,4 +257,10 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
         }
         mPresenter.securityCode(2, phone);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        countDownTimer.cancel();
+    }
 }

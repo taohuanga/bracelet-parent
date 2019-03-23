@@ -193,33 +193,39 @@ public class MyApplication extends Application implements AMapLocationListener {
     }
 
     @Override
-    public void onLocationChanged(AMapLocation amapLocation) {
-        if (amapLocation != null) {
-            if (amapLocation.getErrorCode() == 0) {
+    public void onLocationChanged(AMapLocation location) {
+        if (location != null) {
+            if (location.getErrorCode() == 0) {
                 //定位成功回调信息，设置相关消息
-                amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
+                location.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
                 //获取纬度
-                SPUtils.put(this, AppConfig.LATITUDE, amapLocation.getLatitude());
+                SPUtils.put(this, AppConfig.LATITUDE, location.getLatitude()+"");
                 //获取经度
-                SPUtils.put(this, AppConfig.LONGITUDE, amapLocation.getLongitude());
+                SPUtils.put(this, AppConfig.LONGITUDE, location.getLongitude()+"");
                 //城市编码
-                SPUtils.put(this, AppConfig.CITY_CODE, amapLocation.getAdCode());
+                SPUtils.put(this, AppConfig.CITY_CODE, location.getAdCode());
+                //详细地址
+                SPUtils.put(this,AppConfig.ADDRESS,location.getAddress());
                 //获取精度信息
-                float accuracy = amapLocation.getAccuracy();
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date date = new Date(amapLocation.getTime());
-                String time = df.format(date);//定位时间
+//                float accuracy = location.getAccuracy();
+//                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                Date date = new Date(location.getTime());
+//                String time = df.format(date);//定位时间
 
-                Logger.i("lsy", "定位时间：" + time + ",纬度："
-                        + amapLocation.getLatitude() + ",经度："
-                        + amapLocation.getLongitude()
-                        + ",城市：" + amapLocation.getCity()
-                        + ",城市代码：" + amapLocation.getAdCode());
+//                Logger.i("lsy", "定位时间：" + time + ",纬度："
+//                        + location.getLatitude() + ",经度："
+//                        + location.getLongitude()
+//                        + ",城市：" + location.getCity()
+//                        + ",城市代码：" + location.getAdCode());
+//
+//                String address = location.getProvince()+location.getCity()+location.getAccuracy()+location.getAddress();
+//                Logger.i("lsy",address);
+
             } else {
                 //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                 Logger.e("AmapError", "location Error, ErrCode:"
-                        + amapLocation.getErrorCode() + ", errInfo:"
-                        + amapLocation.getErrorInfo());
+                        + location.getErrorCode() + ", errInfo:"
+                        + location.getErrorInfo());
             }
         }
     }

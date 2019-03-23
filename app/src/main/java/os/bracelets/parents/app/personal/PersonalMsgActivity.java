@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.hyphenate.chat.EMClient;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -25,14 +26,17 @@ import aio.health2world.pickeview.TimePickerView;
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.DateUtil;
 import aio.health2world.utils.FilePathUtil;
+import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.TimePickerUtil;
 import aio.health2world.utils.ToastUtil;
+import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.app.about.FeedBackActivity;
 import os.bracelets.parents.app.setting.UpdatePhoneActivity;
 import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.http.ApiRequest;
+import os.bracelets.parents.utils.AppUtils;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
 import rx.functions.Action1;
@@ -61,7 +65,8 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
     private View layoutHeadImg, layoutNickName, layoutName, layoutSex, layoutBirthday, layoutWeight,
             layoutHeight, layoutPhone, layoutHomeAddress;
 
-    private TextView tvNickName, tvName, tvSex, tvBirthday, tvWeight, tvHeight, tvPhone, tvHomeAddress;
+    private TextView tvNickName, tvName, tvSex, tvBirthday, tvWeight, tvHeight, tvPhone, tvHomeAddress,
+            tvLongitude, tvLatitude;
 
     private ImageView ivHeadImg;
 
@@ -96,6 +101,8 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
         tvHeight = findView(R.id.tvHeight);
         tvPhone = findView(R.id.tvPhone);
         tvHomeAddress = findView(R.id.tvHomeAddress);
+        tvLongitude = findView(R.id.tvLongitude);
+        tvLatitude = findView(R.id.tvLatitude);
 
         layoutHeadImg = findView(R.id.layoutHeadImg);
         layoutNickName = findView(R.id.layoutNickName);
@@ -161,15 +168,23 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
     @Override
     public void loadInfoSuccess(UserInfo info) {
         headImageUrl = info.getPortrait();
+        tvNickName.setText(info.getNickName());
+        tvName.setText(info.getName());
+        tvSex.setText(AppUtils.getSex(info.getSex()));
+        tvBirthday.setText(info.getBirthday());
+        tvWeight.setText(info.getWeight());
+        tvHeight.setText(info.getHeight());
+        tvPhone.setText(info.getPhone());
+        tvLongitude.setText(String.valueOf(SPUtils.get(this,AppConfig.LONGITUDE,"")));
+        tvLatitude.setText(String.valueOf(SPUtils.get(this,AppConfig.LATITUDE,"")));
+        tvHomeAddress.setText(String.valueOf(SPUtils.get(this, AppConfig.ADDRESS, "")));
+
         Glide.with(this)
                 .load(info.getPortrait())
                 .placeholder(R.mipmap.ic_default_portrait)
                 .error(R.mipmap.ic_default_portrait)
                 .bitmapTransform(new CropCircleTransformation(mContext))
                 .into(ivHeadImg);
-
-        tvNickName.setText(info.getNickName());
-        tvName.setText(info.getName());
     }
 
     @Override
@@ -228,15 +243,16 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
                 startActivityForResult(intentWeight, ITEM_WEIGHT);
                 break;
             case R.id.layoutPhone:
-                Intent intentPhone = new Intent(this, UpdatePhoneActivity.class);
-                startActivityForResult(intentPhone, ITEM_PHONE);
                 //修改手机号
+                Intent intentPhone = new Intent(this, UpdatePhoneActivity.class);
+                intentPhone.putExtra("phone", tvPhone.getText().toString());
+                startActivityForResult(intentPhone, ITEM_PHONE);
                 break;
             case R.id.layoutHomeAddress:
-                Intent intentAddress = new Intent(this, InputMsgActivity.class);
-                intentAddress.putExtra(InputMsgActivity.KEY, "修改住址");
-                startActivityForResult(intentAddress, ITEM_ADDRESS);
                 //修改家庭住址
+//                Intent intentAddress = new Intent(this, InputMsgActivity.class);
+//                intentAddress.putExtra(InputMsgActivity.KEY, "修改住址");
+//                startActivityForResult(intentAddress, ITEM_ADDRESS);
                 break;
 
         }

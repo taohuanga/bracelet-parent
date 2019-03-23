@@ -13,6 +13,13 @@ public class UserInfo implements Serializable {
     private String nickName;
     private String portrait;
     private String appType;
+    private int sex;
+    private String birthday;
+    private String weight;
+    private String height;
+    private String phone;
+    private String longitude;
+    private String latitude;
 
 
     public String getName() {
@@ -47,12 +54,75 @@ public class UserInfo implements Serializable {
         this.appType = appType;
     }
 
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
     public static UserInfo parseBean(JSONObject object) {
         UserInfo info = new UserInfo();
         info.setName(object.optString("name", ""));
         info.setNickName(object.optString("nickName", ""));
         info.setPortrait(object.optString("portrait", ""));
         info.setAppType(object.optString("appType", ""));
+        info.setBirthday(object.optString("birthday", ""));
+        info.setHeight(object.optString("height", ""));
+        info.setWeight(object.optString("weight", ""));
+        info.setLongitude(object.optString("longitude", ""));
+        info.setLatitude(object.optString("latitude", ""));
+        info.setPhone(object.optString("phone", ""));
+        info.setSex(object.optInt("sex"));
         return info;
     }
 }
