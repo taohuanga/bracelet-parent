@@ -25,6 +25,8 @@ public class NearbyPerson implements Serializable {
 
     //    距离（m）
     private int distance;
+    //电话
+    private String phone;
 
     public int getAccountId() {
         return accountId;
@@ -82,14 +84,24 @@ public class NearbyPerson implements Serializable {
         this.distance = distance;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public static NearbyPerson parseBean(JSONObject object) {
         NearbyPerson person = new NearbyPerson();
+        person.setAccountId(object.optInt("accountId"));
         person.setProfile(object.optString("profile", ""));
         person.setNickName(object.optString("nickName", ""));
         person.setAge(object.optInt("age", 0));
         person.setSex(object.optInt("sex", 0));
         person.setSexDesc(object.optString("sexDesc", ""));
         person.setDistance(object.optInt("distance", 0));
+        person.setPhone(object.optString("phone", ""));
         return person;
     }
 }

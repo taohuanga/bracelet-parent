@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
+
 import aio.health2world.utils.MD5Util;
 import aio.health2world.utils.MatchUtil;
 import aio.health2world.utils.ToastUtil;
@@ -112,7 +115,18 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
     }
 
     @Override
-    public void registerSuccess() {
+    public void registerSuccess(final String phone) {
+        //注册环信账号
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EMClient.getInstance().createAccount(phone, phone);//同步方法
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
         finish();
     }
 

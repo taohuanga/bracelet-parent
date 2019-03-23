@@ -15,6 +15,8 @@ import com.amap.api.location.AMapLocationListener;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.DeviceConfig;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.EaseUI;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,12 +57,11 @@ public class MyApplication extends Application implements AMapLocationListener {
         INSTANCE = this;
         mContext = this;
         SApplication.init(mContext, AppConfig.isDebug);
+
         initApp();
-        initLocation();
+
         startService(new Intent(this, BluetoothLeService.class));
         startService(new Intent(this, AppService.class));
-        JPushInterface.init(this);
-        JPushInterface.setDebugMode(AppConfig.isDebug);
     }
 
     public static MyApplication getInstance() {
@@ -117,6 +118,15 @@ public class MyApplication extends Application implements AMapLocationListener {
         filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         registerReceiver(new BleReceiver(), filter);
+        //极光
+        JPushInterface.init(this);
+        JPushInterface.setDebugMode(AppConfig.isDebug);
+        //环信
+        initHx();
+
+        //高德
+        initLocation();
+
     }
 
     @Override
@@ -154,6 +164,12 @@ public class MyApplication extends Application implements AMapLocationListener {
                 deviceList.remove(i);
             }
         }
+    }
+
+    //目前使用的是简单版的
+    private void initHx() {
+        //init demo helper
+        EaseUI.getInstance().init(this, null);
     }
 
     private void initLocation() {

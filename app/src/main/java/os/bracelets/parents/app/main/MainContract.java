@@ -2,6 +2,7 @@ package os.bracelets.parents.app.main;
 
 import java.util.List;
 
+import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.RemindBean;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.BasePresenter;
@@ -34,6 +35,8 @@ public interface MainContract {
 //        abstract void remindList();
 
         abstract void getWeather();
+
+        abstract void loginHx(BaseInfo info);
 
     }
 

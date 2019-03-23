@@ -1,6 +1,8 @@
 package os.bracelets.parents.app.main;
 
 import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +21,7 @@ import aio.health2world.utils.SPUtils;
 import okhttp3.ResponseBody;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
+import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.RemindBean;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.http.ApiRequest;
@@ -52,13 +55,13 @@ public class MainPresenter extends MainContract.Presenter {
                         int stepNum = object.optInt("stepNum", 0);
                         JSONArray array = object.optJSONArray("remindList");
                         List<RemindBean> list = new ArrayList<>();
-                        for (int i = 0; i <array.length() ; i++) {
+                        for (int i = 0; i < array.length(); i++) {
                             JSONObject obj = array.optJSONObject(i);
                             RemindBean remind = RemindBean.parseBean(obj);
                             list.add(remind);
                         }
                         if (mView != null)
-                            mView.loadMsgSuccess(stepNum,list);
+                            mView.loadMsgSuccess(stepNum, list);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -139,6 +142,27 @@ public class MainPresenter extends MainContract.Presenter {
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+
+                    }
+                });
+    }
+
+    @Override
+    void loginHx(BaseInfo info) {
+        EMClient.getInstance()
+                .login(info.getPhone(), info.getPhone(), new EMCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        Logger.i("hx", "login success");
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+                        Logger.i("hx", "login failed " + s);
+                    }
+
+                    @Override
+                    public void onProgress(int i, String s) {
 
                     }
                 });

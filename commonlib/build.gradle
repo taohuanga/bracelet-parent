@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         minSdkVersion 19
@@ -35,8 +35,9 @@ dependencies {
     //android加载动画
     compile 'com.github.ybq:Android-SpinKit:1.2.0'
     compile 'com.google.code.gson:gson:2.8.5'
-//    //权限动态申请
-//    compile 'com.github.tbruyelle:rxpermissions:0.10.2'
+    //    //权限动态申请
+    //    compile 'com.github.tbruyelle:rxpermissions:0.10.2'
     //时间选择器
-//    compile 'com.contrarywind:Android-PickerView:4.1.7'
+    //    compile 'com.contrarywind:Android-PickerView:4.1.7'
+    compile project(':easeui')
 }

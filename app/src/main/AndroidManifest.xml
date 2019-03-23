@@ -89,6 +89,8 @@
 
         <activity android:name=".app.nearby.NearbyActivity" />
 
+        <activity android:name=".app.nearby.NearbyDetailActivity" />
+
         <activity android:name=".app.contact.ContactActivity" />
 
         <activity android:name=".app.about.FeedBackActivity" />
@@ -104,6 +106,21 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="1bb000d4c685f3eea8fc76a114e055c3" />
+
+
+        <!-- Required SDK核心功能-->
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="os.bracelets.parents" />
+            </intent-filter>
+        </activity>
 
         <!-- Required SDK 核心功能-->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
@@ -192,6 +209,32 @@
             android:name="JPUSH_APPKEY"
             android:value="06bf5ebdab8e3481e3966269" /> <!--  </>值来自开发者平台取得的AppKey-->
 
+        <!--环信相关-->
+        <activity android:name=".app.nearby.ChatActivity" />
+
+        <activity
+            android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
+            android:screenOrientation="portrait" />
+
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="1121190318085857#intelligent" />
+        <!-- 声明SDK所需的service SDK核心功能-->
+        <service
+            android:name="com.hyphenate.chat.EMChatService"
+            android:exported="true" />
+        <!-- 声明SDK所需的receiver -->
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+            <!-- 可选filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

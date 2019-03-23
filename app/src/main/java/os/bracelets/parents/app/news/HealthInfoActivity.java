@@ -42,7 +42,7 @@ public class HealthInfoActivity extends MVPBaseActivity<HealthInfoContract.Prese
     //0历史  1 最新
     private int infoType = 1;
 
-    private String releaseTime="";
+    private String releaseTime = "";
 
     @Override
     protected HealthInfoContract.Presenter getPresenter() {
@@ -102,7 +102,7 @@ public class HealthInfoActivity extends MVPBaseActivity<HealthInfoContract.Prese
 
     @Override
     public void onLoadMoreRequested() {
-        pageNo = 1;
+        pageNo++;
         infoType = 0;
 //        releaseTime = infoList.get(infoList.size()-1).getCreateDate();
         mPresenter.informationList(infoType, pageNo, releaseTime);
@@ -132,8 +132,8 @@ public class HealthInfoActivity extends MVPBaseActivity<HealthInfoContract.Prese
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         HealthInfo info = (HealthInfo) adapter.getItem(position);
-        Intent intent = new Intent(this,InfoDetailActivity.class);
-        intent.putExtra(InfoDetailActivity.INFO_ID,info.getInformationId());
+        Intent intent = new Intent(this, InfoDetailActivity.class);
+        intent.putExtra(InfoDetailActivity.INFO_ID, info.getInformationId());
         startActivity(intent);
     }
 }

@@ -2,11 +2,13 @@ package os.bracelets.parents.bean;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by lishiyou on 2019/1/27.
  */
 
-public class BaseInfo {
+public class BaseInfo implements Serializable{
 
 //      "tokenId":"c1ceb8b610234aacb130b0fae4ca44c8",
 //              "realName":"",
@@ -20,6 +22,7 @@ public class BaseInfo {
     private String icon;
     private int userId;
     private String openId;
+    private String phone;
 
 
     public String getTokenId() {
@@ -70,6 +73,14 @@ public class BaseInfo {
         this.openId = openId;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public static BaseInfo parseBean(JSONObject object) {
         BaseInfo info = new BaseInfo();
         info.setTokenId(object.optString("tokenId"));
@@ -77,6 +88,7 @@ public class BaseInfo {
         info.setUserId(object.optInt("userId"));
         info.setNickName(object.optString("nickName"));
         info.setRealName(object.optString("realName"));
+        info.setPhone(object.optString("phone"));
         return info;
     }
 }

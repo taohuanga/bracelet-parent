@@ -77,7 +77,6 @@ public class InfoDetailActivity extends MVPBaseActivity<InfoDetailContract.Prese
                 .load(detail.getImageUrl())
                 .placeholder(R.mipmap.bg_head)
                 .error(R.mipmap.bg_head)
-                .bitmapTransform(new CropCircleTransformation(mContext))
                 .into(image);
     }
 

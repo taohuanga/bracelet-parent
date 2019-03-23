@@ -26,6 +26,7 @@ import com.huichenghe.bleControl.Ble.DataSendCallback;
 import com.huichenghe.bleControl.Ble.IServiceCallback;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 import com.huichenghe.bleControl.Utils.FormatUtils;
+import com.hyphenate.chat.EMClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,6 +52,7 @@ import os.bracelets.parents.app.navigate.NavigateActivity;
 import os.bracelets.parents.app.nearby.NearbyActivity;
 import os.bracelets.parents.app.news.HealthInfoActivity;
 import os.bracelets.parents.app.setting.SettingActivity;
+import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.RemindBean;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
@@ -77,6 +79,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     private BatteryView batteryView;
 
     private Handler handler;
+
+    private BaseInfo info;
 
     @Override
     protected MainContract.Presenter getPresenter() {
@@ -141,6 +145,10 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         }
                     });
         }
+        if (getIntent().hasExtra("info"))
+            info = (BaseInfo) getIntent().getSerializableExtra("info");
+        if (info != null)
+            mPresenter.loginHx(info);
     }
 
     @Override
