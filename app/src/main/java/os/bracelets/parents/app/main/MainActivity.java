@@ -128,9 +128,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         remindAdapter.bindToRecyclerView(recyclerView);
         remindAdapter.setEmptyView(R.layout.layout_empty_text);
 
-        mPresenter.homeMsg();
-        mPresenter.getWeather();
-
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RxPermissions rxPermissions = new RxPermissions(this);
             rxPermissions
@@ -145,6 +142,11 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         }
                     });
         }
+
+        mPresenter.homeMsg();
+        mPresenter.getWeather();
+        mPresenter.dailySports();
+
         if (getIntent().hasExtra("info"))
             info = (BaseInfo) getIntent().getSerializableExtra("info");
         if (info != null)
@@ -174,6 +176,11 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     public void loginWeatherSuccess(WeatherInfo info) {
         tvCity.setText(info.getCity());
         tvWeather.setText(info.getWeather());
+    }
+
+    @Override
+    public void loadSports(String number) {
+
     }
 
     @Override

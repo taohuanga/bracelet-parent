@@ -103,6 +103,20 @@ public class MainPresenter extends MainContract.Presenter {
 //        });
 //    }
 
+
+    @Override
+    void dailySports() {
+        ApiRequest.dailySports(new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+                if(result.code.equals(AppConfig.SUCCESS)){
+
+                }
+            }
+        });
+    }
+
     @Override
     void getWeather() {
         Retrofit retrofit = new Retrofit.Builder()

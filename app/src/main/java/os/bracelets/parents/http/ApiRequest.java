@@ -4,11 +4,13 @@ package os.bracelets.parents.http;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import aio.health2world.http.HttpResult;
 import aio.health2world.http.tool.RxTransformer;
+import aio.health2world.utils.DateUtil;
 import aio.health2world.utils.SPUtils;
 import aio.health2world.view.MyProgressDialog;
 import os.bracelets.parents.AppConfig;
@@ -161,6 +163,20 @@ public class ApiRequest {
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .remindList(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //首页日常运动数据
+    public static Subscription dailySports(Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("longitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LONGITUDE, "")));
+        map.put("latitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LATITUDE, "")));
+        map.put("dailyDay", DateUtil.getTime(new Date(System.currentTimeMillis())));
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .dailySports(map)
                 .compose(RxTransformer.<HttpResult>defaultSchedulers())
                 .subscribe(subscriber);
     }

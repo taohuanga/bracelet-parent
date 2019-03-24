@@ -75,6 +75,13 @@ interface ApiService {
     Observable<HttpResult> remindList(@Body Map<String, Object> map);
 
     /**
+     * 首页日常运动数据
+     *
+     */
+    @POST("parent/home/dailySports")
+    Observable<HttpResult> dailySports(@Body Map<String, Object> map);
+
+    /**
      * 用户信息
      *
      * @param map
