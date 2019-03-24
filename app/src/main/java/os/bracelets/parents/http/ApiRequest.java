@@ -168,15 +168,27 @@ public class ApiRequest {
     }
 
     //首页日常运动数据
-    public static Subscription dailySports(Subscriber<HttpResult> subscriber) {
+    public static Subscription dailySports(int stepNumber,Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        map.put("longitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LONGITUDE, "")));
-        map.put("latitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LATITUDE, "")));
+        map.put("stepNumber", stepNumber);
         map.put("dailyDay", DateUtil.getTime(new Date(System.currentTimeMillis())));
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .dailySports(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //跌倒信息上传
+    public static Subscription fall(Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("longitude", String.valueOf(SPUtils.get(MyApplication.getInstance(),AppConfig.LONGITUDE,"")));
+        map.put("latitude", String.valueOf(SPUtils.get(MyApplication.getInstance(),AppConfig.LATITUDE,"")));
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .fall(map)
                 .compose(RxTransformer.<HttpResult>defaultSchedulers())
                 .subscribe(subscriber);
     }

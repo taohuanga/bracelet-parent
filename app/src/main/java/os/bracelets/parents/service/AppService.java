@@ -168,6 +168,7 @@ public class AppService extends Service implements DataSendCallback {
             EventBus.getDefault().post(new MsgEvent<>(data));
         } else if (data.substring(10, 14).equals("5454")) {//跌倒报警，并上传报警信息
             sb.append(data + "\n");
+            fall();
         } else if (currentTime - lastTime > 5000 && lastTime != 0L) {
             Date currentDate = new Date(currentTime);
             Date lastDate = new Date(lastTime);
@@ -220,6 +221,15 @@ public class AppService extends Service implements DataSendCallback {
             });
         }
 
+    }
+
+    private void fall() {
+        ApiRequest.fall(new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+            }
+        });
     }
 
     @Override

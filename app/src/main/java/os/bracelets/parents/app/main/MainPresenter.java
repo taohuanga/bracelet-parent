@@ -1,6 +1,8 @@
 package os.bracelets.parents.app.main;
 
 import com.google.gson.Gson;
+import com.huichenghe.bleControl.Ble.BleDataForSleepData;
+import com.huichenghe.bleControl.Ble.DataSendCallback;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 
@@ -27,6 +29,7 @@ import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.http.ServiceFactory;
+import os.bracelets.parents.utils.StringUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -106,15 +109,26 @@ public class MainPresenter extends MainContract.Presenter {
 
     @Override
     void dailySports() {
-        ApiRequest.dailySports(new HttpSubscriber() {
-            @Override
-            public void onNext(HttpResult result) {
-                super.onNext(result);
-                if(result.code.equals(AppConfig.SUCCESS)){
+        BleDataForSleepData
+                .getInstance(MyApplication.getInstance())
+                .setOnSleepDataRecever(new DataSendCallback() {
+                    @Override
+                    public void sendSuccess(byte[] bytes) {
+                        String data = StringUtils.bytesToHexString(bytes);
+                        Logger.i("MainPresenter", data);
+                    }
 
-                }
-            }
-        });
+                    @Override
+                    public void sendFailed() {
+
+                    }
+
+                    @Override
+                    public void sendFinished() {
+
+                    }
+                });
+
     }
 
     @Override
