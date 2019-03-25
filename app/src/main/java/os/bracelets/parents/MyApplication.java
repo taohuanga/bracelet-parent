@@ -54,7 +54,7 @@ public class MyApplication extends Application implements AMapLocationListener {
     public void onCreate() {
         super.onCreate();
         INSTANCE = this;
-        SApplication.init(this);
+        SApplication.init(this,AppConfig.IS_DEBUG);
 
         initApp();
 

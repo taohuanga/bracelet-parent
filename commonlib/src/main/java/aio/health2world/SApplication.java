@@ -25,8 +25,9 @@ public class SApplication extends Application {
         mInstance = this;
     }
 
-    public static void init(Context context) {
+    public static void init(Context context,boolean isDebug1) {
         mInstance = context;
+        isDebug = isDebug1;
     }
 
     @Override
