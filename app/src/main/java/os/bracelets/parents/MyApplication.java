@@ -40,8 +40,6 @@ public class MyApplication extends Application implements AMapLocationListener {
 
     public static MyApplication INSTANCE;
 
-    private Context mContext;
-
     private boolean isBleConnect = false;
     //扫描到的蓝牙设备的集合
     private List<LocalDeviceEntity> deviceList = new ArrayList<>();
@@ -56,8 +54,7 @@ public class MyApplication extends Application implements AMapLocationListener {
     public void onCreate() {
         super.onCreate();
         INSTANCE = this;
-        mContext = this;
-        SApplication.init(mContext, AppConfig.isDebug);
+        SApplication.init(this);
 
         initApp();
 
@@ -121,13 +118,13 @@ public class MyApplication extends Application implements AMapLocationListener {
         registerReceiver(new BleReceiver(), filter);
         //极光
         JPushInterface.init(this);
-        JPushInterface.setDebugMode(AppConfig.isDebug);
+        JPushInterface.setDebugMode(AppConfig.IS_DEBUG);
         //环信
         initHx();
         //高德
         initLocation();
         // Bugly SDK初始化
-        CrashReport.initCrashReport(getApplicationContext(), AppConfig.BUGLY_ID, BuildConfig.DEBUG);
+        CrashReport.initCrashReport(getApplicationContext(), AppConfig.BUGLY_ID, AppConfig.IS_DEBUG);
     }
 
     @Override
@@ -200,13 +197,13 @@ public class MyApplication extends Application implements AMapLocationListener {
                 //定位成功回调信息，设置相关消息
                 location.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
                 //获取纬度
-                SPUtils.put(this, AppConfig.LATITUDE, location.getLatitude()+"");
+                SPUtils.put(this, AppConfig.LATITUDE, location.getLatitude() + "");
                 //获取经度
-                SPUtils.put(this, AppConfig.LONGITUDE, location.getLongitude()+"");
+                SPUtils.put(this, AppConfig.LONGITUDE, location.getLongitude() + "");
                 //城市编码
                 SPUtils.put(this, AppConfig.CITY_CODE, location.getAdCode());
                 //详细地址
-                SPUtils.put(this,AppConfig.ADDRESS,location.getAddress());
+                SPUtils.put(this, AppConfig.ADDRESS, location.getAddress());
                 //获取精度信息
 //                float accuracy = location.getAccuracy();
 //                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
