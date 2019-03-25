@@ -1,5 +1,7 @@
 package os.bracelets.parents.app.main;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.huichenghe.bleControl.Ble.BleDataForSleepData;
 import com.huichenghe.bleControl.Ble.DataSendCallback;
@@ -194,5 +196,19 @@ public class MainPresenter extends MainContract.Presenter {
 
                     }
                 });
+    }
+
+    @Override
+    void uploadLocation() {
+        String latitude = (String) SPUtils.get(MyApplication.getInstance(), AppConfig.LATITUDE, "");
+        String longitude = (String) SPUtils.get(MyApplication.getInstance(), AppConfig.LONGITUDE, "");
+        if (TextUtils.isEmpty(latitude) || TextUtils.isEmpty(longitude))
+            return;
+        ApiRequest.uploadLocation(longitude, latitude, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+            }
+        });
     }
 }

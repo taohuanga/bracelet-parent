@@ -17,6 +17,7 @@ import com.huichenghe.bleControl.Ble.DeviceConfig;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseUI;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -123,10 +124,10 @@ public class MyApplication extends Application implements AMapLocationListener {
         JPushInterface.setDebugMode(AppConfig.isDebug);
         //环信
         initHx();
-
         //高德
         initLocation();
-
+        // Bugly SDK初始化
+        CrashReport.initCrashReport(getApplicationContext(), AppConfig.BUGLY_ID, BuildConfig.DEBUG);
     }
 
     @Override

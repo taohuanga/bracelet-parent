@@ -24,7 +24,7 @@ public class AppConfig {
     public static final String USER_ID = "user_id";
     public static final String USER_IMG = "user_img";
     public static final String USER_NICK = "user_nick";
-    public static final String USER_PHONE = "user_nick";
+    public static final String USER_PHONE = "user_phone";
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
     public static final String CITY_CODE = "city_code";
@@ -32,6 +32,8 @@ public class AppConfig {
     public static final String CURRENT_DEVICE = "current_device";
     //标记当前程序是否登录
     public static final String IS_LOGIN = "is_login";
+
+    public static final String BUGLY_ID = "97ce25b73d";
 
 
     //蓝牙连接成功

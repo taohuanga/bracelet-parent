@@ -2,6 +2,8 @@ package os.bracelets.parents.app.navigate;
 
 import android.view.View;
 
+import com.tencent.bugly.crashreport.CrashReport;
+
 import os.bracelets.parents.R;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.utils.TitleBarUtil;

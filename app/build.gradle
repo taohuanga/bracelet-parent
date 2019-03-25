@@ -103,5 +103,8 @@ dependencies {
     //高德定位
     compile 'com.amap.api:location:3.3.0'
     compile 'com.amap.api:search:5.0.0'
+    //配合蓝牙库使用 勿删
     compile 'no.nordicsemi.android.support.v18:scanner:0.1.1'
+    //bugly
+    compile 'com.tencent.bugly:crashreport:latest.release'
 }

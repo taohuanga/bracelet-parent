@@ -2,8 +2,6 @@ package os.bracelets.parents.app.personal;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -12,14 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.hyphenate.chat.EMClient;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import aio.health2world.DataEntity;
 import aio.health2world.glide_transformations.CropCircleTransformation;
 import aio.health2world.pickeview.OptionsPickerView;
 import aio.health2world.pickeview.TimePickerView;
@@ -31,12 +26,9 @@ import aio.health2world.utils.TimePickerUtil;
 import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
-import os.bracelets.parents.app.about.FeedBackActivity;
 import os.bracelets.parents.app.setting.UpdatePhoneActivity;
 import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
-import os.bracelets.parents.http.ApiRequest;
-import os.bracelets.parents.hx.parse.UserProfileManager;
 import os.bracelets.parents.utils.AppUtils;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;

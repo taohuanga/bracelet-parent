@@ -42,6 +42,8 @@ public interface MainContract {
 
         abstract void loginHx(BaseInfo info);
 
+        abstract void uploadLocation();
+
     }
 
 }

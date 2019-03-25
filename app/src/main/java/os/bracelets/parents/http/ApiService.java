@@ -82,6 +82,13 @@ interface ApiService {
     Observable<HttpResult> dailySports(@Body Map<String, Object> map);
 
     /**
+     * 上传位置信息（经纬度坐标）
+     */
+
+    @POST("parent/home/location")
+    Observable<HttpResult> uploadLocation(@Body Map<String, Object> map);
+
+    /**
      * 跌倒信息上传
      */
     @POST("parent/home/fall")

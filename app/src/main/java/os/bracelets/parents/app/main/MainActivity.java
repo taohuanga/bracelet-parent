@@ -145,7 +145,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
         mPresenter.homeMsg();
         mPresenter.getWeather();
-//        mPresenter.dailySports();
+        mPresenter.uploadLocation();
 
         if (getIntent().hasExtra("info"))
             info = (BaseInfo) getIntent().getSerializableExtra("info");

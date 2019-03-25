@@ -180,6 +180,19 @@ public class ApiRequest {
                 .subscribe(subscriber);
     }
 
+    //首页日常运动数据
+    public static Subscription uploadLocation(String longitude,String latitude,Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("longitude", longitude);
+        map.put("latitude", latitude);
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .uploadLocation(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
     //跌倒信息上传
     public static Subscription fall(Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
