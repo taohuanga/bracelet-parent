@@ -232,10 +232,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (MyApplication.getInstance().isBleConnect()) {
-                    BluetoothLeService.getInstance().addCallback(
-                            MyBleGattHelper.getInstance(getApplicationContext(), new GattHelperListener()));
-                    getBraceletData();
+                if(BluetoothLeService.getInstance()!=null){
+                    if (MyApplication.getInstance().isBleConnect()) {
+                        BluetoothLeService.getInstance().addCallback(
+                                MyBleGattHelper.getInstance(MainActivity.this, new GattHelperListener()));
+                        getBraceletData();
+                    }
                 }
             }
         }, 500);
