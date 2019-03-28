@@ -9,6 +9,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMapOptions;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -73,6 +85,9 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
 
 //    private UserProfileManager manager = new UserProfileManager();
 
+    private MapView mapView;
+    private BaiduMap baiduMap;
+
     @Override
     protected PersonalMsgContract.Presenter getPresenter() {
         return new PersonalMsgPresenter(this);
@@ -80,6 +95,7 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
 
     @Override
     protected int getLayoutId() {
+        SDKInitializer.initialize(getApplicationContext());
         return R.layout.activity_personal_msg;
     }
 
@@ -108,6 +124,8 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
         layoutHeight = findView(R.id.layoutHeight);
         layoutPhone = findView(R.id.layoutPhone);
         layoutHomeAddress = findView(R.id.layoutHomeAddress);
+        mapView = findView(R.id.mapView);
+
     }
 
     @Override
@@ -121,6 +139,18 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
         listSex.add("女");
         optionsPicker.setPicker(listSex);
 //        manager.init(this);
+
+        baiduMap = mapView.getMap();
+        MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(15.0f);
+        baiduMap.setMapStatus(msu);
+
+        double latitude = Double.parseDouble((String) SPUtils.get(this,AppConfig.LATITUDE,""));
+        double longitude = Double.parseDouble((String) SPUtils.get(this,AppConfig.LONGITUDE,""));
+        String address = (String) SPUtils.get(this,AppConfig.ADDRESS,"");
+        LatLng p = new LatLng(latitude, longitude);
+        mapView = new MapView(this, new BaiduMapOptions().mapStatus(new MapStatus.Builder()
+                        .target(p).build()));
+        showMap(latitude, longitude, address);
     }
 
 
@@ -149,6 +179,19 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
         });
     }
 
+    private void showMap(double latitude, double longitude, String address) {
+        LatLng llA = new LatLng(latitude, longitude);
+        CoordinateConverter converter= new CoordinateConverter();
+        converter.coord(llA);
+        converter.from(CoordinateConverter.CoordType.COMMON);
+        LatLng convertLatLng = converter.convert();
+        OverlayOptions ooA = new MarkerOptions().position(convertLatLng).icon(BitmapDescriptorFactory
+                .fromResource(com.hyphenate.easeui.R.drawable.ease_icon_marka))
+                .zIndex(4).draggable(true);
+        baiduMap.addOverlay(ooA);
+        MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(convertLatLng, 17.0f);
+        baiduMap.animateMapStatus(u);
+    }
 
     @Override
     public void onTimeSelect(Date date, View v) {

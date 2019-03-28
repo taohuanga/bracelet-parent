@@ -76,8 +76,8 @@ public class AppService extends Service implements DataSendCallback {
         builder.setContentTitle("衣带保父母端");
         builder.setContentText("正在上传蓝牙设备数据");
         builder.setWhen(System.currentTimeMillis());//通知栏显示时间
-        builder.setSmallIcon(R.mipmap.ic_launcher);//通知栏小图标
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));//通知栏下拉是图标
+        builder.setSmallIcon(R.mipmap.ic_app_logo);//通知栏小图标
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_logo));//通知栏下拉是图标
         builder.setPriority(NotificationCompat.PRIORITY_MAX);//设置通知消息优先级
         builder.setAutoCancel(true);//设置点击通知栏消息后，通知消息自动消失
         builder.setVibrate(new long[]{0, 1000, 1000, 1000});//通知栏消息震动

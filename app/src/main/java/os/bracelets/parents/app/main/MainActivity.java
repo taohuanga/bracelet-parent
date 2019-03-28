@@ -34,11 +34,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import aio.health2world.rx.rxpermissions.RxPermissions;
+import aio.health2world.utils.DateUtil;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.ToastUtil;
 import cn.jpush.android.api.JPushInterface;
@@ -120,7 +122,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         handler = new Handler();
         tvConnect.setText(MyApplication.getInstance().isBleConnect() ? "已连接" : "未连接");
         //星期
-        tvWeek.setText(DataString.getWeek());
+        tvWeek.setText(DataString.getWeek()+"\r\n"+ DateUtil.getDate(new Date(System.currentTimeMillis())));
 
         remindList = new ArrayList<>();
         remindAdapter = new RemindAdapter(remindList);
