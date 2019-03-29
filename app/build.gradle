@@ -21,7 +21,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
-            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","x86_64"
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
     }
 
@@ -102,12 +102,12 @@ dependencies {
     compile 'no.nordicsemi.android.support.v18:scanner:0.1.1'
     //    //蓝牙库
     //    compile 'com.clj.fastble:FastBleLib:2.3.4'
-    //高德定位 导航
-    compile 'com.amap.api:location:3.3.0'
-    //高德搜索
-    compile 'com.amap.api:search:5.0.0'
-    //高德3D地图
-    //    compile 'com.amap.api:3dmap:5.0.0'
-    //    //高德导航
-    //    compile 'com.amap.api:navi-3dmap:5.0.0'
+//    //高德定位 导航
+//    compile 'com.amap.api:location:3.3.0'
+//    //高德搜索
+//    compile 'com.amap.api:search:5.0.0'
+//    //高德3D地图
+//    compile 'com.amap.api:3dmap:5.0.0'
+//    //高德导航
+//    compile 'com.amap.api:navi-3dmap:5.0.0'
 }

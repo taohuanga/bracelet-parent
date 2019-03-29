@@ -108,7 +108,9 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="1bb000d4c685f3eea8fc76a114e055c3" />
-
+        <activity
+            android:name="com.amap.api.navi.AmapRouteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <!-- Required SDK核心功能-->
         <activity
