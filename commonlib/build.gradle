@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "25.0.1"
 
     defaultConfig {
@@ -39,5 +39,4 @@ dependencies {
     //    compile 'com.github.tbruyelle:rxpermissions:0.10.2'
     //时间选择器
     //    compile 'com.contrarywind:Android-PickerView:4.1.7'
-    compile project(':easeui')
 }

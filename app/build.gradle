@@ -8,7 +8,7 @@ android {
     //use legacy for android 6.0
     useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion 28
+    compileSdkVersion 26
     buildToolsVersion "27.0.3"
 
     defaultConfig {
@@ -97,6 +97,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:multidex:1.0.1'
     compile project(path: ':commonlib')
+    compile project(':easeui')
     //配合蓝牙库使用 勿删
     compile 'no.nordicsemi.android.support.v18:scanner:0.1.1'
     //    //蓝牙库
@@ -106,8 +107,7 @@ dependencies {
     //高德搜索
     compile 'com.amap.api:search:5.0.0'
     //高德3D地图
-//    compile 'com.amap.api:3dmap:5.0.0'
-//    //高德导航
-//    compile 'com.amap.api:navi-3dmap:5.0.0'
-
+    //    compile 'com.amap.api:3dmap:5.0.0'
+    //    //高德导航
+    //    compile 'com.amap.api:navi-3dmap:5.0.0'
 }
