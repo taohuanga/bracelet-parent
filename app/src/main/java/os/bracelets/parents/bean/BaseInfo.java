@@ -19,7 +19,7 @@ public class BaseInfo implements Serializable{
     private String tokenId;
     private String nickName;
     private String realName;
-    private String icon;
+    private String portrait;
     private int userId;
     private String openId;
     private String phone;
@@ -49,12 +49,12 @@ public class BaseInfo implements Serializable{
         this.realName = realName;
     }
 
-    public String getIcon() {
-        return icon;
+    public String getPortrait() {
+        return portrait;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
     }
 
     public int getUserId() {
@@ -84,7 +84,7 @@ public class BaseInfo implements Serializable{
     public static BaseInfo parseBean(JSONObject object) {
         BaseInfo info = new BaseInfo();
         info.setTokenId(object.optString("tokenId"));
-        info.setIcon(object.optString("icon"));
+        info.setPortrait(object.optString("portrait"));
         info.setUserId(object.optInt("userId"));
         info.setNickName(object.optString("nickName"));
         info.setRealName(object.optString("realName"));

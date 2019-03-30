@@ -113,7 +113,7 @@ public class NearbyPerson implements Serializable {
     public static NearbyPerson parseBean(JSONObject object) {
         NearbyPerson person = new NearbyPerson();
         person.setAccountId(object.optInt("accountId"));
-        person.setProfile(object.optString("profile", ""));
+        person.setProfile(object.optString("portrait", ""));
         person.setNickName(object.optString("nickName", ""));
         person.setAge(object.optInt("age", 0));
         person.setSex(object.optInt("sex", 0));
