@@ -180,11 +180,11 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
             aMap = mapView.getMap();
         }
         //设置默认定位按钮是否显示，非必需设置。
-        aMap.getUiSettings().setMyLocationButtonEnabled(true);
+//        aMap.getUiSettings().setMyLocationButtonEnabled(true);
         aMap.setMyLocationEnabled(true);
-        aMap.moveCamera(CameraUpdateFactory.zoomTo((float) 17.5));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo((float) 10.5));
         LatLng latLng = new LatLng(latitude, longitude);
-        Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("")
+        aMap.addMarker(new MarkerOptions().position(latLng).title("")
                 .zIndex(2).snippet("DefaultMarker"));
     }
 

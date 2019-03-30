@@ -279,7 +279,6 @@ public class ApiRequest {
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("type", String.valueOf(type));
         map.put("pageNo", String.valueOf(pageNo));
-        map.put("type", "1");
         map.put("pageSize", String.valueOf(AppConfig.PAGE_SIZE));
         if (!TextUtils.isEmpty(releaseTime))
             map.put("releaseTime", releaseTime);
@@ -330,12 +329,12 @@ public class ApiRequest {
     }
 
     //修改资料
-    public static Subscription updateMsg(String protrait, String nickName, String realName, int sex, String birthday,
+    public static Subscription updateMsg(String portrait, String nickName, String realName, int sex, String birthday,
                                          String height, String weight, String location, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        if (!TextUtils.isEmpty(protrait))
-            map.put("protrait", protrait);
+        if (!TextUtils.isEmpty(portrait))
+            map.put("portrait", portrait);
 
         if (!TextUtils.isEmpty(nickName))
             map.put("nickName", nickName);

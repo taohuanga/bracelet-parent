@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eee"
@@ -72,15 +73,13 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvNickName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
@@ -116,15 +115,13 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
@@ -160,15 +157,13 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvSex"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
@@ -204,15 +199,13 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvBirthday"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
@@ -248,15 +241,13 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvWeight"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
@@ -292,15 +283,12 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
                 <TextView
                     android:id="@+id/tvHeight"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
@@ -336,15 +324,13 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvPhone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
@@ -381,16 +367,13 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvHomeAddress"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_18"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
@@ -498,11 +481,11 @@
             </LinearLayout>
 
             <com.amap.api.maps.MapView
-                android:background="@color/white"
-                android:padding="16dp"
                 android:id="@+id/mapView"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="200dp"
+                android:background="@color/white"
+                android:padding="16dp" />
         </LinearLayout>
     </ScrollView>
 
