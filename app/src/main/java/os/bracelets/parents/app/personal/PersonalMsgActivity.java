@@ -186,7 +186,6 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
         LatLng latLng = new LatLng(latitude, longitude);
         Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("")
                 .zIndex(2).snippet("DefaultMarker"));
-        marker.setAnchor(05.f, 1.0f);
     }
 
     @Override
