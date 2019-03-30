@@ -3,12 +3,25 @@ package os.bracelets.parents.app.personal;
 import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.MapsInitializer;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -28,7 +41,7 @@ import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.app.setting.UpdatePhoneActivity;
 import os.bracelets.parents.bean.UserInfo;
-import os.bracelets.parents.common.MVPBaseActivity;
+import os.bracelets.parents.common.MVPActivity;
 import os.bracelets.parents.utils.AppUtils;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
@@ -38,7 +51,7 @@ import rx.functions.Action1;
  * Created by lishiyou on 2019/2/23.
  */
 
-public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Presenter>
+public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Presenter>
         implements PersonalMsgContract.View, TimePickerView.OnTimeSelectListener, OptionsPickerView.OnOptionsSelectListener {
 
     private String headImageUrl;
@@ -71,8 +84,8 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
 
     private List<String> listSex = new ArrayList<>();
 
-//    private UserProfileManager manager = new UserProfileManager();
-
+    private MapView mapView;
+    private AMap aMap;
 
     @Override
     protected PersonalMsgContract.Presenter getPresenter() {
@@ -80,67 +93,74 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_personal_msg;
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_personal_msg);
+
+        mapView = (MapView) findViewById(R.id.mapView);
+//        // 此方法必须重写
+        mapView.onCreate(savedInstanceState);
+        try {
+            MapsInitializer.initialize(this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        initView();
+        initData();
+        initListener();
     }
 
-    @Override
-    protected void initView() {
-        titleBar = findView(R.id.titleBar);
+    private void initView() {
+        titleBar = (TitleBar) findViewById(R.id.titleBar);
 
-        ivHeadImg = findView(R.id.ivHeadImg);
-        tvNickName = findView(R.id.tvNickName);
-        tvName = findView(R.id.tvName);
-        tvSex = findView(R.id.tvSex);
-        tvBirthday = findView(R.id.tvBirthday);
-        tvWeight = findView(R.id.tvWeight);
-        tvHeight = findView(R.id.tvHeight);
-        tvPhone = findView(R.id.tvPhone);
-        tvHomeAddress = findView(R.id.tvHomeAddress);
-        tvLongitude = findView(R.id.tvLongitude);
-        tvLatitude = findView(R.id.tvLatitude);
+        ivHeadImg = (ImageView) findViewById(R.id.ivHeadImg);
+        tvNickName = (TextView) findViewById(R.id.tvNickName);
+        tvName = (TextView) findViewById(R.id.tvName);
+        tvSex = (TextView) findViewById(R.id.tvSex);
+        tvBirthday = (TextView) findViewById(R.id.tvBirthday);
+        tvWeight = (TextView) findViewById(R.id.tvWeight);
+        tvHeight = (TextView) findViewById(R.id.tvHeight);
+        tvPhone = (TextView) findViewById(R.id.tvPhone);
+        tvHomeAddress = (TextView) findViewById(R.id.tvHomeAddress);
+        tvLongitude = (TextView) findViewById(R.id.tvLongitude);
+        tvLatitude = (TextView) findViewById(R.id.tvLatitude);
 
-        layoutHeadImg = findView(R.id.layoutHeadImg);
-        layoutNickName = findView(R.id.layoutNickName);
-        layoutName = findView(R.id.layoutName);
-        layoutSex = findView(R.id.layoutSex);
-        layoutBirthday = findView(R.id.layoutBirthday);
-        layoutWeight = findView(R.id.layoutWeight);
-        layoutHeight = findView(R.id.layoutHeight);
-        layoutPhone = findView(R.id.layoutPhone);
-        layoutHomeAddress = findView(R.id.layoutHomeAddress);
-
+        layoutHeadImg = findViewById(R.id.layoutHeadImg);
+        layoutNickName = findViewById(R.id.layoutNickName);
+        layoutName = findViewById(R.id.layoutName);
+        layoutSex = findViewById(R.id.layoutSex);
+        layoutBirthday = findViewById(R.id.layoutBirthday);
+        layoutWeight = findViewById(R.id.layoutWeight);
+        layoutHeight = findViewById(R.id.layoutHeight);
+        layoutPhone = findViewById(R.id.layoutPhone);
+        layoutHomeAddress = findViewById(R.id.layoutHomeAddress);
     }
 
-    @Override
-    protected void initData() {
+    private void initData() {
         TitleBarUtil.setAttr(this, "", "修改资料", titleBar);
-        mPresenter.userInfo();
+
         rxPermissions = new RxPermissions(this);
         pickerView = TimePickerUtil.init(this, this);
         optionsPicker = TimePickerUtil.initOptions(this, this);
         listSex.add("男");
         listSex.add("女");
         optionsPicker.setPicker(listSex);
-//        manager.init(this);
 
-        double latitude = Double.parseDouble((String) SPUtils.get(this,AppConfig.LATITUDE,""));
-        double longitude = Double.parseDouble((String) SPUtils.get(this,AppConfig.LONGITUDE,""));
-        String address = (String) SPUtils.get(this,AppConfig.ADDRESS,"");
+        mPresenter.userInfo();
     }
 
 
-    @Override
-    protected void initListener() {
-        setOnClickListener(layoutHeadImg);
-        setOnClickListener(layoutNickName);
-        setOnClickListener(layoutName);
-        setOnClickListener(layoutSex);
-        setOnClickListener(layoutBirthday);
-        setOnClickListener(layoutWeight);
-        setOnClickListener(layoutHeight);
-        setOnClickListener(layoutPhone);
-        setOnClickListener(layoutHomeAddress);
+    private void initListener() {
+        layoutHeadImg.setOnClickListener(this);
+        layoutNickName.setOnClickListener(this);
+        layoutName.setOnClickListener(this);
+        layoutSex.setOnClickListener(this);
+        layoutBirthday.setOnClickListener(this);
+        layoutWeight.setOnClickListener(this);
+        layoutHeight.setOnClickListener(this);
+        layoutPhone.setOnClickListener(this);
+        layoutHomeAddress.setOnClickListener(this);
         titleBar.setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,8 +175,18 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
         });
     }
 
-    private void showMap(double latitude, double longitude, String address) {
-
+    private void showMap(double latitude, double longitude) {
+        if (aMap == null) {
+            aMap = mapView.getMap();
+        }
+        //设置默认定位按钮是否显示，非必需设置。
+        aMap.getUiSettings().setMyLocationButtonEnabled(true);
+        aMap.setMyLocationEnabled(true);
+        aMap.moveCamera(CameraUpdateFactory.zoomTo((float) 17.5));
+        LatLng latLng = new LatLng(latitude, longitude);
+        Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("")
+                .zIndex(2).snippet("DefaultMarker"));
+        marker.setAnchor(05.f, 1.0f);
     }
 
     @Override
@@ -180,21 +210,72 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
         tvWeight.setText(info.getWeight());
         tvHeight.setText(info.getHeight());
         tvPhone.setText(info.getPhone());
-        tvLongitude.setText(String.valueOf(SPUtils.get(this,AppConfig.LONGITUDE,"")));
-        tvLatitude.setText(String.valueOf(SPUtils.get(this,AppConfig.LATITUDE,"")));
-        tvHomeAddress.setText(String.valueOf(SPUtils.get(this, AppConfig.ADDRESS, "")));
+        tvLongitude.setText(info.getLongitude());
+        tvLatitude.setText(info.getLatitude());
+        tvHomeAddress.setText(info.getLocation());
 
         Glide.with(this)
                 .load(info.getPortrait())
                 .placeholder(R.mipmap.ic_default_portrait)
                 .error(R.mipmap.ic_default_portrait)
-                .bitmapTransform(new CropCircleTransformation(mContext))
+                .bitmapTransform(new CropCircleTransformation(PersonalMsgActivity.this))
                 .into(ivHeadImg);
+        if (!TextUtils.isEmpty(info.getLatitude()) && !TextUtils.isEmpty(info.getLongitude())) {
+//            showMap(Double.parseDouble((String) SPUtils.get(this, AppConfig.LATITUDE, "")),
+//                    Double.parseDouble((String) SPUtils.get(this, AppConfig.LONGITUDE, "")));
+            showMap(Double.parseDouble(info.getLatitude()), Double.parseDouble(info.getLongitude()));
+        }
+
+    }
+
+
+    @Override
+    public void updateMsgSuccess() {
+//        String userNick = tvNickName.getText().toString();
+//        manager.getCurrentUserInfo().setNickname(userNick);
+    }
+
+    @Override
+    public void uploadImageSuccess(String imageUrl) {
+        headImageUrl = imageUrl;
+        //修改环信头像
+//        manager.getCurrentUserInfo().setAvatar(headImageUrl);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+        pickerView = null;
     }
 
     @Override
     public void onClick(View v) {
-        super.onClick(v);
         switch (v.getId()) {
             case R.id.layoutHeadImg:
                 //修改头像
@@ -255,9 +336,9 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
                 break;
             case R.id.layoutHomeAddress:
                 //修改家庭住址
-//                Intent intentAddress = new Intent(this, InputMsgActivity.class);
-//                intentAddress.putExtra(InputMsgActivity.KEY, "修改住址");
-//                startActivityForResult(intentAddress, ITEM_ADDRESS);
+                Intent intentAddress = new Intent(this, InputMsgActivity.class);
+                intentAddress.putExtra(InputMsgActivity.KEY, "修改住址");
+                startActivityForResult(intentAddress, ITEM_ADDRESS);
                 break;
 
         }
@@ -278,7 +359,7 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
                                 .load(imagePath)
                                 .placeholder(R.mipmap.ic_default_portrait)
                                 .error(R.mipmap.ic_default_portrait)
-                                .bitmapTransform(new CropCircleTransformation(mContext))
+                                .bitmapTransform(new CropCircleTransformation(PersonalMsgActivity.this))
                                 .into(ivHeadImg);
                     mPresenter.uploadImage(imagePath);
                 }
@@ -336,23 +417,4 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
         mPresenter.updateMsg(headImageUrl, nickName, realName, sexType, birthday, height, weight, address);
     }
 
-    @Override
-    public void updateMsgSuccess() {
-        String userNick = tvNickName.getText().toString();
-//        manager.getCurrentUserInfo().setNickname(userNick);
-    }
-
-    @Override
-    public void uploadImageSuccess(String imageUrl) {
-        headImageUrl = imageUrl;
-        //修改环信头像
-//        manager.getCurrentUserInfo().setAvatar(headImageUrl);
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        pickerView = null;
-    }
 }

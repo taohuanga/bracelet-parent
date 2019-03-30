@@ -206,15 +206,15 @@ public class MyApplication extends Application implements AMapLocationListener {
                 SPUtils.put(this, AppConfig.ADDRESS, location.getAddress());
                 //获取精度信息
 //                float accuracy = location.getAccuracy();
-//                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                Date date = new Date(location.getTime());
-//                String time = df.format(date);//定位时间
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = new Date(location.getTime());
+                String time = df.format(date);//定位时间
 
-//                Logger.i("lsy", "定位时间：" + time + ",纬度："
-//                        + location.getLatitude() + ",经度："
-//                        + location.getLongitude()
-//                        + ",城市：" + location.getCity()
-//                        + ",城市代码：" + location.getAdCode());
+                Logger.i("lsy", "定位时间：" + time + ",纬度："
+                        + location.getLatitude() + ",经度："
+                        + location.getLongitude()
+                        + ",城市：" + location.getCity()
+                        + ",城市代码：" + location.getAdCode());
 //
 //                String address = location.getProvince()+location.getCity()+location.getAccuracy()+location.getAddress();
 //                Logger.i("lsy",address);

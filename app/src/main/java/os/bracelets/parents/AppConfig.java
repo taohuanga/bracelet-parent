@@ -25,8 +25,8 @@ public class AppConfig {
     public static final String USER_IMG = "user_img";
     public static final String USER_NICK = "user_nick";
     public static final String USER_PHONE = "user_phone";
-    public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
     public static final String CITY_CODE = "city_code";
     public static final String ADDRESS = "address";
     public static final String CURRENT_DEVICE = "current_device";

@@ -52,6 +52,7 @@
         tools:replace="android:name">
         <activity android:name=".app.main.StartActivity">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -240,16 +241,16 @@
             </intent-filter>
         </receiver>
         <!-- 百度地图所需的service -->
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" />
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="3ecea51f560650b1ed8a4b99808f52e8" />
-        <activity
-            android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
-            android:screenOrientation="portrait" />
+        <!--<service-->
+            <!--android:name="com.baidu.location.f"-->
+            <!--android:enabled="true"-->
+            <!--android:process=":remote" />-->
+        <!--<meta-data-->
+            <!--android:name="com.baidu.lbsapi.API_KEY"-->
+            <!--android:value="3ecea51f560650b1ed8a4b99808f52e8" />-->
+        <!--<activity-->
+            <!--android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"-->
+            <!--android:screenOrientation="portrait" />-->
     </application>
 
 </manifest>

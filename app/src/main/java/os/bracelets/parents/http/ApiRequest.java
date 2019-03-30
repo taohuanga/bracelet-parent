@@ -330,12 +330,12 @@ public class ApiRequest {
     }
 
     //修改资料
-    public static Subscription updateMsg(String profile, String nickName, String realName, int sex, String birthday,
+    public static Subscription updateMsg(String protrait, String nickName, String realName, int sex, String birthday,
                                          String height, String weight, String location, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        if (!TextUtils.isEmpty(profile))
-            map.put("profile", profile);
+        if (!TextUtils.isEmpty(protrait))
+            map.put("protrait", protrait);
 
         if (!TextUtils.isEmpty(nickName))
             map.put("nickName", nickName);

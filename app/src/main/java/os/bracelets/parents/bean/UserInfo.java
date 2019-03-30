@@ -20,6 +20,7 @@ public class UserInfo implements Serializable {
     private String phone;
     private String longitude;
     private String latitude;
+    private String location;
 
 
     public String getName() {
@@ -110,6 +111,15 @@ public class UserInfo implements Serializable {
         this.latitude = latitude;
     }
 
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public static UserInfo parseBean(JSONObject object) {
         UserInfo info = new UserInfo();
         info.setName(object.optString("name", ""));
@@ -123,6 +133,7 @@ public class UserInfo implements Serializable {
         info.setLatitude(object.optString("latitude", ""));
         info.setPhone(object.optString("phone", ""));
         info.setSex(object.optInt("sex"));
+        info.setLocation(object.optString("location"));
         return info;
     }
 }
