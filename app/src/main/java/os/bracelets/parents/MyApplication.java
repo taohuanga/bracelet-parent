@@ -54,7 +54,7 @@ public class MyApplication extends Application implements AMapLocationListener {
     public void onCreate() {
         super.onCreate();
         INSTANCE = this;
-        SApplication.init(this,AppConfig.IS_DEBUG);
+        SApplication.init(this, AppConfig.IS_DEBUG);
 
         initApp();
 
@@ -119,8 +119,8 @@ public class MyApplication extends Application implements AMapLocationListener {
         //极光
         JPushInterface.init(this);
         JPushInterface.setDebugMode(AppConfig.IS_DEBUG);
-        //环信
-        initHx();
+        //环信 目前使用的是简单版的
+        EaseUI.getInstance().init(this, null);
         //高德
         initLocation();
         // Bugly SDK初始化
@@ -162,12 +162,6 @@ public class MyApplication extends Application implements AMapLocationListener {
                 deviceList.remove(i);
             }
         }
-    }
-
-    //目前使用的是简单版的
-    private void initHx() {
-        //init demo helper
-        EaseUI.getInstance().init(this, null);
     }
 
     private void initLocation() {

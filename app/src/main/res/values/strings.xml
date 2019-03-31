@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">衣带保-父母端</string>
+
+    <string name="about_content">
+            衣带保是一款智能呵护腰带。能够智能检测意外跌倒，及时打开气囊减少高达90%的冲击力，
+        保护老人两侧髋关节、臀部、尾椎骨以及骶骨等容易受伤部位，降低人身伤害。衣带保根据人体工学设计，
+        穿戴舒服，美观时尚!
+    </string>
+
 </resources>

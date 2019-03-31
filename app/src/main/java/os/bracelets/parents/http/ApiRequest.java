@@ -180,7 +180,7 @@ public class ApiRequest {
                 .subscribe(subscriber);
     }
 
-    //首页日常运动数据
+    //上传地理位置经纬度
     public static Subscription uploadLocation(String longitude,String latitude,Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
