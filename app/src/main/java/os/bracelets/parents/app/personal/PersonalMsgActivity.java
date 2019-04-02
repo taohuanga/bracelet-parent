@@ -19,6 +19,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.MapsInitializer;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -99,13 +100,8 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
         setContentView(R.layout.activity_personal_msg);
 
         mapView = (MapView) findViewById(R.id.mapView);
-//        // 此方法必须重写
+        // 此方法必须重写
         mapView.onCreate(savedInstanceState);
-        try {
-            MapsInitializer.initialize(this);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
         initView();
         initData();
         initListener();
@@ -179,14 +175,22 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
         if (aMap == null) {
             aMap = mapView.getMap();
         }
-        //设置默认定位按钮是否显示，非必需设置。
-//        aMap.getUiSettings().setMyLocationButtonEnabled(true);
-        aMap.setMyLocationEnabled(true);
-        aMap.moveCamera(CameraUpdateFactory.zoomTo((float) 10.5));
         LatLng latLng = new LatLng(latitude, longitude);
-        aMap.addMarker(new MarkerOptions().position(latLng).title("")
-                .zIndex(2).snippet("DefaultMarker"));
+        changeCamera(CameraUpdateFactory.newCameraPosition(
+                new CameraPosition(latLng, 18, 30, 30)));
+        aMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+        );
     }
+
+    /**
+     * 根据动画按钮状态，调用函数animateCamera或moveCamera来改变可视区域
+     */
+    private void changeCamera(CameraUpdate update) {
+        aMap.moveCamera(update);
+    }
+
 
     @Override
     public void onTimeSelect(Date date, View v) {
@@ -220,8 +224,6 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
                 .bitmapTransform(new CropCircleTransformation(PersonalMsgActivity.this))
                 .into(ivHeadImg);
         if (!TextUtils.isEmpty(info.getLatitude()) && !TextUtils.isEmpty(info.getLongitude())) {
-//            showMap(Double.parseDouble((String) SPUtils.get(this, AppConfig.LATITUDE, "")),
-//                    Double.parseDouble((String) SPUtils.get(this, AppConfig.LONGITUDE, "")));
             showMap(Double.parseDouble(info.getLatitude()), Double.parseDouble(info.getLongitude()));
         }
 
