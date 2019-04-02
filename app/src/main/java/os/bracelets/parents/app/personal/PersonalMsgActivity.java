@@ -180,8 +180,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
                 new CameraPosition(latLng, 18, 30, 30)));
         aMap.addMarker(new MarkerOptions()
                 .position(latLng)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-        );
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
     }
 
     /**
