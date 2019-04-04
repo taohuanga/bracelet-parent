@@ -3,6 +3,8 @@ package os.bracelets.parents.http;
 
 import android.text.TextUtils;
 
+import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -175,8 +177,9 @@ public class ApiRequest {
     //上传文件
     public static Subscription uploadFile(File file, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
+        LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        map.put("fileType", ".csv");
+        map.put("fileType", entity == null ? "" : entity.getAddress());
         map.put("fileData", FileUtils.file2Base64(file.getAbsolutePath()));
         map.put("fileName", file.getName());
         return ServiceFactory.getInstance()
