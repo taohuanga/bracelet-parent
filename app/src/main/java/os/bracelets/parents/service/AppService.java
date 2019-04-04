@@ -54,7 +54,6 @@ public class AppService extends Service implements DataSendCallback {
 
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-
     private FileUtils fileUtils = new FileUtils("Bracelet");
 
     private StringBuilder sb = new StringBuilder();
@@ -161,7 +160,8 @@ public class AppService extends Service implements DataSendCallback {
             sb.append(data + "\n");
             String content = sb.toString();
             fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) + "\n" + content + "\n" +
-                    "结束时间：" + formatter.format(currentTime), "test6Sensor" + formatter.format(currentTime) + ".csv");
+                    "结束时间：" + formatter.format(currentTime), MyApplication.getInstance().getDeviceEntity() == null ? "" :
+                    MyApplication.getInstance().getDeviceEntity().getAddress() + formatter.format(currentTime) + ".csv");
             uploadFile();
         } else if (data.substring(10, 14).equals("5453")) {//若第11位至第14位是5453，则原始数据上传
             sb.append(data + "\n");
@@ -172,7 +172,8 @@ public class AppService extends Service implements DataSendCallback {
             Date currentDate = new Date(currentTime);
             Date lastDate = new Date(lastTime);
             fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) + "\n" + sb.toString() + "\n" +
-                    "结束时间：" + formatter.format(currentDate), "test6Sensor" + formatter.format(currentDate) + ".csv");
+                    "结束时间：" + formatter.format(currentDate), MyApplication.getInstance().getDeviceEntity() == null ? "" :
+                    MyApplication.getInstance().getDeviceEntity().getAddress() + formatter.format(currentDate) + ".csv");
         } else {
             //拼接数据
             sb.append(accXD + "," + accYD + "," + accZD + "," + gyrXD + "," + gyrYD + "," + gyrZD + "\n");
