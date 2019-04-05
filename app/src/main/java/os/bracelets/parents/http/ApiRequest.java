@@ -3,6 +3,8 @@ package os.bracelets.parents.http;
 
 import android.text.TextUtils;
 
+import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
+
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
@@ -168,7 +170,7 @@ public class ApiRequest {
     }
 
     //首页日常运动数据
-    public static Subscription dailySports(int stepNumber,Subscriber<HttpResult> subscriber) {
+    public static Subscription dailySports(int stepNumber, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("stepNumber", stepNumber);
@@ -181,7 +183,7 @@ public class ApiRequest {
     }
 
     //上传地理位置经纬度
-    public static Subscription uploadLocation(String longitude,String latitude,Subscriber<HttpResult> subscriber) {
+    public static Subscription uploadLocation(String longitude, String latitude, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("longitude", longitude);
@@ -197,8 +199,8 @@ public class ApiRequest {
     public static Subscription fall(Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        map.put("longitude", String.valueOf(SPUtils.get(MyApplication.getInstance(),AppConfig.LONGITUDE,"")));
-        map.put("latitude", String.valueOf(SPUtils.get(MyApplication.getInstance(),AppConfig.LATITUDE,"")));
+        map.put("longitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LONGITUDE, "")));
+        map.put("latitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LATITUDE, "")));
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .fall(map)
@@ -232,8 +234,9 @@ public class ApiRequest {
     //上传文件
     public static Subscription uploadFile(File file, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
+        LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        map.put("fileType", ".csv");
+        map.put("fileType", entity == null ? "" : entity.getAddress());
         map.put("fileData", FileUtils.file2Base64(file.getAbsolutePath()));
         map.put("fileName", file.getName());
         return ServiceFactory.getInstance()
