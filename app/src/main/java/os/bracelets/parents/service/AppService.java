@@ -7,18 +7,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.NotificationCompat;
 
-import com.huichenghe.bleControl.Ble.BleDataForDayData;
 import com.huichenghe.bleControl.Ble.DataSendCallback;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -42,7 +43,9 @@ import os.bracelets.parents.utils.StringUtils;
  * Created by lishiyou on 2019/1/27.
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class AppService extends Service implements DataSendCallback {
+public class AppService extends Service implements DataSendCallback, SensorEventListener {
+
+    public static final String TAG = "AppService";
 
     private NotificationManager notificationManager;
 
@@ -52,7 +55,7 @@ public class AppService extends Service implements DataSendCallback {
 
     private int countFile = 0;
 
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
     private FileUtils fileUtils = new FileUtils("Bracelet");
@@ -63,6 +66,29 @@ public class AppService extends Service implements DataSendCallback {
 
     private long startTime = System.currentTimeMillis();
 
+
+    private SensorManager sensorManager;
+    /**
+     * 当前所走的步数
+     */
+    private int CURRENT_STEP;
+    /**
+     * 计步传感器类型  Sensor.TYPE_STEP_COUNTER或者Sensor.TYPE_STEP_DETECTOR
+     */
+    private static int stepSensorType = -1;
+    /**
+     * 每次第一次启动记步服务时是否从系统中获取了已有的步数记录
+     */
+    private boolean hasRecord = false;
+    /**
+     * 系统中获取到的已有的步数
+     */
+    private int hasStepCount = 0;
+    /**
+     * 上一次的步数
+     */
+    private int previousStepCount = 0;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -71,6 +97,33 @@ public class AppService extends Service implements DataSendCallback {
     @Override
     public void onCreate() {
         super.onCreate();
+        //蓝牙数据回调监听
+        BleDataForSensor.getInstance().setSensorListener(this);
+        //通知
+        initNotify();
+        //计步器
+        initSensor();
+
+        timer.start();
+    }
+
+    //计时器 十分钟执行一次数据上传操作
+    private CountDownTimer timer = new CountDownTimer(60 * 1000, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+        }
+
+        @Override
+        public void onFinish() {
+            timer.start();
+            //计时结束 分发数据
+            EventBus.getDefault().post(new MsgEvent<>(AppConfig.MSG_STEP_COUNT, CURRENT_STEP));
+            uploadStepNum();
+        }
+    };
+
+    private void initNotify() {
         notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(this);//创建通知消息实例
         builder.setContentTitle("衣带保父母端");
@@ -91,26 +144,54 @@ public class AppService extends Service implements DataSendCallback {
                     .IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }
-        initData();
     }
 
-    //计时器 十分钟执行一次数据上传操作
-    private CountDownTimer timer = new CountDownTimer(60 * 1000, 1000) {
-        @Override
-        public void onTick(long millisUntilFinished) {
+    private void initSensor() {
+        sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
 
+        Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        Sensor detectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        if (countSensor != null) {
+            stepSensorType = Sensor.TYPE_STEP_COUNTER;
+            Logger.v(TAG, "Sensor.TYPE_STEP_COUNTER");
+            sensorManager.registerListener(AppService.this, countSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        } else if (detectorSensor != null) {
+            stepSensorType = Sensor.TYPE_STEP_DETECTOR;
+            Logger.v(TAG, "Sensor.TYPE_STEP_DETECTOR");
+            sensorManager.registerListener(AppService.this, detectorSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
+    }
 
-        @Override
-        public void onFinish() {
-            timer.start();
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (stepSensorType == Sensor.TYPE_STEP_COUNTER) {
+            //获取当前传感器返回的临时步数
+            int tempStep = (int) event.values[0];
+            //首次如果没有获取手机系统中已有的步数则获取一次系统中APP还未开始记步的步数
+            if (!hasRecord) {
+                hasRecord = true;
+                hasStepCount = tempStep;
+            } else {
+                //获取APP打开到现在的总步数=本次系统回调的总步数-APP打开之前已有的步数
+                int thisStepCount = tempStep - hasStepCount;
+                //本次有效步数=（APP打开后所记录的总步数-上一次APP打开后所记录的总步数）
+                int thisStep = thisStepCount - previousStepCount;
+                //总步数=现有的步数+本次有效步数
+                CURRENT_STEP += (thisStep);
+                //记录最后一次APP打开到现在的总步数
+                previousStepCount = thisStepCount;
+            }
+        } else if (stepSensorType == Sensor.TYPE_STEP_DETECTOR) {
+            if (event.values[0] == 1.0) {
+                CURRENT_STEP++;
+            }
         }
-    };
+    }
 
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    private void initData() {
-        BleDataForSensor.getInstance().setSensorListener(this);
     }
 
     @Override
@@ -168,7 +249,6 @@ public class AppService extends Service implements DataSendCallback {
             EventBus.getDefault().post(new MsgEvent<>(data));
         } else if (data.substring(10, 14).equals("5454")) {//跌倒报警，并上传报警信息
             sb.append(data + "\n");
-            fall();
         } else if (currentTime - lastTime > 5000 && lastTime != 0L) {
             Date currentDate = new Date(currentTime);
             Date lastDate = new Date(lastTime);
@@ -223,8 +303,9 @@ public class AppService extends Service implements DataSendCallback {
 
     }
 
-    private void fall() {
-        ApiRequest.fall(new HttpSubscriber() {
+
+    private void uploadStepNum() {
+        ApiRequest.dailySports(CURRENT_STEP, new HttpSubscriber() {
             @Override
             public void onNext(HttpResult result) {
                 super.onNext(result);

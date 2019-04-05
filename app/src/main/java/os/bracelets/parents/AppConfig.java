@@ -42,6 +42,8 @@ public class AppConfig {
     public static final int MSG_DEVICE_DISCONNECT = 11;
     //蓝牙状态发生变化
     public static final int MSG_STATE_CHANGED = 12;
+    //每隔一分钟分发一次计步数据
+    public static final int MSG_STEP_COUNT = 13;
 
     //手环UUID
     public static final String BLUETOOTH_NAME = "DFZ";
