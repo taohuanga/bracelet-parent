@@ -8,9 +8,8 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
-import android.support.v7.app.AppCompatActivity;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -19,8 +18,12 @@ import com.amap.api.location.AMapLocationListener;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.DeviceConfig;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseUI;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechSynthesizer;
+import com.iflytek.cloud.SpeechUtility;
+import com.iflytek.cloud.SynthesizerListener;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.text.ParseException;
@@ -137,6 +140,8 @@ public class MyApplication extends Application implements AMapLocationListener {
         initLocation();
         // Bugly SDK初始化
         CrashReport.initCrashReport(getApplicationContext(), AppConfig.BUGLY_ID, AppConfig.IS_DEBUG);
+
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5c9d7cb1");
     }
 
     @Override
@@ -234,7 +239,8 @@ public class MyApplication extends Application implements AMapLocationListener {
         }
     }
 
-    public void startTimer(Context context, String time) {
+    public void alarmClock(Context context, String time) {
+//        time="20:22";
         Intent intent = new Intent(AppConfig.ALARM_CLOCK);
         PendingIntent sender = PendingIntent.getBroadcast(context, AppConfig.CLOCK_ID, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
@@ -246,7 +252,7 @@ public class MyApplication extends Application implements AMapLocationListener {
         int year = calendar.get(calendar.YEAR);
         int month = calendar.get(calendar.MONTH) + 1;
         int day = calendar.get(calendar.DAY_OF_MONTH);
-        String mTime = year + "-" + month + "-" + day + " " + "18:55";
+        String mTime = year + "-" + month + "-" + day + " " + time;
         try {
             date = format.parse(mTime);
         } catch (ParseException e) {
@@ -255,5 +261,80 @@ public class MyApplication extends Application implements AMapLocationListener {
         calendar.setTime(date);
         alarmManager.setWindow(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 100, sender);
     }
+    private SpeechSynthesizer mTts;
+    public void speakVoice(){
+        if(mTts==null)
+            mTts = SpeechSynthesizer.createSynthesizer(this, null);
+        setTts();
+        mTts.startSpeaking("您有新的待办任务，请及时处理",mTtsListener);
 
+    }
+
+    private void setTts() {
+        // 设置发音人
+        mTts.setParameter(SpeechConstant.VOICE_NAME, "xiaoyan");
+
+        // 设置语速
+        mTts.setParameter(SpeechConstant.SPEED, "20");
+
+        // 设置音调
+        mTts.setParameter(SpeechConstant.PITCH, "50");
+
+        // 设置音量0-100
+        mTts.setParameter(SpeechConstant.VOLUME, "100");
+
+        // 设置播放器音频流类型
+        mTts.setParameter(SpeechConstant.STREAM_TYPE, "3");
+    }
+
+
+    private SynthesizerListener mTtsListener = new SynthesizerListener() {
+        // 缓冲进度回调，arg0为缓冲进度，arg1为缓冲音频在文本中开始的位置，arg2为缓冲音频在文本中结束的位置，arg3为附加信息
+        @Override
+        public void onBufferProgress(int arg0, int arg1, int arg2, String arg3) {
+            // TODO Auto-generated method stub
+
+        }
+
+        // 会话结束回调接口，没有错误时error为空
+        @Override
+        public void onCompleted(SpeechError error) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onEvent(int i, int i1, int i2, Bundle bundle) {
+
+        }
+
+        // 开始播放
+        @Override
+        public void onSpeakBegin() {
+            // TODO Auto-generated method stub
+
+        }
+
+        // 停止播放
+        @Override
+        public void onSpeakPaused() {
+            // TODO Auto-generated method stub
+
+        }
+
+        // 播放进度回调,arg0为播放进度0-100；arg1为播放音频在文本中开始的位置，arg2为播放音频在文本中结束的位置。
+        @Override
+        public void onSpeakProgress(int arg0, int arg1, int arg2) {
+            // TODO Auto-generated method stub
+
+        }
+
+        // 恢复播放回调接口
+        @Override
+        public void onSpeakResumed() {
+            // TODO Auto-generated method stub
+
+        }
+
+    };
 }

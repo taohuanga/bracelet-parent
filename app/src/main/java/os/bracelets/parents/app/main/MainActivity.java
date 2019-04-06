@@ -170,7 +170,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         remindList.addAll(list);
         remindAdapter.notifyDataSetChanged();
         if (remindList.size() > 0) {
-            MyApplication.getInstance().startTimer(this, remindList.get(0).getRemindTime());
+            MyApplication.getInstance().alarmClock(this, remindList.get(0).getRemindTime());
         }
     }
 
