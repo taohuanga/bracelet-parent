@@ -1,12 +1,16 @@
 package os.bracelets.parents;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.support.multidex.MultiDex;
+import android.support.v7.app.AppCompatActivity;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -19,8 +23,10 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseUI;
 import com.tencent.bugly.crashreport.CrashReport;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +35,7 @@ import aio.health2world.utils.AppManager;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
 import cn.jpush.android.api.JPushInterface;
+import os.bracelets.parents.receiver.AlarmReceiver;
 import os.bracelets.parents.receiver.BleReceiver;
 import os.bracelets.parents.service.AppService;
 
@@ -116,6 +123,11 @@ public class MyApplication extends Application implements AMapLocationListener {
         filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         registerReceiver(new BleReceiver(), filter);
+
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction(AppConfig.ALARM_CLOCK);
+        registerReceiver(new AlarmReceiver(), filter1);
+
         //极光
         JPushInterface.init(this);
         JPushInterface.setDebugMode(AppConfig.IS_DEBUG);
@@ -221,4 +233,27 @@ public class MyApplication extends Application implements AMapLocationListener {
             }
         }
     }
+
+    public void startTimer(Context context, String time) {
+        Intent intent = new Intent(AppConfig.ALARM_CLOCK);
+        PendingIntent sender = PendingIntent.getBroadcast(context, AppConfig.CLOCK_ID, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm");
+        Date date = null;
+        int year = calendar.get(calendar.YEAR);
+        int month = calendar.get(calendar.MONTH) + 1;
+        int day = calendar.get(calendar.DAY_OF_MONTH);
+        String mTime = year + "-" + month + "-" + day + " " + "18:55";
+        try {
+            date = format.parse(mTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        calendar.setTime(date);
+        alarmManager.setWindow(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 100, sender);
+    }
+
 }

@@ -169,6 +169,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         remindList.clear();
         remindList.addAll(list);
         remindAdapter.notifyDataSetChanged();
+        if (remindList.size() > 0) {
+            MyApplication.getInstance().startTimer(this, remindList.get(0).getRemindTime());
+        }
     }
 
     @Override

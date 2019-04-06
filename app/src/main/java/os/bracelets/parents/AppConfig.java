@@ -45,6 +45,10 @@ public class AppConfig {
     //每隔一分钟分发一次计步数据
     public static final int MSG_STEP_COUNT = 13;
 
+    public static final String ALARM_CLOCK = "alarm_clock";
+
+    public static final int CLOCK_ID = 15;
+
     //手环UUID
     public static final String BLUETOOTH_NAME = "DFZ";
     public static final String UUID_SERVICE = "0000fff0-0000-1000-8000-00805f9b34fb";
