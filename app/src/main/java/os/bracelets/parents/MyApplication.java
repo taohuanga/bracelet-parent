@@ -258,15 +258,22 @@ public class MyApplication extends Application implements AMapLocationListener {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
         calendar.setTime(date);
+
+        if (System.currentTimeMillis() - calendar.getTimeInMillis() > 0)
+            return;
+
         alarmManager.setWindow(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 100, sender);
     }
+
     private SpeechSynthesizer mTts;
-    public void speakVoice(){
-        if(mTts==null)
+
+    public void speakVoice() {
+        if (mTts == null)
             mTts = SpeechSynthesizer.createSynthesizer(this, null);
         setTts();
-        mTts.startSpeaking("您有新的待办任务，请及时处理",mTtsListener);
+        mTts.startSpeaking("您有新的待办任务，请及时处理", mTtsListener);
 
     }
 
