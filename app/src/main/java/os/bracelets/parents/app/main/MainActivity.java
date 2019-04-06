@@ -55,6 +55,7 @@ import os.bracelets.parents.bean.RemindBean;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.common.MsgEvent;
+import os.bracelets.parents.db.DBManager;
 import os.bracelets.parents.utils.DataString;
 import os.bracelets.parents.view.BatteryView;
 import rx.functions.Action1;
@@ -169,9 +170,11 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         remindList.clear();
         remindList.addAll(list);
         remindAdapter.notifyDataSetChanged();
-        if (remindList.size() > 0) {
+
+        DBManager.getInstance().saveRemindList(list);
+
+        if (remindList.size() > 0)
             MyApplication.getInstance().alarmClock(this, remindList.get(0).getRemindTime());
-        }
     }
 
     @Override

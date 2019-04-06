@@ -55,7 +55,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                     .setContentTitle("待办提醒")
-                    .setContentText("您有新的待办任务现在需要处理")
+                    .setContentText("您有新的待办任务，请及时处理")
                     .setSmallIcon(R.mipmap.ic_app_logo)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_app_logo))
                     .setDefaults(NotificationCompat.DEFAULT_ALL)
@@ -70,7 +70,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 //            PendingIntent sender = PendingIntent.getBroadcast(context, AppConfig.CLOCK_ID, i, PendingIntent.FLAG_CANCEL_CURRENT);
 //            am.setWindow(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + INTERVAL, 100,
 //                    sender);
-
             MyApplication.getInstance().speakVoice();
         }
     }
