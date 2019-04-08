@@ -69,24 +69,10 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     @Override
     protected void initData() {
-//        mPresenter.loadBaseInfo();
         TitleBarUtil.setAttr(this, "", "设置", titleBar);
+        mPresenter.loadBaseInfo();
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String nickName = (String) SPUtils.get(this, AppConfig.USER_NICK, "");
-        String userImage = (String) SPUtils.get(this, AppConfig.USER_IMG, "");
-        tvName.setText(nickName);
-        Glide.with(this)
-                .load(userImage)
-                .placeholder(R.mipmap.ic_default_portrait)
-                .error(R.mipmap.ic_default_portrait)
-                .bitmapTransform(new CropCircleTransformation(mContext))
-                .into(ivImage);
-    }
 
     @Override
     protected void initListener() {
@@ -106,6 +92,15 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK)
+            return;
+        if (requestCode == 0x01)
+            mPresenter.loadBaseInfo();
+    }
+
+    @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
@@ -119,7 +114,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
                 startActivity(new Intent(this, UpdatePwdActivity.class));
                 break;
             case R.id.layoutUpdateMsg:
-                startActivity(new Intent(this, PersonalMsgActivity.class));
+                startActivityForResult(new Intent(this, PersonalMsgActivity.class), 0x01);
                 break;
             case R.id.layoutSensorMsg:
                 startActivity(new Intent(this, SensorMsgActivity.class));
@@ -159,7 +154,13 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     @Override
     public void loadInfoSuccess(BaseInfo info) {
-
+        tvName.setText(info.getNickName());
+        Glide.with(this)
+                .load(info.getPortrait())
+                .placeholder(R.mipmap.ic_default_portrait)
+                .error(R.mipmap.ic_default_portrait)
+                .bitmapTransform(new CropCircleTransformation(mContext))
+                .into(ivImage);
     }
 
     private void logoutHx() {

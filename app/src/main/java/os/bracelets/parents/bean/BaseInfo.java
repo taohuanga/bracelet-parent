@@ -20,6 +20,7 @@ public class BaseInfo implements Serializable{
     private String nickName;
     private String realName;
     private String portrait;
+    private String birthday;
     private int userId;
     private String openId;
     private String phone;
@@ -81,6 +82,14 @@ public class BaseInfo implements Serializable{
         this.phone = phone;
     }
 
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
     public static BaseInfo parseBean(JSONObject object) {
         BaseInfo info = new BaseInfo();
         info.setTokenId(object.optString("tokenId"));
@@ -89,6 +98,7 @@ public class BaseInfo implements Serializable{
         info.setNickName(object.optString("nickName"));
         info.setRealName(object.optString("realName"));
         info.setPhone(object.optString("phone"));
+        info.setBirthday(object.optString("birthday"));
         return info;
     }
 }

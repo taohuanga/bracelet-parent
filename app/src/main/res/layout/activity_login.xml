@@ -194,7 +194,6 @@
                     android:background="@color/white"
                     android:hint="请输入账号"
                     android:maxLines="1"
-                    android:text="1000000425"
                     android:textColor="#666"
                     android:textColorHint="@color/black9"
                     android:textSize="15sp" />
@@ -227,7 +226,6 @@
                     android:hint="请输入密码"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:text="1000000425"
                     android:textColor="#666"
                     android:textSize="15sp" />
             </LinearLayout>

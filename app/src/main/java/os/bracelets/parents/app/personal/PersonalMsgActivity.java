@@ -231,8 +231,8 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
 
     @Override
     public void updateMsgSuccess() {
-//        String userNick = tvNickName.getText().toString();
-//        manager.getCurrentUserInfo().setNickname(userNick);
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override
