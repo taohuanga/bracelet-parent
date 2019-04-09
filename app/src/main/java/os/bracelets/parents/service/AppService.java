@@ -305,6 +305,8 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
 
     private void uploadStepNum() {
+        if (CURRENT_STEP == 0)
+            return;
         ApiRequest.dailySports(CURRENT_STEP, new HttpSubscriber() {
             @Override
             public void onNext(HttpResult result) {
