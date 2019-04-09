@@ -28,6 +28,15 @@
             android:textSize="@dimen/sp16" />
 
         <TextView
+            android:id="@+id/tvType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_toRightOf="@id/personName"
+            android:textColor="@color/black9"
+            android:textSize="@dimen/sp14" />
+
+        <TextView
             android:id="@+id/personSex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

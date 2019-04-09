@@ -29,6 +29,7 @@ public class NearbyPerson implements Serializable {
     private String phone;
     private int height;
     private int weight;
+    private int userType;
 
     public int getAccountId() {
         return accountId;
@@ -110,6 +111,14 @@ public class NearbyPerson implements Serializable {
         this.weight = weight;
     }
 
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
+
     public static NearbyPerson parseBean(JSONObject object) {
         NearbyPerson person = new NearbyPerson();
         person.setAccountId(object.optInt("accountId"));
@@ -122,6 +131,7 @@ public class NearbyPerson implements Serializable {
         person.setPhone(object.optString("phone", ""));
         person.setHeight(object.optInt("height", 0));
         person.setWeight(object.optInt("weight", 0));
+        person.setUserType(object.optInt("userType", 0));
         return person;
     }
 }
