@@ -63,7 +63,7 @@ public class ContactBean implements Serializable {
 
     public static ContactBean parseBean(JSONObject object) {
         ContactBean contact = new ContactBean();
-        contact.setProfile(object.optString("profile", ""));
+        contact.setProfile(object.optString("portrait", ""));
         contact.setNickName(object.optString("nickName", ""));
         contact.setPhone(object.optString("phone", ""));
         contact.setSex(object.optInt("sex", 0));

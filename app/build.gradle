@@ -29,7 +29,7 @@ android {
         config {
             keyAlias 'yftx'
             keyPassword 'yftx2017'
-            storeFile file('E:/workspace_done/bracelet-parent/health2world.jks')
+            storeFile file('../health2world.jks')
             storePassword 'yftx2017'
             v1SigningEnabled true
             v2SigningEnabled true
