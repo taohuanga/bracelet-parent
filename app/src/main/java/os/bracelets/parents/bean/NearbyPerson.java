@@ -24,9 +24,10 @@ public class NearbyPerson implements Serializable {
     private String sexDesc;
 
     //    距离（m）
-    private int distance;
+    private String distance;
     //电话
     private String phone;
+    private String birthday;
     private int height;
     private int weight;
     private int userType;
@@ -79,11 +80,11 @@ public class NearbyPerson implements Serializable {
         this.sexDesc = sexDesc;
     }
 
-    public int getDistance() {
+    public String getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(String distance) {
         this.distance = distance;
     }
 
@@ -119,6 +120,14 @@ public class NearbyPerson implements Serializable {
         this.userType = userType;
     }
 
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
     public static NearbyPerson parseBean(JSONObject object) {
         NearbyPerson person = new NearbyPerson();
         person.setAccountId(object.optInt("accountId"));
@@ -127,11 +136,12 @@ public class NearbyPerson implements Serializable {
         person.setAge(object.optInt("age", 0));
         person.setSex(object.optInt("sex", 0));
         person.setSexDesc(object.optString("sexDesc", ""));
-        person.setDistance(object.optInt("distance", 0));
+        person.setDistance(object.optString("distance", ""));
         person.setPhone(object.optString("phone", ""));
         person.setHeight(object.optInt("height", 0));
         person.setWeight(object.optInt("weight", 0));
         person.setUserType(object.optInt("userType", 0));
+        person.setBirthday(object.optString("birthday", ""));
         return person;
     }
 }
