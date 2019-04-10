@@ -1,6 +1,12 @@
 package os.bracelets.parents.app.main;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
+import com.huichenghe.bleControl.Ble.BleDataForSleepData;
+import com.huichenghe.bleControl.Ble.DataSendCallback;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,11 +25,13 @@ import aio.health2world.utils.SPUtils;
 import okhttp3.ResponseBody;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
+import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.RemindBean;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.http.ServiceFactory;
+import os.bracelets.parents.utils.StringUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,13 +60,13 @@ public class MainPresenter extends MainContract.Presenter {
                         int stepNum = object.optInt("stepNum", 0);
                         JSONArray array = object.optJSONArray("remindList");
                         List<RemindBean> list = new ArrayList<>();
-                        for (int i = 0; i <array.length() ; i++) {
+                        for (int i = 0; i < array.length(); i++) {
                             JSONObject obj = array.optJSONObject(i);
                             RemindBean remind = RemindBean.parseBean(obj);
                             list.add(remind);
                         }
                         if (mView != null)
-                            mView.loadMsgSuccess(stepNum,list);
+                            mView.loadMsgSuccess(stepNum, list);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -99,6 +107,31 @@ public class MainPresenter extends MainContract.Presenter {
 //            }
 //        });
 //    }
+
+
+    @Override
+    void dailySports() {
+        BleDataForSleepData
+                .getInstance(MyApplication.getInstance())
+                .setOnSleepDataRecever(new DataSendCallback() {
+                    @Override
+                    public void sendSuccess(byte[] bytes) {
+                        String data = StringUtils.bytesToHexString(bytes);
+                        Logger.i("MainPresenter", data);
+                    }
+
+                    @Override
+                    public void sendFailed() {
+
+                    }
+
+                    @Override
+                    public void sendFinished() {
+
+                    }
+                });
+
+    }
 
     @Override
     void getWeather() {
@@ -142,5 +175,40 @@ public class MainPresenter extends MainContract.Presenter {
 
                     }
                 });
+    }
+
+    @Override
+    void loginHx(BaseInfo info) {
+        EMClient.getInstance()
+                .login(info.getPhone(), info.getPhone(), new EMCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        Logger.i("hx", "login success");
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+                        Logger.i("hx", "login failed " + s);
+                    }
+
+                    @Override
+                    public void onProgress(int i, String s) {
+
+                    }
+                });
+    }
+
+    @Override
+    void uploadLocation() {
+        String latitude = (String) SPUtils.get(MyApplication.getInstance(), AppConfig.LATITUDE, "");
+        String longitude = (String) SPUtils.get(MyApplication.getInstance(), AppConfig.LONGITUDE, "");
+        if (TextUtils.isEmpty(latitude) || TextUtils.isEmpty(longitude))
+            return;
+        ApiRequest.uploadLocation(longitude, latitude, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+            }
+        });
     }
 }

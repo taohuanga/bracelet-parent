@@ -158,7 +158,12 @@ public class SensorMsgActivity extends BaseActivity {
 
             @Override
             public void sendFailed() {
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showShort("测试失败");
+                    }
+                });
             }
 
             @Override

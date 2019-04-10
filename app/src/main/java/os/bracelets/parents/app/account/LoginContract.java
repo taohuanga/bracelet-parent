@@ -1,5 +1,6 @@
 package os.bracelets.parents.app.account;
 
+import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.common.BasePresenter;
 import os.bracelets.parents.common.BaseView;
 
@@ -12,7 +13,7 @@ public interface LoginContract {
     interface View extends BaseView<Presenter>{
 
         //数据保存
-        void loginSuccess();
+        void loginSuccess(BaseInfo info);
 
         void securityCodeSuccess();
     }

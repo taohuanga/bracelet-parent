@@ -1,6 +1,8 @@
 package os.bracelets.parents.app.nearby;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -52,6 +54,8 @@ public class NearbyActivity extends MVPBaseActivity<NearbyContract.Presenter> im
         refreshLayout = findView(R.id.refreshLayout);
         recyclerView = findView(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                android.support.v7.widget.DividerItemDecoration.VERTICAL));
     }
 
     @Override
@@ -95,7 +99,10 @@ public class NearbyActivity extends MVPBaseActivity<NearbyContract.Presenter> im
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+        NearbyPerson person = (NearbyPerson) adapter.getItem(position);
+        Intent intent = new Intent(this, NearbyDetailActivity.class);
+        intent.putExtra("person", person);
+        startActivity(intent);
     }
 
     @Override

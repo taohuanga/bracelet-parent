@@ -8,7 +8,7 @@ package os.bracelets.parents;
 public class AppConfig {
 
     //是否为调试模式
-    public static final boolean isDebug = BuildConfig.BUILD_TYPE.equals("debug");
+    public static final boolean IS_DEBUG = BuildConfig.BUILD_TYPE.equals("debug");
 
     public static final String SERVER_URL = "http://47.101.221.44/api/";
 
@@ -24,21 +24,30 @@ public class AppConfig {
     public static final String USER_ID = "user_id";
     public static final String USER_IMG = "user_img";
     public static final String USER_NICK = "user_nick";
-    public static final String USER_PHONE = "user_nick";
-    public static final String LONGITUDE = "longitude";
+    public static final String USER_PHONE = "user_phone";
     public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
     public static final String CITY_CODE = "city_code";
+    public static final String ADDRESS = "address";
     public static final String CURRENT_DEVICE = "current_device";
     //标记当前程序是否登录
     public static final String IS_LOGIN = "is_login";
+
+    public static final String BUGLY_ID = "97ce25b73d";
 
 
     //蓝牙连接成功
     public static final int MSG_DEVICE_CONNECT = 10;
     //蓝牙失去连接
     public static final int MSG_DEVICE_DISCONNECT = 11;
-    //蓝牙连接状态发生变化
-    public static final int MSG_DEVICE_CHANGED = 12;
+    //蓝牙状态发生变化
+    public static final int MSG_STATE_CHANGED = 12;
+    //每隔一分钟分发一次计步数据
+    public static final int MSG_STEP_COUNT = 13;
+
+    public static final String ALARM_CLOCK = "alarm_clock";
+
+    public static final int CLOCK_ID = 15;
 
     //手环UUID
     public static final String BLUETOOTH_NAME = "DFZ";

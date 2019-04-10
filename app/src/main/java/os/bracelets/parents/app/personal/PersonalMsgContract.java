@@ -11,6 +11,7 @@ import os.bracelets.parents.common.BaseView;
 public interface PersonalMsgContract {
 
     interface View extends BaseView<Presenter> {
+
         void loadInfoSuccess(UserInfo info);
 
         void uploadImageSuccess(String imageUrl);

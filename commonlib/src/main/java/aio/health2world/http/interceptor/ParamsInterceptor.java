@@ -38,7 +38,7 @@ public class ParamsInterceptor implements Interceptor {
 
         //添加公共参数
         rootMap.put("appKey", "888888");//固定
-        rootMap.put("appType", "1");//1:一体机 2:医生端 3:患者端
+        rootMap.put("appType", "1");//0子女  1父母
         rootMap.put("appVersion", AppUtils.getAppVersionName(SApplication.mInstance));//app版本号
         rootMap.put("versionNo", AppUtils.getAppVersionCode(SApplication.mInstance) + "");
         rootMap.put("osVersion", android.os.Build.VERSION.RELEASE);//操作系统版本号 android 6.0

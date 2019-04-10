@@ -32,9 +32,8 @@ public class HealthInfoAdapter extends BaseQuickAdapter<HealthInfo,BaseViewHolde
 
         Glide.with(mContext)
                 .load(item.getImageUrl())
-                .placeholder(R.mipmap.ic_default_portrait)
-                .error(R.mipmap.ic_default_portrait)
-                .bitmapTransform(new CropCircleTransformation(mContext))
+                .placeholder(R.mipmap.bg_head)
+                .error(R.mipmap.bg_head)
                 .into(ivImage);
     }
 }

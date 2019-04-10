@@ -2,6 +2,7 @@ package os.bracelets.parents.app.main;
 
 import java.util.List;
 
+import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.RemindBean;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.BasePresenter;
@@ -18,9 +19,11 @@ public interface MainContract {
         //数据保存
         void loginWeatherSuccess(WeatherInfo info);
 
-        void loadMsgSuccess(int stepNum,List<RemindBean> list);
+        void loadMsgSuccess(int stepNum, List<RemindBean> list);
 
 //        void loadRemindSuccess();
+
+        void loadSports(String number);
     }
 
     abstract class Presenter extends BasePresenter<View> {
@@ -33,7 +36,13 @@ public interface MainContract {
 
 //        abstract void remindList();
 
+        abstract void dailySports();
+
         abstract void getWeather();
+
+        abstract void loginHx(BaseInfo info);
+
+        abstract void uploadLocation();
 
     }
 

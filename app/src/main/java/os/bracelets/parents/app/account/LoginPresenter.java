@@ -53,9 +53,10 @@ public class LoginPresenter extends LoginContract.Presenter {
                         BaseInfo info = BaseInfo.parseBean(object);
                         SPUtils.put(MyApplication.getInstance(), AppConfig.TOKEN_ID, info.getTokenId());
                         SPUtils.put(MyApplication.getInstance(), AppConfig.USER_ID, info.getUserId() + "");
-                        SPUtils.put(MyApplication.getInstance(), AppConfig.USER_IMG, info.getIcon() + "");
+                        SPUtils.put(MyApplication.getInstance(), AppConfig.USER_IMG, info.getPortrait() + "");
                         SPUtils.put(MyApplication.getInstance(), AppConfig.USER_NICK, info.getNickName() + "");
-                        mView.loginSuccess();
+                        if(mView!=null)
+                            mView.loginSuccess(info);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -119,8 +120,18 @@ public class LoginPresenter extends LoginContract.Presenter {
                 if (mView != null)
                     mView.hideLoading();
                 if (result.code.equals(AppConfig.SUCCESS)) {
-                    if (mView != null)
-                        mView.loginSuccess();
+                    try {
+                        JSONObject object = new JSONObject(new Gson().toJson(result.data));
+                        BaseInfo info = BaseInfo.parseBean(object);
+                        SPUtils.put(MyApplication.getInstance(), AppConfig.TOKEN_ID, info.getTokenId());
+                        SPUtils.put(MyApplication.getInstance(), AppConfig.USER_ID, info.getUserId() + "");
+                        SPUtils.put(MyApplication.getInstance(), AppConfig.USER_IMG, info.getPortrait() + "");
+                        SPUtils.put(MyApplication.getInstance(), AppConfig.USER_NICK, info.getNickName() + "");
+                        if(mView!=null)
+                            mView.loginSuccess(info);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

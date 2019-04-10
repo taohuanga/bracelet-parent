@@ -2,37 +2,48 @@ package os.bracelets.parents.app.personal;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.MapsInitializer;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.bumptech.glide.Glide;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import aio.health2world.DataEntity;
 import aio.health2world.glide_transformations.CropCircleTransformation;
 import aio.health2world.pickeview.OptionsPickerView;
 import aio.health2world.pickeview.TimePickerView;
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.DateUtil;
 import aio.health2world.utils.FilePathUtil;
+import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.TimePickerUtil;
 import aio.health2world.utils.ToastUtil;
+import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
-import os.bracelets.parents.app.about.FeedBackActivity;
 import os.bracelets.parents.app.setting.UpdatePhoneActivity;
 import os.bracelets.parents.bean.UserInfo;
-import os.bracelets.parents.common.MVPBaseActivity;
-import os.bracelets.parents.http.ApiRequest;
+import os.bracelets.parents.common.MVPActivity;
+import os.bracelets.parents.utils.AppUtils;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
 import rx.functions.Action1;
@@ -41,7 +52,7 @@ import rx.functions.Action1;
  * Created by lishiyou on 2019/2/23.
  */
 
-public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Presenter>
+public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Presenter>
         implements PersonalMsgContract.View, TimePickerView.OnTimeSelectListener, OptionsPickerView.OnOptionsSelectListener {
 
     private String headImageUrl;
@@ -61,7 +72,8 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
     private View layoutHeadImg, layoutNickName, layoutName, layoutSex, layoutBirthday, layoutWeight,
             layoutHeight, layoutPhone, layoutHomeAddress;
 
-    private TextView tvNickName, tvName, tvSex, tvBirthday, tvWeight, tvHeight, tvPhone, tvHomeAddress;
+    private TextView tvNickName, tvName, tvSex, tvBirthday, tvWeight, tvHeight, tvPhone, tvHomeAddress,
+            tvLongitude, tvLatitude;
 
     private ImageView ivHeadImg;
 
@@ -73,65 +85,78 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
 
     private List<String> listSex = new ArrayList<>();
 
+    private MapView mapView;
+    private AMap aMap;
+
     @Override
     protected PersonalMsgContract.Presenter getPresenter() {
         return new PersonalMsgPresenter(this);
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_personal_msg;
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_personal_msg);
+
+        mapView = (MapView) findViewById(R.id.mapView);
+        // 此方法必须重写
+        mapView.onCreate(savedInstanceState);
+        initView();
+        initData();
+        initListener();
     }
 
-    @Override
-    protected void initView() {
-        titleBar = findView(R.id.titleBar);
+    private void initView() {
+        titleBar = (TitleBar) findViewById(R.id.titleBar);
 
-        ivHeadImg = findView(R.id.ivHeadImg);
-        tvNickName = findView(R.id.tvNickName);
-        tvName = findView(R.id.tvName);
-        tvSex = findView(R.id.tvSex);
-        tvBirthday = findView(R.id.tvBirthday);
-        tvWeight = findView(R.id.tvWeight);
-        tvHeight = findView(R.id.tvHeight);
-        tvPhone = findView(R.id.tvPhone);
-        tvHomeAddress = findView(R.id.tvHomeAddress);
+        ivHeadImg = (ImageView) findViewById(R.id.ivHeadImg);
+        tvNickName = (TextView) findViewById(R.id.tvNickName);
+        tvName = (TextView) findViewById(R.id.tvName);
+        tvSex = (TextView) findViewById(R.id.tvSex);
+        tvBirthday = (TextView) findViewById(R.id.tvBirthday);
+        tvWeight = (TextView) findViewById(R.id.tvWeight);
+        tvHeight = (TextView) findViewById(R.id.tvHeight);
+        tvPhone = (TextView) findViewById(R.id.tvPhone);
+        tvHomeAddress = (TextView) findViewById(R.id.tvHomeAddress);
+        tvLongitude = (TextView) findViewById(R.id.tvLongitude);
+        tvLatitude = (TextView) findViewById(R.id.tvLatitude);
 
-        layoutHeadImg = findView(R.id.layoutHeadImg);
-        layoutNickName = findView(R.id.layoutNickName);
-        layoutName = findView(R.id.layoutName);
-        layoutSex = findView(R.id.layoutSex);
-        layoutBirthday = findView(R.id.layoutBirthday);
-        layoutWeight = findView(R.id.layoutWeight);
-        layoutHeight = findView(R.id.layoutHeight);
-        layoutPhone = findView(R.id.layoutPhone);
-        layoutHomeAddress = findView(R.id.layoutHomeAddress);
+        layoutHeadImg = findViewById(R.id.layoutHeadImg);
+        layoutNickName = findViewById(R.id.layoutNickName);
+        layoutName = findViewById(R.id.layoutName);
+        layoutSex = findViewById(R.id.layoutSex);
+        layoutBirthday = findViewById(R.id.layoutBirthday);
+        layoutWeight = findViewById(R.id.layoutWeight);
+        layoutHeight = findViewById(R.id.layoutHeight);
+        layoutPhone = findViewById(R.id.layoutPhone);
+        layoutHomeAddress = findViewById(R.id.layoutHomeAddress);
     }
 
-    @Override
-    protected void initData() {
+    private void initData() {
         TitleBarUtil.setAttr(this, "", "修改资料", titleBar);
-        mPresenter.userInfo();
+
         rxPermissions = new RxPermissions(this);
         pickerView = TimePickerUtil.init(this, this);
         optionsPicker = TimePickerUtil.initOptions(this, this);
         listSex.add("男");
         listSex.add("女");
         optionsPicker.setPicker(listSex);
+
+        mPresenter.userInfo();
     }
 
 
-    @Override
-    protected void initListener() {
-        setOnClickListener(layoutHeadImg);
-        setOnClickListener(layoutNickName);
-        setOnClickListener(layoutName);
-        setOnClickListener(layoutSex);
-        setOnClickListener(layoutBirthday);
-        setOnClickListener(layoutWeight);
-        setOnClickListener(layoutHeight);
-        setOnClickListener(layoutPhone);
-        setOnClickListener(layoutHomeAddress);
+    private void initListener() {
+        layoutHeadImg.setOnClickListener(this);
+        layoutNickName.setOnClickListener(this);
+        layoutName.setOnClickListener(this);
+        layoutSex.setOnClickListener(this);
+        layoutBirthday.setOnClickListener(this);
+        layoutWeight.setOnClickListener(this);
+        layoutHeight.setOnClickListener(this);
+        layoutPhone.setOnClickListener(this);
+        layoutHomeAddress.setOnClickListener(this);
         titleBar.setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +169,25 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
                 saveMsg();
             }
         });
+    }
+
+    private void showMap(double latitude, double longitude) {
+        if (aMap == null) {
+            aMap = mapView.getMap();
+        }
+        LatLng latLng = new LatLng(latitude, longitude);
+        changeCamera(CameraUpdateFactory.newCameraPosition(
+                new CameraPosition(latLng, 18, 30, 30)));
+        aMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+    }
+
+    /**
+     * 根据动画按钮状态，调用函数animateCamera或moveCamera来改变可视区域
+     */
+    private void changeCamera(CameraUpdate update) {
+        aMap.moveCamera(update);
     }
 
 
@@ -161,20 +205,77 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
     @Override
     public void loadInfoSuccess(UserInfo info) {
         headImageUrl = info.getPortrait();
+        tvNickName.setText(info.getNickName());
+        tvName.setText(info.getName());
+        tvSex.setText(AppUtils.getSex(info.getSex()));
+        tvBirthday.setText(info.getBirthday());
+        tvWeight.setText(info.getWeight());
+        tvHeight.setText(info.getHeight());
+        tvPhone.setText(info.getPhone());
+        tvLongitude.setText(info.getLongitude());
+        tvLatitude.setText(info.getLatitude());
+        tvHomeAddress.setText(info.getLocation());
+
         Glide.with(this)
                 .load(info.getPortrait())
                 .placeholder(R.mipmap.ic_default_portrait)
                 .error(R.mipmap.ic_default_portrait)
-                .bitmapTransform(new CropCircleTransformation(mContext))
+                .bitmapTransform(new CropCircleTransformation(PersonalMsgActivity.this))
                 .into(ivHeadImg);
+        if (!TextUtils.isEmpty(info.getLatitude()) && !TextUtils.isEmpty(info.getLongitude())) {
+            showMap(Double.parseDouble(info.getLatitude()), Double.parseDouble(info.getLongitude()));
+        }
 
-        tvNickName.setText(info.getNickName());
-        tvName.setText(info.getName());
+    }
+
+
+    @Override
+    public void updateMsgSuccess() {
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void uploadImageSuccess(String imageUrl) {
+        headImageUrl = imageUrl;
+        //修改环信头像
+//        manager.getCurrentUserInfo().setAvatar(headImageUrl);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+        pickerView = null;
     }
 
     @Override
     public void onClick(View v) {
-        super.onClick(v);
         switch (v.getId()) {
             case R.id.layoutHeadImg:
                 //修改头像
@@ -228,15 +329,16 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
                 startActivityForResult(intentWeight, ITEM_WEIGHT);
                 break;
             case R.id.layoutPhone:
-                Intent intentPhone = new Intent(this, UpdatePhoneActivity.class);
-                startActivityForResult(intentPhone, ITEM_PHONE);
                 //修改手机号
+                Intent intentPhone = new Intent(this, UpdatePhoneActivity.class);
+                intentPhone.putExtra("phone", tvPhone.getText().toString());
+                startActivityForResult(intentPhone, ITEM_PHONE);
                 break;
             case R.id.layoutHomeAddress:
+                //修改家庭住址
                 Intent intentAddress = new Intent(this, InputMsgActivity.class);
                 intentAddress.putExtra(InputMsgActivity.KEY, "修改住址");
                 startActivityForResult(intentAddress, ITEM_ADDRESS);
-                //修改家庭住址
                 break;
 
         }
@@ -257,7 +359,7 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
                                 .load(imagePath)
                                 .placeholder(R.mipmap.ic_default_portrait)
                                 .error(R.mipmap.ic_default_portrait)
-                                .bitmapTransform(new CropCircleTransformation(mContext))
+                                .bitmapTransform(new CropCircleTransformation(PersonalMsgActivity.this))
                                 .into(ivHeadImg);
                     mPresenter.uploadImage(imagePath);
                 }
@@ -276,7 +378,7 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
                 tvHeight.setText(data.getStringExtra("data"));
                 break;
             case ITEM_PHONE:
-                tvPhone.setText(data.getStringExtra("data"));
+                tvPhone.setText(data.getStringExtra("newPhone"));
                 break;
             case ITEM_ADDRESS:
                 tvHomeAddress.setText(data.getStringExtra("data"));
@@ -315,20 +417,4 @@ public class PersonalMsgActivity extends MVPBaseActivity<PersonalMsgContract.Pre
         mPresenter.updateMsg(headImageUrl, nickName, realName, sexType, birthday, height, weight, address);
     }
 
-    @Override
-    public void updateMsgSuccess() {
-
-    }
-
-    @Override
-    public void uploadImageSuccess(String imageUrl) {
-        headImageUrl = imageUrl;
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        pickerView = null;
-    }
 }

@@ -3,12 +3,16 @@ package os.bracelets.parents.http;
 
 import android.text.TextUtils;
 
+import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
+
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import aio.health2world.http.HttpResult;
 import aio.health2world.http.tool.RxTransformer;
+import aio.health2world.utils.DateUtil;
 import aio.health2world.utils.SPUtils;
 import aio.health2world.view.MyProgressDialog;
 import os.bracelets.parents.AppConfig;
@@ -87,6 +91,22 @@ public class ApiRequest {
                 .subscribe(subscriber);
     }
 
+    //绑定手机号
+    public static Subscription updatePhone(String oldPhone, String code, String pwd, String newPhone,
+                                           Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("oldPhone", oldPhone);
+        map.put("newPhone", newPhone);
+        map.put("loginPass", pwd);
+        map.put("securityCode", code);
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .phoneExist(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
     //修改密码
     public static Subscription updatePwd(String oldPwd, String newPwd, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
@@ -127,7 +147,7 @@ public class ApiRequest {
     }
 
 
-    //首页获取步数
+    //首页首页信息
     public static Subscription homeMsg(Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
@@ -145,6 +165,45 @@ public class ApiRequest {
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .remindList(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //首页日常运动数据
+    public static Subscription dailySports(int stepNumber, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("stepNumber", stepNumber);
+        map.put("dailyDay", DateUtil.getTime(new Date(System.currentTimeMillis())));
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .dailySports(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //上传地理位置经纬度
+    public static Subscription uploadLocation(String longitude, String latitude, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("longitude", longitude);
+        map.put("latitude", latitude);
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .uploadLocation(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //跌倒信息上传
+    public static Subscription fall(Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("longitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LONGITUDE, "")));
+        map.put("latitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LATITUDE, "")));
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .fall(map)
                 .compose(RxTransformer.<HttpResult>defaultSchedulers())
                 .subscribe(subscriber);
     }
@@ -175,8 +234,9 @@ public class ApiRequest {
     //上传文件
     public static Subscription uploadFile(File file, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
+        LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        map.put("fileType", ".csv");
+        map.put("fileType", entity == null ? "" : entity.getAddress());
         map.put("fileData", FileUtils.file2Base64(file.getAbsolutePath()));
         map.put("fileName", file.getName());
         return ServiceFactory.getInstance()
@@ -232,6 +292,17 @@ public class ApiRequest {
                 .subscribe(subscriber);
     }
 
+    //资讯详情
+    public static Subscription infoDetail(String informationId, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("informationId", informationId);
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .infoDetail(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
 
     //附近的人
     public static Subscription nearbyList(int pageNo, Subscriber<HttpResult> subscriber) {
@@ -261,12 +332,12 @@ public class ApiRequest {
     }
 
     //修改资料
-    public static Subscription updateMsg(String profile, String nickName, String realName, int sex, String birthday,
+    public static Subscription updateMsg(String portrait, String nickName, String realName, int sex, String birthday,
                                          String height, String weight, String location, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        if (!TextUtils.isEmpty(profile))
-            map.put("profile", profile);
+        if (!TextUtils.isEmpty(portrait))
+            map.put("portrait", portrait);
 
         if (!TextUtils.isEmpty(nickName))
             map.put("nickName", nickName);

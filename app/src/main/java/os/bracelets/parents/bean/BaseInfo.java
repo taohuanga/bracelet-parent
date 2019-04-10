@@ -2,11 +2,13 @@ package os.bracelets.parents.bean;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by lishiyou on 2019/1/27.
  */
 
-public class BaseInfo {
+public class BaseInfo implements Serializable{
 
 //      "tokenId":"c1ceb8b610234aacb130b0fae4ca44c8",
 //              "realName":"",
@@ -17,9 +19,11 @@ public class BaseInfo {
     private String tokenId;
     private String nickName;
     private String realName;
-    private String icon;
+    private String portrait;
+    private String birthday;
     private int userId;
     private String openId;
+    private String phone;
 
 
     public String getTokenId() {
@@ -46,12 +50,12 @@ public class BaseInfo {
         this.realName = realName;
     }
 
-    public String getIcon() {
-        return icon;
+    public String getPortrait() {
+        return portrait;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
     }
 
     public int getUserId() {
@@ -70,13 +74,31 @@ public class BaseInfo {
         this.openId = openId;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
     public static BaseInfo parseBean(JSONObject object) {
         BaseInfo info = new BaseInfo();
         info.setTokenId(object.optString("tokenId"));
-        info.setIcon(object.optString("icon"));
+        info.setPortrait(object.optString("portrait"));
         info.setUserId(object.optInt("userId"));
         info.setNickName(object.optString("nickName"));
         info.setRealName(object.optString("realName"));
+        info.setPhone(object.optString("phone"));
+        info.setBirthday(object.optString("birthday"));
         return info;
     }
 }

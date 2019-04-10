@@ -6,6 +6,8 @@ import android.os.Environment;
 
 import java.io.File;
 
+import aio.health2world.library.BuildConfig;
+
 /**
  * Created by _SOLID
  * Date:2016/3/30
@@ -15,16 +17,17 @@ public class SApplication extends Application {
 
     public static Context mInstance;
 
-    public static boolean isDebug;
+    public static boolean isDebug = BuildConfig.BUILD_TYPE.equals("debug");
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
     }
-    public static void init(Context context, boolean debug) {
+
+    public static void init(Context context,boolean isDebug1) {
         mInstance = context;
-        isDebug = debug;
+        isDebug = isDebug1;
     }
 
     @Override

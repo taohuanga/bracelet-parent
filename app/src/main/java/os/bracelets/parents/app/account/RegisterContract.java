@@ -14,7 +14,7 @@ public interface RegisterContract {
 
         void codeSuccess();
 
-        void registerSuccess();
+        void registerSuccess(String phone);
     }
 
     abstract class Presenter extends BasePresenter<View> {

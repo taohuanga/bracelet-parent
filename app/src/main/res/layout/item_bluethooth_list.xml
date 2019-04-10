@@ -56,11 +56,10 @@
 
 
         <ImageView
-            android:clickable="true"
             android:id="@+id/imgConnect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"
             android:padding="@dimen/dp_8"
             android:scaleType="centerInside"
             android:src="@mipmap/switch_off" />

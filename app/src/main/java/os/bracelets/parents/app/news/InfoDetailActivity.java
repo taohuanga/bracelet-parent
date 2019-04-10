@@ -1,12 +1,23 @@
 package os.bracelets.parents.app.news;
 
+import android.text.Html;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import aio.health2world.glide_transformations.CropCircleTransformation;
+import aio.health2world.http.HttpResult;
 import os.bracelets.parents.R;
+import os.bracelets.parents.bean.InfoDetail;
 import os.bracelets.parents.common.BaseActivity;
+import os.bracelets.parents.common.MVPBaseActivity;
+import os.bracelets.parents.http.ApiRequest;
+import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
 
@@ -15,13 +26,24 @@ import os.bracelets.parents.view.TitleBar;
  * Created by lishiyou on 2019/2/24.
  */
 
-public class InfoDetailActivity extends BaseActivity {
+public class InfoDetailActivity extends MVPBaseActivity<InfoDetailContract.Presenter> implements InfoDetailContract.View{
+
+    public static final String INFO_ID = "infoId";
 
     private TitleBar titleBar;
 
-    private WebView webView;
+    private String infoId = "";
 
-    public static final String URL = "https://www.baidu.com/";
+    private TextView infoTitle,infoContent,infoTime,infoAuthor;
+
+    private ImageView image;
+
+
+
+    @Override
+    protected InfoDetailContract.Presenter getPresenter() {
+        return new InfoDetailPresenter(this);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -31,38 +53,31 @@ public class InfoDetailActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleBar = findView(R.id.titleBar);
-        webView = findView(R.id.webView);
+        infoTitle = findView(R.id.infoTitle);
+        infoContent = findView(R.id.infoContent);
+        infoTime = findView(R.id.infoTime);
+        infoAuthor = findView(R.id.infoAuthor);
+        image = findView(R.id.image);
     }
 
     @Override
     protected void initData() {
+        infoId = getIntent().getStringExtra(INFO_ID);
         TitleBarUtil.setAttr(this, "", "资讯详情", titleBar);
-        initWebView();
-        webView.loadUrl(URL);
+        mPresenter.loadInfoDetail(infoId);
     }
 
-    private void initWebView() {
-        WebSettings webSettings = webView.getSettings();
-        //如果访问的页面中要与Javascript交互，则webView必须设置支持Javascript
-        webSettings.setJavaScriptEnabled(true);
-        // 若加载的 html 里有JS 在执行动画等操作，会造成资源浪费（CPU、电量）
-        // 在 onStop 和 onResume 里分别把 setJavaScriptEnabled() 给设置成 false 和 true 即可
-
-        //设置自适应屏幕，两者合用
-        webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
-        webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
-
-        //缩放操作
-        webSettings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
-        webSettings.setBuiltInZoomControls(true); //设置内置的缩放控件。若为false，则该WebView不可缩放
-        webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
-
-        //其他细节操作
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); //关闭webview中缓存
-        webSettings.setAllowFileAccess(true); //设置可以访问文件
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
-        webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
-        webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
+    @Override
+    public void loadSuccess(InfoDetail detail) {
+        infoTitle.setText(detail.getTitle());
+        infoTime.setText(detail.getCreateDate());
+        infoAuthor.setText(detail.getAuthor());
+        infoContent.setText(Html.fromHtml(detail.getContent()));
+        Glide.with(mContext)
+                .load(detail.getImageUrl())
+                .placeholder(R.mipmap.bg_head)
+                .error(R.mipmap.bg_head)
+                .into(image);
     }
 
     @Override
@@ -73,9 +88,6 @@ public class InfoDetailActivity extends BaseActivity {
                 finish();
             }
         });
-        webView.setWebChromeClient(new WebChromeClient(){
 
-
-        });
     }
 }

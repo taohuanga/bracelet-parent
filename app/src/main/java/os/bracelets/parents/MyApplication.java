@@ -1,8 +1,14 @@
 package os.bracelets.parents;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.amap.api.location.AMapLocation;
@@ -10,10 +16,20 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
+import com.huichenghe.bleControl.Ble.DeviceConfig;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
+import com.hyphenate.easeui.EaseUI;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechSynthesizer;
+import com.iflytek.cloud.SpeechUtility;
+import com.iflytek.cloud.SynthesizerListener;
+import com.tencent.bugly.crashreport.CrashReport;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +37,9 @@ import aio.health2world.SApplication;
 import aio.health2world.utils.AppManager;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
+import cn.jpush.android.api.JPushInterface;
+import os.bracelets.parents.receiver.AlarmReceiver;
+import os.bracelets.parents.receiver.BleReceiver;
 import os.bracelets.parents.service.AppService;
 
 /**
@@ -30,8 +49,6 @@ import os.bracelets.parents.service.AppService;
 public class MyApplication extends Application implements AMapLocationListener {
 
     public static MyApplication INSTANCE;
-
-    private Context mContext;
 
     private boolean isBleConnect = false;
     //扫描到的蓝牙设备的集合
@@ -47,10 +64,10 @@ public class MyApplication extends Application implements AMapLocationListener {
     public void onCreate() {
         super.onCreate();
         INSTANCE = this;
-        mContext = this;
-        SApplication.init(mContext, AppConfig.isDebug);
-        initLocation();
-//        initBle();
+        SApplication.init(this, AppConfig.IS_DEBUG);
+
+        initApp();
+
         startService(new Intent(this, BluetoothLeService.class));
         startService(new Intent(this, AppService.class));
     }
@@ -88,6 +105,10 @@ public class MyApplication extends Application implements AMapLocationListener {
         isBleConnect = bleConnect;
     }
 
+    public void clearEntityList() {
+        deviceList.clear();
+    }
+
     //退出当前程序 回到登录界面
     public void logout() {
         SPUtils.put(this, AppConfig.IS_LOGIN, false);
@@ -95,6 +116,32 @@ public class MyApplication extends Application implements AMapLocationListener {
         Intent intent = new Intent("os.bracelets.parents.login");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    private void initApp() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(DeviceConfig.DEVICE_CONNECTING_AUTO);
+        filter.addAction(DeviceConfig.DEVICE_CONNECTE_AND_NOTIFY_SUCESSFUL);
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        registerReceiver(new BleReceiver(), filter);
+
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction(AppConfig.ALARM_CLOCK);
+        registerReceiver(new AlarmReceiver(), filter1);
+
+        //极光
+        JPushInterface.init(this);
+        JPushInterface.setDebugMode(AppConfig.IS_DEBUG);
+        //环信 目前使用的是简单版的
+        EaseUI.getInstance().init(this, null);
+        //高德
+        initLocation();
+        // Bugly SDK初始化
+        CrashReport.initCrashReport(getApplicationContext(), AppConfig.BUGLY_ID, AppConfig.IS_DEBUG);
+
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5c9d7cb1");
     }
 
     @Override
@@ -155,34 +202,146 @@ public class MyApplication extends Application implements AMapLocationListener {
     }
 
     @Override
-    public void onLocationChanged(AMapLocation amapLocation) {
-        if (amapLocation != null) {
-            if (amapLocation.getErrorCode() == 0) {
+    public void onLocationChanged(AMapLocation location) {
+        if (location != null) {
+            if (location.getErrorCode() == 0) {
                 //定位成功回调信息，设置相关消息
-                amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
+                location.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
                 //获取纬度
-                SPUtils.put(this, AppConfig.LATITUDE, amapLocation.getLatitude());
+                SPUtils.put(this, AppConfig.LATITUDE, location.getLatitude() + "");
                 //获取经度
-                SPUtils.put(this, AppConfig.LONGITUDE, amapLocation.getLongitude());
+                SPUtils.put(this, AppConfig.LONGITUDE, location.getLongitude() + "");
                 //城市编码
-                SPUtils.put(this, AppConfig.CITY_CODE, amapLocation.getAdCode());
+                SPUtils.put(this, AppConfig.CITY_CODE, location.getAdCode());
+                //详细地址
+                SPUtils.put(this, AppConfig.ADDRESS, location.getAddress());
                 //获取精度信息
-                float accuracy = amapLocation.getAccuracy();
+//                float accuracy = location.getAccuracy();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date date = new Date(amapLocation.getTime());
+                Date date = new Date(location.getTime());
                 String time = df.format(date);//定位时间
 
                 Logger.i("lsy", "定位时间：" + time + ",纬度："
-                        + amapLocation.getLatitude() + ",经度："
-                        + amapLocation.getLongitude()
-                        + ",城市：" + amapLocation.getCity()
-                        + ",城市代码：" + amapLocation.getAdCode());
+                        + location.getLatitude() + ",经度："
+                        + location.getLongitude()
+                        + ",城市：" + location.getCity()
+                        + ",城市代码：" + location.getAdCode());
+//
+//                String address = location.getProvince()+location.getCity()+location.getAccuracy()+location.getAddress();
+//                Logger.i("lsy",address);
+
             } else {
                 //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                 Logger.e("AmapError", "location Error, ErrCode:"
-                        + amapLocation.getErrorCode() + ", errInfo:"
-                        + amapLocation.getErrorInfo());
+                        + location.getErrorCode() + ", errInfo:"
+                        + location.getErrorInfo());
             }
         }
     }
+
+    public void alarmClock(Context context, String time) {
+//        time="20:22";
+        Intent intent = new Intent(AppConfig.ALARM_CLOCK);
+        PendingIntent sender = PendingIntent.getBroadcast(context, AppConfig.CLOCK_ID, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm");
+        Date date = null;
+        int year = calendar.get(calendar.YEAR);
+        int month = calendar.get(calendar.MONTH) + 1;
+        int day = calendar.get(calendar.DAY_OF_MONTH);
+        String mTime = year + "-" + month + "-" + day + " " + time;
+        try {
+            date = format.parse(mTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        calendar.setTime(date);
+
+        if (System.currentTimeMillis() - calendar.getTimeInMillis() > 0)
+            return;
+
+        alarmManager.setWindow(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 100, sender);
+    }
+
+    private SpeechSynthesizer mTts;
+
+    public void speakVoice() {
+        if (mTts == null)
+            mTts = SpeechSynthesizer.createSynthesizer(this, null);
+        setTts();
+        mTts.startSpeaking("您有新的待办任务，请及时处理", mTtsListener);
+
+    }
+
+    private void setTts() {
+        // 设置发音人
+        mTts.setParameter(SpeechConstant.VOICE_NAME, "xiaoyan");
+
+        // 设置语速
+        mTts.setParameter(SpeechConstant.SPEED, "20");
+
+        // 设置音调
+        mTts.setParameter(SpeechConstant.PITCH, "50");
+
+        // 设置音量0-100
+        mTts.setParameter(SpeechConstant.VOLUME, "100");
+
+        // 设置播放器音频流类型
+        mTts.setParameter(SpeechConstant.STREAM_TYPE, "3");
+    }
+
+
+    private SynthesizerListener mTtsListener = new SynthesizerListener() {
+        // 缓冲进度回调，arg0为缓冲进度，arg1为缓冲音频在文本中开始的位置，arg2为缓冲音频在文本中结束的位置，arg3为附加信息
+        @Override
+        public void onBufferProgress(int arg0, int arg1, int arg2, String arg3) {
+            // TODO Auto-generated method stub
+
+        }
+
+        // 会话结束回调接口，没有错误时error为空
+        @Override
+        public void onCompleted(SpeechError error) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onEvent(int i, int i1, int i2, Bundle bundle) {
+
+        }
+
+        // 开始播放
+        @Override
+        public void onSpeakBegin() {
+            // TODO Auto-generated method stub
+
+        }
+
+        // 停止播放
+        @Override
+        public void onSpeakPaused() {
+            // TODO Auto-generated method stub
+
+        }
+
+        // 播放进度回调,arg0为播放进度0-100；arg1为播放音频在文本中开始的位置，arg2为播放音频在文本中结束的位置。
+        @Override
+        public void onSpeakProgress(int arg0, int arg1, int arg2) {
+            // TODO Auto-generated method stub
+
+        }
+
+        // 恢复播放回调接口
+        @Override
+        public void onSpeakResumed() {
+            // TODO Auto-generated method stub
+
+        }
+
+    };
 }

@@ -49,7 +49,7 @@ public class RegisterPresenter extends RegisterContract.Presenter {
     }
 
     @Override
-    void register(String phone, String securityCode, String code, String password) {
+    void register(final String phone, String securityCode, String code, String password) {
         ApiRequest.register(phone, securityCode, code, password, new HttpSubscriber() {
 
             @Override
@@ -73,7 +73,7 @@ public class RegisterPresenter extends RegisterContract.Presenter {
                     mView.hideLoading();
                 if (result.code.equals(AppConfig.SUCCESS)) {
                     ToastUtil.showShort("注册成功");
-                    mView.registerSuccess();
+                    mView.registerSuccess(phone);
                 } else {
                     ToastUtil.showShort(result.errorMessage);
                 }

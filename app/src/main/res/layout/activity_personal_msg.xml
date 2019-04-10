@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eee"
@@ -9,7 +10,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dp_8">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,16 +73,14 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
-                    android:gravity="right"
                     android:id="@+id/tvNickName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
                     android:textColor="@color/black6"
@@ -115,16 +115,14 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
-                    android:gravity="right"
                     android:id="@+id/tvName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
                     android:textColor="@color/black6"
@@ -159,15 +157,13 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvSex"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
@@ -203,16 +199,14 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
-                    android:gravity="right"
                     android:id="@+id/tvBirthday"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
                     android:textColor="@color/black6"
@@ -243,20 +237,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="体重"
+                    android:text="体重(kg)"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
-                    android:gravity="right"
                     android:id="@+id/tvWeight"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
                     android:textColor="@color/black6"
@@ -287,20 +279,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="身高"
+                    android:text="身高(cm)"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
+                <TextView
+                    android:id="@+id/tvHeight"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <TextView
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:gravity="right"
-                    android:id="@+id/tvHeight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:hint="未填写"
                     android:maxLines="1"
                     android:textColor="@color/black6"
@@ -335,16 +324,14 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
-                    android:gravity="right"
                     android:id="@+id/tvPhone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
                     android:textColor="@color/black6"
@@ -368,6 +355,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/selector_item_click_bg"
+                android:clickable="true"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/dp_16"
                 android:paddingRight="@dimen/dp_16">
@@ -379,17 +367,14 @@
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
-                    android:gravity="right"
                     android:id="@+id/tvHomeAddress"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_18"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
                     android:hint="未填写"
                     android:maxLines="1"
                     android:textColor="@color/black6"
@@ -402,6 +387,105 @@
                     android:src="@mipmap/icon_right" />
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f6f6f6" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/selector_item_click_bg"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp_16"
+                android:paddingRight="@dimen/dp_16"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="经度"
+                    android:textColor="@color/black6"
+                    android:textSize="@dimen/sp15" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tvLongitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_18"
+                    android:gravity="right"
+                    android:hint="未填写"
+                    android:maxLines="1"
+                    android:textColor="@color/black6"
+                    android:textColorHint="@color/black9"
+                    android:textSize="@dimen/sp15" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="16dp"
+                    android:src="@mipmap/icon_right" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f6f6f6" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/selector_item_click_bg"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp_16"
+                android:paddingRight="@dimen/dp_16"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="纬度"
+                    android:textColor="@color/black6"
+                    android:textSize="@dimen/sp15" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tvLatitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_18"
+                    android:gravity="right"
+                    android:hint="未填写"
+                    android:maxLines="1"
+                    android:textColor="@color/black6"
+                    android:textColorHint="@color/black9"
+                    android:textSize="@dimen/sp15" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="16dp"
+                    android:src="@mipmap/icon_right" />
+
+            </LinearLayout>
+
+            <com.amap.api.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/white"
+                android:padding="16dp" />
         </LinearLayout>
     </ScrollView>
 

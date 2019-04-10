@@ -5,25 +5,27 @@ import android.bluetooth.BluetoothGatt;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Poi;
+import com.amap.api.navi.AmapNaviPage;
+import com.amap.api.navi.AmapNaviParams;
+import com.amap.api.navi.AmapNaviType;
+import com.amap.api.navi.AmapRouteActivity;
+import com.amap.api.navi.INaviInfoCallback;
+import com.amap.api.navi.model.AMapNaviLocation;
 import com.huichenghe.bleControl.Ble.BleDataForBattery;
 import com.huichenghe.bleControl.Ble.BleDataforSyn;
 import com.huichenghe.bleControl.Ble.BleGattHelperListener;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.DataSendCallback;
-import com.huichenghe.bleControl.Ble.IServiceCallback;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 import com.huichenghe.bleControl.Utils.FormatUtils;
 
@@ -32,13 +34,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import aio.health2world.rx.rxpermissions.RxPermissions;
-import aio.health2world.utils.Logger;
+import aio.health2world.utils.DateUtil;
 import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
@@ -50,16 +50,19 @@ import os.bracelets.parents.app.navigate.NavigateActivity;
 import os.bracelets.parents.app.nearby.NearbyActivity;
 import os.bracelets.parents.app.news.HealthInfoActivity;
 import os.bracelets.parents.app.setting.SettingActivity;
+import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.RemindBean;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.common.MsgEvent;
+import os.bracelets.parents.db.DBManager;
 import os.bracelets.parents.utils.DataString;
 import os.bracelets.parents.view.BatteryView;
 import rx.functions.Action1;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implements MainContract.View {
+public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implements MainContract.View,
+        INaviInfoCallback {
 
     private View layoutDialing, layoutNews, layoutSetting, layoutNavigation, layoutNearby;
 
@@ -76,6 +79,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     private BatteryView batteryView;
 
     private Handler handler;
+
+    private BaseInfo info;
 
     @Override
     protected MainContract.Presenter getPresenter() {
@@ -115,16 +120,13 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         handler = new Handler();
         tvConnect.setText(MyApplication.getInstance().isBleConnect() ? "已连接" : "未连接");
         //星期
-        tvWeek.setText(DataString.getWeek());
+        tvWeek.setText(DataString.getWeek() + "\r\n" + DateUtil.getDate(new Date(System.currentTimeMillis())));
 
         remindList = new ArrayList<>();
         remindAdapter = new RemindAdapter(remindList);
         recyclerView.setAdapter(remindAdapter);
         remindAdapter.bindToRecyclerView(recyclerView);
         remindAdapter.setEmptyView(R.layout.layout_empty_text);
-
-        mPresenter.homeMsg();
-        mPresenter.getWeather();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RxPermissions rxPermissions = new RxPermissions(this);
@@ -140,6 +142,15 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         }
                     });
         }
+
+        mPresenter.homeMsg();
+        mPresenter.getWeather();
+        mPresenter.uploadLocation();
+
+        if (getIntent().hasExtra("info"))
+            info = (BaseInfo) getIntent().getSerializableExtra("info");
+        if (info != null)
+            mPresenter.loginHx(info);
     }
 
     @Override
@@ -159,12 +170,22 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         remindList.clear();
         remindList.addAll(list);
         remindAdapter.notifyDataSetChanged();
+
+        DBManager.getInstance().saveRemindList(list);
+
+        if (remindList.size() > 0)
+            MyApplication.getInstance().alarmClock(this, remindList.get(0).getRemindTime());
     }
 
     @Override
     public void loginWeatherSuccess(WeatherInfo info) {
         tvCity.setText(info.getCity());
         tvWeather.setText(info.getWeather());
+    }
+
+    @Override
+    public void loadSports(String number) {
+
     }
 
     @Override
@@ -181,7 +202,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
             case R.id.layoutNavigation:
-                startActivity(new Intent(this, NavigateActivity.class));
+                AmapNaviParams params = new AmapNaviParams(new Poi("", null, ""),
+                        null, new Poi("", null, ""), AmapNaviType.DRIVER);
+                params.setUseInnerVoice(true);
+                AmapNaviPage.getInstance().showRouteActivity(getApplicationContext(), params,
+                        MainActivity.this, AmapRouteActivity.class);
+//                startActivity(new Intent(this, NavigateActivity.class));
                 break;
             case R.id.layoutNearby:
                 //附近的人
@@ -194,6 +220,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         }
     }
 
+
     //蓝牙设备扫描完成之后回调
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMsgEvent(MsgEvent event) {
@@ -201,12 +228,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         if (event.getAction() == AppConfig.MSG_DEVICE_CONNECT) {
             tvConnect.setText("已连接");
             onResume();
-        } else {
-            boolean isConnect = MyApplication.getInstance().isBleConnect();
-            if (isConnect)
-                tvConnect.setText("已连接");
-            else
-                tvConnect.setText("未连接");
+        }
+        //设备失去连接
+        if (event.getAction() == AppConfig.MSG_DEVICE_DISCONNECT) {
+            tvConnect.setText("未连接");
+            batteryView.setPower(10);
+            tvBattery.setText("---");
         }
     }
 
@@ -216,10 +243,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (MyApplication.getInstance().isBleConnect()) {
-                    BluetoothLeService.getInstance().addCallback(
-                            MyBleGattHelper.getInstance(getApplicationContext(), new GattHelperListener()));
-                    getBraceletData();
+                if (BluetoothLeService.getInstance() != null) {
+                    if (MyApplication.getInstance().isBleConnect()) {
+                        BluetoothLeService.getInstance().addCallback(
+                                MyBleGattHelper.getInstance(MainActivity.this, new GattHelperListener()));
+                        getBraceletData();
+                    }
                 }
             }
         }, 500);
@@ -336,5 +365,75 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         handler.removeCallbacksAndMessages(null);
         EventBus.getDefault().unregister(this);
 //        countDownTimer.cancel();
+    }
+
+    @Override
+    public void onInitNaviFailure() {
+
+    }
+
+    @Override
+    public void onGetNavigationText(String s) {
+
+    }
+
+    @Override
+    public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
+
+    }
+
+    @Override
+    public void onArriveDestination(boolean b) {
+
+    }
+
+    @Override
+    public void onStartNavi(int i) {
+
+    }
+
+    @Override
+    public void onCalculateRouteSuccess(int[] ints) {
+
+    }
+
+    @Override
+    public void onCalculateRouteFailure(int i) {
+
+    }
+
+    @Override
+    public void onStopSpeaking() {
+
+    }
+
+    @Override
+    public void onReCalculateRoute(int i) {
+
+    }
+
+    @Override
+    public void onExitPage(int i) {
+
+    }
+
+    @Override
+    public void onStrategyChanged(int i) {
+
+    }
+
+    @Override
+    public View getCustomNaviBottomView() {
+        return null;
+    }
+
+    @Override
+    public View getCustomNaviView() {
+        return null;
+    }
+
+    @Override
+    public void onArrivedWayPoint(int i) {
+
     }
 }

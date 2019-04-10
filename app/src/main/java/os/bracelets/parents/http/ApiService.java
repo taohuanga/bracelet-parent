@@ -57,6 +57,12 @@ interface ApiService {
     Observable<HttpResult> phoneExist(@Body Map<String, Object> map);
 
     /**
+     * 绑定手机号
+     */
+    @POST("member/memberAccount/updatePhone")
+    Observable<HttpResult> updatePhone(@Body Map<String, Object> map);
+
+    /**
      * 首页信息
      */
     @POST("parent/home/index")
@@ -67,6 +73,26 @@ interface ApiService {
      */
     @POST("parent/home/remindList")
     Observable<HttpResult> remindList(@Body Map<String, Object> map);
+
+    /**
+     * 首页日常运动数据
+     *
+     */
+    @POST("parent/home/dailySports")
+    Observable<HttpResult> dailySports(@Body Map<String, Object> map);
+
+    /**
+     * 上传位置信息（经纬度坐标）
+     */
+
+    @POST("parent/home/location")
+    Observable<HttpResult> uploadLocation(@Body Map<String, Object> map);
+
+    /**
+     * 跌倒信息上传
+     */
+    @POST("parent/home/fall")
+    Observable<HttpResult> fall(@Body Map<String, Object> map);
 
     /**
      * 用户信息
@@ -109,6 +135,11 @@ interface ApiService {
     @POST("parent/information/list")
     Observable<HttpResult> informationList(@Body Map<String, Object> map);
 
+    /**
+     * 资讯详情
+     */
+    @POST("parent/information/info")
+    Observable<HttpResult> infoDetail(@Body Map<String, Object> map);
 
     /**
      * 附近的人列表
