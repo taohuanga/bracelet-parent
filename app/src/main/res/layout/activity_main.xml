@@ -266,6 +266,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/layoutNearby"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -293,6 +294,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginLeft="@dimen/dp_8"
                 android:id="@+id/layoutNavigation"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

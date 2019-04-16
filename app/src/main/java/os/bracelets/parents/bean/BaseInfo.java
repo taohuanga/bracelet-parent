@@ -24,6 +24,9 @@ public class BaseInfo implements Serializable{
     private int userId;
     private String openId;
     private String phone;
+    private String bluetoothName;
+    private String equipmentSn;
+    private String macAddress;
 
 
     public String getTokenId() {
@@ -90,6 +93,30 @@ public class BaseInfo implements Serializable{
         this.birthday = birthday;
     }
 
+    public String getBluetoothName() {
+        return bluetoothName;
+    }
+
+    public void setBluetoothName(String bluetoothName) {
+        this.bluetoothName = bluetoothName;
+    }
+
+    public String getEquipmentSn() {
+        return equipmentSn;
+    }
+
+    public void setEquipmentSn(String equipmentSn) {
+        this.equipmentSn = equipmentSn;
+    }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
+
     public static BaseInfo parseBean(JSONObject object) {
         BaseInfo info = new BaseInfo();
         info.setTokenId(object.optString("tokenId"));
@@ -99,6 +126,9 @@ public class BaseInfo implements Serializable{
         info.setRealName(object.optString("realName"));
         info.setPhone(object.optString("phone"));
         info.setBirthday(object.optString("birthday"));
+        info.setBluetoothName(object.optString("bluetoothName"));
+        info.setEquipmentSn(object.optString("equipmentSn"));
+        info.setMacAddress(object.optString("macAddress"));
         return info;
     }
 }

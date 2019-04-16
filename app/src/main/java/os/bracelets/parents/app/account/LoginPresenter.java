@@ -127,7 +127,7 @@ public class LoginPresenter extends LoginContract.Presenter {
                         SPUtils.put(MyApplication.getInstance(), AppConfig.USER_ID, info.getUserId() + "");
                         SPUtils.put(MyApplication.getInstance(), AppConfig.USER_IMG, info.getPortrait() + "");
                         SPUtils.put(MyApplication.getInstance(), AppConfig.USER_NICK, info.getNickName() + "");
-                        if(mView!=null)
+                        if (mView != null)
                             mView.loginSuccess(info);
                     } catch (JSONException e) {
                         e.printStackTrace();

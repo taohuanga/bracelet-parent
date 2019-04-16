@@ -30,6 +30,7 @@ public class AppConfig {
     public static final String CITY_CODE = "city_code";
     public static final String ADDRESS = "address";
     public static final String CURRENT_DEVICE = "current_device";
+    public static final String MAC_ADDRESS = "mac_address";
     //标记当前程序是否登录
     public static final String IS_LOGIN = "is_login";
 

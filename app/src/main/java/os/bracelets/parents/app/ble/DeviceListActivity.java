@@ -27,6 +27,7 @@ import java.util.List;
 import aio.health2world.brvah.BaseQuickAdapter;
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.Logger;
+import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import aio.health2world.view.LoadingDialog;
 import aio.health2world.view.MyProgressDialog;
@@ -55,6 +56,8 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
 
     private LoadingDialog dialog;
 
+    private String macAddress = "";
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_ble_device;
@@ -72,6 +75,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
 
     @Override
     protected void initData() {
+        macAddress = (String) SPUtils.get(this, AppConfig.MAC_ADDRESS, "");
         listAdapter = new DeviceListAdapter(MyApplication.getInstance().getDeviceList());
         recyclerView.setAdapter(listAdapter);
 
@@ -123,15 +127,17 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             ToastUtil.showShort("请开启蓝牙");
             return;
         }
+        if(entity==null)
+            return;
         if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
-            dialog.showDialog(true,"正在断开设备");
+            dialog.showDialog(true, "正在断开设备");
             BluetoothLeService.getInstance().disconnect();
         } else {
             if (MyApplication.getInstance().isBleConnect()) {
                 ToastUtil.showShort("请先断开已连接的设备");
                 return;
             }
-            dialog.showDialog(true,"正在连接设备");
+            dialog.showDialog(true, "正在连接设备");
             BluetoothLeService.getInstance().connect(entity);
         }
     }
@@ -196,6 +202,10 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
                 Logger.i("lsy", "扫描到设备" + deviceName);
                 MyApplication.getInstance().addDevice(mLocalDeviceEntity);
                 listAdapter.notifyDataSetChanged();
+            }
+            //根据绑定的设备自带链接
+            if (mLocalDeviceEntity != null && mLocalDeviceEntity.getAddress().equals(macAddress)) {
+                BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
             }
         }
 
