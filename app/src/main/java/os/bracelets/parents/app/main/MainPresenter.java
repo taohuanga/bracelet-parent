@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.huichenghe.bleControl.Ble.BleDataForSleepData;
 import com.huichenghe.bleControl.Ble.DataSendCallback;
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +28,6 @@ import os.bracelets.parents.bean.RemindBean;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
-import os.bracelets.parents.http.ServiceFactory;
 import os.bracelets.parents.utils.StringUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -179,23 +176,23 @@ public class MainPresenter extends MainContract.Presenter {
 
     @Override
     void loginHx(BaseInfo info) {
-        EMClient.getInstance()
-                .login(info.getPhone(), info.getPhone(), new EMCallBack() {
-                    @Override
-                    public void onSuccess() {
-                        Logger.i("hx", "login success");
-                    }
-
-                    @Override
-                    public void onError(int i, String s) {
-                        Logger.i("hx", "login failed " + s);
-                    }
-
-                    @Override
-                    public void onProgress(int i, String s) {
-
-                    }
-                });
+//        EMClient.getInstance()
+//                .login(info.getPhone(), info.getPhone(), new EMCallBack() {
+//                    @Override
+//                    public void onSuccess() {
+//                        Logger.i("hx", "login success");
+//                    }
+//
+//                    @Override
+//                    public void onError(int i, String s) {
+//                        Logger.i("hx", "login failed " + s);
+//                    }
+//
+//                    @Override
+//                    public void onProgress(int i, String s) {
+//
+//                    }
+//                });
     }
 
     @Override

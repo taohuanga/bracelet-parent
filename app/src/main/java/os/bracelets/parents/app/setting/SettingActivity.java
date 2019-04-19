@@ -8,11 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import aio.health2world.glide_transformations.CropCircleTransformation;
 import aio.health2world.utils.AppManager;
@@ -164,22 +159,22 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
     }
 
     private void logoutHx() {
-        EMClient.getInstance()
-                .logout(true, new EMCallBack() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError(int i, String s) {
-
-                    }
-
-                    @Override
-                    public void onProgress(int i, String s) {
-
-                    }
-                });
+//        EMClient.getInstance()
+//                .logout(true, new EMCallBack() {
+//                    @Override
+//                    public void onSuccess() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(int i, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onProgress(int i, String s) {
+//
+//                    }
+//                });
     }
 }

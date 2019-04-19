@@ -1,6 +1,5 @@
 package os.bracelets.parents.app.nearby;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -8,7 +7,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.hyphenate.easeui.EaseConstant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +21,6 @@ import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.utils.AppUtils;
-import os.bracelets.parents.utils.DataString;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
 
@@ -87,11 +84,11 @@ public class NearbyDetailActivity extends MVPBaseActivity {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        Intent intent = new Intent(this,ChatActivity.class);
-        intent.putExtra(EaseConstant.EXTRA_USER_ID,person.getPhone());
-        intent.putExtra(EaseConstant.EXTRA_USER_NICK,person.getNickName());
-        intent.putExtra(EaseConstant.EXTRA_USER_AVATAR,person.getProfile());
-        startActivity(intent);
+//        Intent intent = new Intent(this,ChatActivity.class);
+//        intent.putExtra(EaseConstant.EXTRA_USER_ID,person.getPhone());
+//        intent.putExtra(EaseConstant.EXTRA_USER_NICK,person.getNickName());
+//        intent.putExtra(EaseConstant.EXTRA_USER_AVATAR,person.getProfile());
+//        startActivity(intent);
     }
 
     private void initPersonMsg(NearbyPerson person){

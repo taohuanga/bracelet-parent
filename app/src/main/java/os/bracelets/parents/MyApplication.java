@@ -18,7 +18,6 @@ import com.amap.api.location.AMapLocationListener;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.DeviceConfig;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
-import com.hyphenate.easeui.EaseUI;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechSynthesizer;
@@ -135,7 +134,7 @@ public class MyApplication extends Application implements AMapLocationListener {
         JPushInterface.init(this);
         JPushInterface.setDebugMode(AppConfig.IS_DEBUG);
         //环信 目前使用的是简单版的
-        EaseUI.getInstance().init(this, null);
+//        EaseUI.getInstance().init(this, null);
         //高德
         initLocation();
         // Bugly SDK初始化

@@ -98,7 +98,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:multidex:1.0.1'
     compile project(path: ':commonlib')
-    compile project(':easeui')
+//    compile project(':easeui')
     //配合蓝牙库使用 勿删
     compile 'no.nordicsemi.android.support.v18:scanner:0.1.1'
     //    //蓝牙库

@@ -127,18 +127,22 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             ToastUtil.showShort("请开启蓝牙");
             return;
         }
-        if(entity==null)
+        if (entity == null)
             return;
-        if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
-            dialog.showDialog(true, "正在断开设备");
-            BluetoothLeService.getInstance().disconnect();
-        } else {
-            if (MyApplication.getInstance().isBleConnect()) {
-                ToastUtil.showShort("请先断开已连接的设备");
-                return;
+        try {
+            if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
+                dialog.showDialog(true, "正在断开设备");
+                BluetoothLeService.getInstance().disconnect();
+            } else {
+                if (MyApplication.getInstance().isBleConnect()) {
+                    ToastUtil.showShort("请先断开已连接的设备");
+                    return;
+                }
+                dialog.showDialog(true, "正在连接设备");
+                BluetoothLeService.getInstance().connect(entity);
             }
-            dialog.showDialog(true, "正在连接设备");
-            BluetoothLeService.getInstance().connect(entity);
+        } catch (Exception e) {
+
         }
     }
 
