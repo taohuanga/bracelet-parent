@@ -215,32 +215,32 @@
             android:name="JPUSH_APPKEY"
             android:value="06bf5ebdab8e3481e3966269" /> <!--  </>值来自开发者平台取得的AppKey-->
 
-        <!--环信相关-->
-        <activity android:name=".app.nearby.ChatActivity" />
+        <!--&lt;!&ndash;环信相关&ndash;&gt;-->
+        <!--<activity android:name=".app.nearby.ChatActivity" />-->
 
-        <activity
-            android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
-            android:screenOrientation="portrait" />
+        <!--<activity-->
+            <!--android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"-->
+            <!--android:screenOrientation="portrait" />-->
 
-        <meta-data
-            android:name="EASEMOB_APPKEY"
-            android:value="1121190318085857#intelligent" />
-        <!-- 声明SDK所需的service SDK核心功能-->
-        <service
-            android:name="com.hyphenate.chat.EMChatService"
-            android:exported="true" />
-        <!-- 声明SDK所需的receiver -->
-        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-                <data android:scheme="package" />
-            </intent-filter>
-            <!-- 可选filter -->
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-        </receiver>
+        <!--<meta-data-->
+            <!--android:name="EASEMOB_APPKEY"-->
+            <!--android:value="1121190318085857#intelligent" />-->
+        <!--&lt;!&ndash; 声明SDK所需的service SDK核心功能&ndash;&gt;-->
+        <!--<service-->
+            <!--android:name="com.hyphenate.chat.EMChatService"-->
+            <!--android:exported="true" />-->
+        <!--&lt;!&ndash; 声明SDK所需的receiver &ndash;&gt;-->
+        <!--<receiver android:name="com.hyphenate.chat.EMMonitorReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.PACKAGE_REMOVED" />-->
+                <!--<data android:scheme="package" />-->
+            <!--</intent-filter>-->
+            <!--&lt;!&ndash; 可选filter &ndash;&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+                <!--<action android:name="android.intent.action.USER_PRESENT" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
         <!-- 百度地图所需的service -->
         <!--<service-->
             <!--android:name="com.baidu.location.f"-->
