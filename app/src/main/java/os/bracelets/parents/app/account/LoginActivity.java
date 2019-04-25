@@ -92,6 +92,9 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
 
         edAccount.setSelection(edAccount.getText().length());
 
+        edPhone.setText((String) SPUtils.get(this, AppConfig.USER_PHONE, ""));
+        edPhone.setSelection(edPhone.getText().length());
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RxPermissions rxPermissions = new RxPermissions(this);
             rxPermissions

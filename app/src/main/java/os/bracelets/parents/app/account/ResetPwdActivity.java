@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import aio.health2world.utils.MD5Util;
 import aio.health2world.utils.MatchUtil;
 import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.R;
@@ -135,7 +136,7 @@ public class ResetPwdActivity extends MVPBaseActivity<ResetPwdContract.Presenter
                     ToastUtil.showShort("两次密码不一致");
                     return;
                 }
-                mPresenter.resetPwd(phone, pwd, code);
+                mPresenter.resetPwd(phone, MD5Util.getMD5String(pwd), code);
                 break;
         }
     }

@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import aio.health2world.http.HttpResult;
+import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
 import os.bracelets.parents.AppConfig;
@@ -88,6 +89,8 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
      * 上一次的步数
      */
     private int previousStepCount = 0;
+
+    private RxPermissions rxPermissions;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -243,6 +246,8 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             String content = sb.toString();
             fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) + "\n" + content + "\n" +
                     "结束时间：" + formatter.format(currentTime), "test6Sensor" + formatter.format(currentTime) + ".csv");
+
+
             uploadFile();
         } else if (data.substring(10, 14).equals("5453")) {//若第11位至第14位是5453，则原始数据上传
             sb.append(data + "\n");

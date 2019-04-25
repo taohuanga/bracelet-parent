@@ -106,7 +106,7 @@ public class SensorMsgActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMsgEvent(MsgEvent event) {
-        String message = (String) event.getT();
+        String message = String.valueOf(event.getT());
         if (message.contains("688508")) {
             String str = message.substring(18, 20);
             if (str.equals("01")) {

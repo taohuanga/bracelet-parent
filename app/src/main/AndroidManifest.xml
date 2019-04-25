@@ -37,7 +37,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -53,13 +53,16 @@
         tools:replace="android:name">
         <activity android:name=".app.main.StartActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".app.account.LoginActivity">
+        <activity
+            android:name=".app.account.LoginActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="os.bracelets.parents.login" />
             </intent-filter>
@@ -219,39 +222,39 @@
         <!--<activity android:name=".app.nearby.ChatActivity" />-->
 
         <!--<activity-->
-            <!--android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"-->
-            <!--android:screenOrientation="portrait" />-->
+        <!--android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"-->
+        <!--android:screenOrientation="portrait" />-->
 
         <!--<meta-data-->
-            <!--android:name="EASEMOB_APPKEY"-->
-            <!--android:value="1121190318085857#intelligent" />-->
+        <!--android:name="EASEMOB_APPKEY"-->
+        <!--android:value="1121190318085857#intelligent" />-->
         <!--&lt;!&ndash; 声明SDK所需的service SDK核心功能&ndash;&gt;-->
         <!--<service-->
-            <!--android:name="com.hyphenate.chat.EMChatService"-->
-            <!--android:exported="true" />-->
+        <!--android:name="com.hyphenate.chat.EMChatService"-->
+        <!--android:exported="true" />-->
         <!--&lt;!&ndash; 声明SDK所需的receiver &ndash;&gt;-->
         <!--<receiver android:name="com.hyphenate.chat.EMMonitorReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.PACKAGE_REMOVED" />-->
-                <!--<data android:scheme="package" />-->
-            <!--</intent-filter>-->
-            <!--&lt;!&ndash; 可选filter &ndash;&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
-                <!--<action android:name="android.intent.action.USER_PRESENT" />-->
-            <!--</intent-filter>-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.PACKAGE_REMOVED" />-->
+        <!--<data android:scheme="package" />-->
+        <!--</intent-filter>-->
+        <!--&lt;!&ndash; 可选filter &ndash;&gt;-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+        <!--<action android:name="android.intent.action.USER_PRESENT" />-->
+        <!--</intent-filter>-->
         <!--</receiver>-->
         <!-- 百度地图所需的service -->
         <!--<service-->
-            <!--android:name="com.baidu.location.f"-->
-            <!--android:enabled="true"-->
-            <!--android:process=":remote" />-->
+        <!--android:name="com.baidu.location.f"-->
+        <!--android:enabled="true"-->
+        <!--android:process=":remote" />-->
         <!--<meta-data-->
-            <!--android:name="com.baidu.lbsapi.API_KEY"-->
-            <!--android:value="3ecea51f560650b1ed8a4b99808f52e8" />-->
+        <!--android:name="com.baidu.lbsapi.API_KEY"-->
+        <!--android:value="3ecea51f560650b1ed8a4b99808f52e8" />-->
         <!--<activity-->
-            <!--android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"-->
-            <!--android:screenOrientation="portrait" />-->
+        <!--android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"-->
+        <!--android:screenOrientation="portrait" />-->
     </application>
 
 </manifest>
