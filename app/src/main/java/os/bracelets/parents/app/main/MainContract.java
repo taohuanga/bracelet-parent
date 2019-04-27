@@ -4,6 +4,7 @@ import java.util.List;
 
 import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.RemindBean;
+import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.BasePresenter;
 import os.bracelets.parents.common.BaseView;
@@ -21,9 +22,7 @@ public interface MainContract {
 
         void loadMsgSuccess(int stepNum, List<RemindBean> list);
 
-//        void loadRemindSuccess();
-
-        void loadSports(String number);
+        void loadUserInfo(UserInfo userInfo);
     }
 
     abstract class Presenter extends BasePresenter<View> {
@@ -34,9 +33,7 @@ public interface MainContract {
 
         abstract void homeMsg();
 
-//        abstract void remindList();
-
-        abstract void dailySports();
+        abstract void userInfo();
 
         abstract void getWeather();
 
@@ -44,6 +41,7 @@ public interface MainContract {
 
         abstract void uploadLocation();
 
+        abstract void dailySports();
     }
 
 }

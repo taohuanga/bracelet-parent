@@ -170,6 +170,7 @@
             android:background="#eee" />
 
         <LinearLayout
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -180,6 +181,13 @@
                 android:layout_height="wrap_content"
                 android:text="今天的运动步数"
                 android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/ivSports"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:src="@mipmap/icon_sports_man"
+                android:layout_width="22dp"
+                android:layout_height="22dp" />
 
             <TextView
                 android:id="@+id/tvStep"

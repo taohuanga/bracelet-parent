@@ -11,7 +11,9 @@ public interface UpdatePwdContract {
 
     interface View extends BaseView<Presenter> {
 
-        void updateSuccess();
+        void codeSuccess();
+
+        void resetPwdSuccess();
 
     }
 
@@ -20,7 +22,10 @@ public interface UpdatePwdContract {
             super(mView);
         }
 
-        abstract void updatePwd(String oldPwd, String newPwd);
+        abstract void code(int type, String phone);
+
+
+        abstract void resetPwd(String phone,String oldPwd,String password,String securityCode);
     }
 
 }

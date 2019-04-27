@@ -4,13 +4,16 @@ import android.Manifest;
 import android.bluetooth.BluetoothGatt;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.model.LatLng;
@@ -49,9 +52,12 @@ import os.bracelets.parents.app.contact.ContactActivity;
 import os.bracelets.parents.app.navigate.NavigateActivity;
 import os.bracelets.parents.app.nearby.NearbyActivity;
 import os.bracelets.parents.app.news.HealthInfoActivity;
+import os.bracelets.parents.app.personal.PersonalMsgActivity;
+import os.bracelets.parents.app.personal.UpdateLocationActivity;
 import os.bracelets.parents.app.setting.SettingActivity;
 import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.RemindBean;
+import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.common.MsgEvent;
@@ -68,6 +74,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
     private TextView tvWeek, tvWeather, tvConnect, tvBattery, tvCity, tvStep;
 
+    private ImageView ivSports;
+
     private RecyclerView recyclerView;
 
     private RemindAdapter remindAdapter;
@@ -80,7 +88,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
     private Handler handler;
 
-    private BaseInfo info;
+    private UserInfo info;
 
     @Override
     protected MainContract.Presenter getPresenter() {
@@ -100,6 +108,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         layoutSetting = findView(R.id.layoutSetting);
         layoutNearby = findView(R.id.layoutNearby);
         layoutNavigation = findView(R.id.layoutNavigation);
+        ivSports = findView(R.id.ivSports);
 
         tvWeek = findView(R.id.tvWeek);
         tvCity = findView(R.id.tvCity);
@@ -143,15 +152,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         }
                     });
         }
-
-        mPresenter.homeMsg();
         mPresenter.getWeather();
         mPresenter.uploadLocation();
-
-        if (getIntent().hasExtra("info"))
-            info = (BaseInfo) getIntent().getSerializableExtra("info");
-        if (info != null)
-            mPresenter.loginHx(info);
+//        if (getIntent().hasExtra("info"))
+//            info = (BaseInfo) getIntent().getSerializableExtra("info");
+//        if (info != null)
+//            mPresenter.loginHx(info);
     }
 
     @Override
@@ -168,6 +174,14 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     @Override
     public void loadMsgSuccess(int stepNum, List<RemindBean> list) {
         tvStep.setText(String.valueOf(stepNum));
+        if(info!=null){
+            //性别描述0 未知 1 男 2 女
+            if(info.getSex()==2){
+                ivSports.setImageResource(R.mipmap.icon_sports_woman);
+            }else {
+                ivSports.setImageResource(R.mipmap.icon_sports_man);
+            }
+        }
         remindList.clear();
         remindList.addAll(list);
         remindAdapter.notifyDataSetChanged();
@@ -185,8 +199,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     }
 
     @Override
-    public void loadSports(String number) {
-
+    public void loadUserInfo(UserInfo userInfo) {
+        this.info = userInfo;
+        mPresenter.homeMsg();
     }
 
     @Override
@@ -203,8 +218,35 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
             case R.id.layoutNavigation:
+                if (info == null) {
+                    ToastUtil.showShort("用户信息加载失败");
+                    mPresenter.userInfo();
+                    return;
+                }
+                if (TextUtils.isEmpty(info.getLocation())) {
+                    new AlertDialog.Builder(this)
+                            .setMessage("您还没有设置家的位置，请先去设置家庭位置！")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(MainActivity.this, PersonalMsgActivity.class);
+                                    startActivityForResult(intent, 0x11);
+                                }
+                            })
+                            .show();
+                    return;
+                }
+                double latitude = Double.parseDouble(info.getLatitude());
+                double longitude = Double.parseDouble(info.getLongitude());
+                LatLng latLng = new LatLng(latitude, longitude);
                 AmapNaviParams params = new AmapNaviParams(new Poi("", null, ""),
-                        null, new Poi("", null, ""), AmapNaviType.DRIVER);
+                        null, new Poi(info.getLocation(), latLng, ""), AmapNaviType.DRIVER);
                 params.setUseInnerVoice(true);
                 AmapNaviPage.getInstance().showRouteActivity(getApplicationContext(), params,
                         MainActivity.this, AmapRouteActivity.class);
@@ -241,6 +283,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     @Override
     protected void onResume() {
         super.onResume();
+        mPresenter.userInfo();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -25,6 +25,7 @@ import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.RemindBean;
+import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
@@ -72,39 +73,26 @@ public class MainPresenter extends MainContract.Presenter {
         });
     }
 
-//    @Override
-//    void remindList() {
-//        ApiRequest.remindList(new HttpSubscriber() {
-//            @Override
-//            public void onError(Throwable e) {
-//                super.onError(e);
-//            }
-//
-//            @Override
-//            public void onNext(HttpResult result) {
-//                super.onNext(result);
-//                if (result.code.equals(AppConfig.SUCCESS)) {
-//                    try {
-//                        JSONObject object = new JSONObject(new Gson().toJson(result.data));
-//                        JSONArray array = object.optJSONArray("list");
-//                        if (array != null) {
-//                            List<RemindBean> list = new ArrayList<>();
-//                            for (int i = 0; i < array.length(); i++) {
-//                                JSONObject obj = array.optJSONObject(i);
-//                                RemindBean remind = RemindBean.parseBean(obj);
-//                                list.add(remind);
-//                            }
-//                            if (mView != null)
-//                                mView.loadRemindSuccess(list);
-//                        }
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
-//    }
+    @Override
+    void userInfo() {
+        ApiRequest.userInfo(new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+                if (result.code.equals(AppConfig.SUCCESS)) {
+                    try {
+                        JSONObject object = new JSONObject(new Gson().toJson(result.data));
+                        UserInfo info = UserInfo.parseBean(object);
+                        if(mView!=null)
+                            mView.loadUserInfo(info);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
+                }
+            }
+        });
+    }
 
     @Override
     void dailySports() {

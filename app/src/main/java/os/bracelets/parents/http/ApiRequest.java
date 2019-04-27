@@ -121,11 +121,12 @@ public class ApiRequest {
     }
 
     //重置密码
-    public static Subscription resetPwd(String phone, String password, String securityCode,
+    public static Subscription resetPwd(String phone, String oldPwd, String password, String securityCode,
                                         Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("phone", phone);
+        map.put("oldPwd", oldPwd);
         map.put("password", password);
         map.put("securityCode", securityCode);
         return ServiceFactory.getInstance()

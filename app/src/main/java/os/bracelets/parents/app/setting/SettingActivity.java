@@ -2,6 +2,7 @@ package os.bracelets.parents.app.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -149,7 +150,11 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     @Override
     public void loadInfoSuccess(BaseInfo info) {
-        tvName.setText(info.getNickName());
+        if (!TextUtils.isEmpty(info.getName())) {
+            tvName.setText(info.getNickName() + "(" + info.getName() + ")");
+        } else {
+            tvName.setText(info.getNickName());
+        }
         Glide.with(this)
                 .load(info.getPortrait())
                 .placeholder(R.mipmap.ic_default_portrait)

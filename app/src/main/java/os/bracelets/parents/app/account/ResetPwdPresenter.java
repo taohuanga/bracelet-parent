@@ -50,7 +50,7 @@ public class ResetPwdPresenter extends ResetPwdContract.Presenter {
 
     @Override
     void resetPwd(String phone, String pwd, String securityCode) {
-        ApiRequest.resetPwd(phone, pwd, securityCode, new HttpSubscriber() {
+        ApiRequest.resetPwd(phone, "", pwd, securityCode, new HttpSubscriber() {
             @Override
             public void onStart() {
                 super.onStart();
