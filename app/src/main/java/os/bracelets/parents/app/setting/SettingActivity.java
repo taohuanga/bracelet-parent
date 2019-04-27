@@ -14,6 +14,7 @@ import aio.health2world.glide_transformations.CropCircleTransformation;
 import aio.health2world.utils.AppManager;
 import aio.health2world.utils.SPUtils;
 import os.bracelets.parents.AppConfig;
+import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
 import os.bracelets.parents.app.about.AboutActivity;
 import os.bracelets.parents.app.about.FeedBackActivity;
@@ -137,10 +138,11 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SPUtils.put(SettingActivity.this, AppConfig.IS_LOGIN, false);
-                        AppManager.getInstance().finishAllActivity();
-                        startActivity(new Intent(SettingActivity.this, LoginActivity.class));
-                        finish();
+//                        SPUtils.put(SettingActivity.this, AppConfig.IS_LOGIN, false);
+//                        AppManager.getInstance().finishAllActivity();
+//                        startActivity(new Intent(SettingActivity.this, LoginActivity.class));
+//                        finish();
+                        MyApplication.getInstance().logout();
                         logoutHx();
                     }
                 })

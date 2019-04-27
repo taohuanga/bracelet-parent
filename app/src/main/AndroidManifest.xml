@@ -64,6 +64,7 @@
             android:name=".app.account.LoginActivity"
             android:launchMode="singleTop">
             <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="os.bracelets.parents.login" />
             </intent-filter>
         </activity>
