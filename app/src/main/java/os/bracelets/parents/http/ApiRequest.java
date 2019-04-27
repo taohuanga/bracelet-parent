@@ -333,7 +333,8 @@ public class ApiRequest {
 
     //修改资料
     public static Subscription updateMsg(String portrait, String nickName, String realName, int sex, String birthday,
-                                         String height, String weight, String location, Subscriber<HttpResult> subscriber) {
+                                         String height, String weight, String location, String longitude, String latitude,
+                                         Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         if (!TextUtils.isEmpty(portrait))
@@ -359,6 +360,12 @@ public class ApiRequest {
 
         if (!TextUtils.isEmpty(location))
             map.put("location", location);
+
+        if (!TextUtils.isEmpty(longitude))
+            map.put("longitude", longitude);
+
+        if (!TextUtils.isEmpty(latitude))
+            map.put("latitude", latitude);
 
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)

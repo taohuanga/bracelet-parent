@@ -30,7 +30,7 @@ public interface PersonalMsgContract {
         abstract void uploadImage(String imagePath);
 
         abstract void updateMsg(String profile, String nickName, String realName, int sex, String birthday,
-                                String height, String weight, String location);
+                                String height, String weight, String location, String longitude, String latitude);
     }
 
 }
