@@ -114,7 +114,7 @@ public class UpdatePwdActivity extends MVPBaseActivity<UpdatePwdContract.Present
             ToastUtil.showShort("两次输入的新密码不一致");
             return;
         }
-        mPresenter.resetPwd(phone, MD5Util.getMD5String(oldPwd), MD5Util.getMD5String(newPwd), code);
+        mPresenter.updatePwd(MD5Util.getMD5String(oldPwd), MD5Util.getMD5String(newPwd), code);
     }
 
     //计时器

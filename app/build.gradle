@@ -81,10 +81,6 @@ android.applicationVariants.all {
     variant ->
         variant.outputs.each {
             output ->
-                if (buildType.name.equals("debug")) {
-//                    output.outputFile = new File(output.outputFile.parent,
-//                            "parents_debug_" + packageTime() + ".apk");
-                }
                 if (buildType.name.equals("release")) {
                     output.outputFile = new File(output.outputFile.parent,
                             "parents_release_" + packageTime() + ".apk");

@@ -108,11 +108,13 @@ public class ApiRequest {
     }
 
     //修改密码
-    public static Subscription updatePwd(String oldPwd, String newPwd, Subscriber<HttpResult> subscriber) {
+    public static Subscription updatePwd(String oldPwd, String newPwd, String securityCode,
+                                         Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("oldPass", oldPwd);
         map.put("newPass", newPwd);
+        map.put("securityCode", securityCode);
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .updatePwd(map)
@@ -121,12 +123,11 @@ public class ApiRequest {
     }
 
     //重置密码
-    public static Subscription resetPwd(String phone, String oldPwd, String password, String securityCode,
+    public static Subscription resetPwd(String phone,String password, String securityCode,
                                         Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("phone", phone);
-        map.put("oldPwd", oldPwd);
         map.put("password", password);
         map.put("securityCode", securityCode);
         return ServiceFactory.getInstance()

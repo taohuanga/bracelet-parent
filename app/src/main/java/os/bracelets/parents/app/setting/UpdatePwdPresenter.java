@@ -50,8 +50,8 @@ public class UpdatePwdPresenter extends UpdatePwdContract.Presenter {
 
 
     @Override
-    void resetPwd(String phone, String oldPwd,String password, String securityCode) {
-        ApiRequest.resetPwd(phone, oldPwd,password, securityCode, new HttpSubscriber() {
+    void updatePwd(String oldPwd, String password, String securityCode) {
+        ApiRequest.updatePwd(oldPwd, password, securityCode, new HttpSubscriber() {
             @Override
             public void onStart() {
                 super.onStart();

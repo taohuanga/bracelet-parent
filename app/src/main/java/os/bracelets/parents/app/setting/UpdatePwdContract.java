@@ -25,7 +25,7 @@ public interface UpdatePwdContract {
         abstract void code(int type, String phone);
 
 
-        abstract void resetPwd(String phone,String oldPwd,String password,String securityCode);
+        abstract void updatePwd(String oldPwd,String password,String securityCode);
     }
 
 }
