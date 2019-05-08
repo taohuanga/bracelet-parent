@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
@@ -67,8 +68,14 @@ public class MyApplication extends Application implements AMapLocationListener {
 
         initApp();
 
-        startService(new Intent(this, BluetoothLeService.class));
-        startService(new Intent(this, AppService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(this, BluetoothLeService.class));
+            startForegroundService(new Intent(this, AppService.class));
+        } else {
+            startService(new Intent(this, BluetoothLeService.class));
+            startService(new Intent(this, AppService.class));
+        }
+
     }
 
     public static MyApplication getInstance() {

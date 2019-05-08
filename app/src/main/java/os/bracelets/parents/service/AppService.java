@@ -1,5 +1,6 @@
 package os.bracelets.parents.service;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -100,6 +101,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
     @Override
     public void onCreate() {
         super.onCreate();
+        startForeground(1,new Notification());
         //蓝牙数据回调监听
         BleDataForSensor.getInstance().setSensorListener(this);
         //通知
