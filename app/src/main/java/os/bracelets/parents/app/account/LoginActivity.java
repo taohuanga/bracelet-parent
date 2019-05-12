@@ -86,12 +86,6 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
 
     @Override
     protected void initData() {
-        String userId = (String) SPUtils.get(this, AppConfig.USER_ID, "");
-        JPushInterface.init(this);
-        JPushUtil.setJPushAlias(TagAliasOperatorHelper.ACTION_SET, userId);
-//        Set<String> set = new HashSet<>();
-//        set.add("android");
-//        JPushUtil.setJPushTags(TagAliasOperatorHelper.ACTION_SET, set);
 
         edAccount.setSelection(edAccount.getText().length());
 

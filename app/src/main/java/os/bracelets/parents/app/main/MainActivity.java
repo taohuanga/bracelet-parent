@@ -42,7 +42,9 @@ import java.util.List;
 
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.DateUtil;
+import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
+import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
@@ -62,6 +64,8 @@ import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.common.MsgEvent;
 import os.bracelets.parents.db.DBManager;
+import os.bracelets.parents.jpush.JPushUtil;
+import os.bracelets.parents.jpush.TagAliasOperatorHelper;
 import os.bracelets.parents.utils.DataString;
 import os.bracelets.parents.view.BatteryView;
 import rx.functions.Action1;
@@ -126,6 +130,13 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
     @Override
     protected void initData() {
+        String userId = (String) SPUtils.get(this, AppConfig.USER_ID, "");
+        JPushInterface.init(this);
+        JPushUtil.setJPushAlias(TagAliasOperatorHelper.ACTION_SET, userId);
+//        Set<String> set = new HashSet<>();
+//        set.add("android");
+//        JPushUtil.setJPushTags(TagAliasOperatorHelper.ACTION_SET, set);
+
         handler = new Handler();
         tvConnect.setText(MyApplication.getInstance().isBleConnect() ? "已连接" : "未连接");
         //星期
