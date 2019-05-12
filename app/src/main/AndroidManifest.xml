@@ -219,7 +219,7 @@
             android:value="developer-default" />
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="06bf5ebdab8e3481e3966269" /> <!--  </>值来自开发者平台取得的AppKey-->
+            android:value="fa9ca01e1b8be910afe71c30" /> <!--  </>值来自开发者平台取得的AppKey-->
 
         <!--&lt;!&ndash;环信相关&ndash;&gt;-->
         <!--<activity android:name=".app.nearby.ChatActivity" />-->

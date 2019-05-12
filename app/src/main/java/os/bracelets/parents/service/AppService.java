@@ -35,6 +35,7 @@ import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
 import os.bracelets.parents.app.ble.BleDataForSensor;
+import os.bracelets.parents.app.contact.ContactActivity;
 import os.bracelets.parents.common.MsgEvent;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
@@ -101,7 +102,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(1,new Notification());
+        startForeground(1, new Notification());
         //蓝牙数据回调监听
         BleDataForSensor.getInstance().setSensorListener(this);
         //通知
@@ -249,8 +250,8 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) + "\n" + content + "\n" +
                     "结束时间：" + formatter.format(currentTime), "test6Sensor" + formatter.format(currentTime) + ".csv");
 
-
             uploadFile();
+            fallMsg();
         } else if (data.substring(10, 14).equals("5453")) {//若第11位至第14位是5453，则原始数据上传
             sb.append(data + "\n");
             EventBus.getDefault().post(new MsgEvent<>(data));
@@ -307,9 +308,26 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                 }
             });
         }
-
     }
 
+    private void fallMsg() {
+        //跳转到拨号界面
+        Intent dialIntent = new Intent(this, ContactActivity.class);
+        dialIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(dialIntent);
+
+        ApiRequest.fall(new HttpSubscriber() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
+
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+            }
+        });
+    }
 
     private void uploadStepNum() {
         if (CURRENT_STEP == 0)

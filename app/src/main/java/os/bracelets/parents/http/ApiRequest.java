@@ -2,6 +2,7 @@ package os.bracelets.parents.http;
 
 
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 
@@ -123,7 +124,7 @@ public class ApiRequest {
     }
 
     //重置密码
-    public static Subscription resetPwd(String phone,String password, String securityCode,
+    public static Subscription resetPwd(String phone, String password, String securityCode,
                                         Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
@@ -237,8 +238,11 @@ public class ApiRequest {
     public static Subscription uploadFile(File file, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+        String address = entity == null ? "" : entity.getAddress();
+        if (!TextUtils.isEmpty(address))
+            address = address.replace(":", "").toLowerCase();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        map.put("fileType", entity == null ? "" : entity.getAddress());
+        map.put("fileType", address);
         map.put("fileData", FileUtils.file2Base64(file.getAbsolutePath()));
         map.put("fileName", file.getName());
         return ServiceFactory.getInstance()
