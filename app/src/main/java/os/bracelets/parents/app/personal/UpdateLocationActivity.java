@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -20,6 +21,7 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.Text;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.TranslateAnimation;
 import com.amap.api.services.core.AMapException;
@@ -91,10 +93,14 @@ public class UpdateLocationActivity extends AppCompatActivity implements View.On
         if (aMap == null) {
             aMap = mapView.getMap();
         }
-        double latitude1 = Double.parseDouble(latitude);
-        double longitude1 = Double.parseDouble(longitude);
-        aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(
-                new LatLng(latitude1, longitude1), 18, 30, 30)));
+        LatLng latLng = null;
+        if (!TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(longitude)) {
+            double latitude1 = Double.parseDouble(latitude);
+            double longitude1 = Double.parseDouble(longitude);
+            latLng = new LatLng(latitude1, longitude1);
+        }
+
+        aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18, 30, 30)));
         aMap.moveCamera(CameraUpdateFactory.zoomTo((float) 13.5));
     }
 

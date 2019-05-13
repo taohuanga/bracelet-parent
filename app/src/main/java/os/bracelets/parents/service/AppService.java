@@ -14,7 +14,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.NotificationCompat;
 
@@ -54,7 +56,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
     private NotificationCompat.Builder builder;
 
-    private int notifyId = 11;
+    private int notifyId = 1;
 
     private int countFile = 0;
 
@@ -102,7 +104,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(1, new Notification());
         //蓝牙数据回调监听
         BleDataForSensor.getInstance().setSensorListener(this);
         //通知
@@ -111,6 +112,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         initSensor();
 
         timer.start();
+
     }
 
     //计时器 十分钟执行一次数据上传操作
@@ -149,6 +151,8 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, NotificationManager
                     .IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
+
+            notificationManager.notify(notifyId,builder.build());
         }
     }
 
