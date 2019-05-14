@@ -131,6 +131,7 @@ public class MyApplication extends Application implements AMapLocationListener {
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        filter.addAction(BleReceiver.NOTIFICATION_SHOW);
         registerReceiver(new BleReceiver(), filter);
 
         IntentFilter filter1 = new IntentFilter();
