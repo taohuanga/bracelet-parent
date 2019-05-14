@@ -68,12 +68,13 @@ public class MyApplication extends Application implements AMapLocationListener {
 
         initApp();
 
-        startService(new Intent(this, BluetoothLeService.class));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(new Intent(this, AppService.class));
+            startForegroundService(new Intent(this, BluetoothLeService.class));
         } else {
             startService(new Intent(this, AppService.class));
+            startService(new Intent(this, BluetoothLeService.class));
         }
 
     }
