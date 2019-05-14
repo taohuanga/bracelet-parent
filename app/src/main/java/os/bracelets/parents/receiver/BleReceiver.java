@@ -57,7 +57,6 @@ public class BleReceiver extends BroadcastReceiver {
                 EventBus.getDefault().post(new MsgEvent<LocalDeviceEntity>(AppConfig.MSG_DEVICE_DISCONNECT));
                 break;
             case NOTIFICATION_SHOW:
-                ToastUtil.showShort("123123");
                 break;
         }
     }

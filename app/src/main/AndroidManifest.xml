@@ -108,9 +108,7 @@
         <activity android:name=".app.personal.UpdateLocationActivity" />
 
         <service
-            android:name=".service.AppService"
-            android:enabled="true"
-            android:exported="true" />
+            android:name=".service.AppService" />
 
         <service android:name="com.huichenghe.bleControl.Ble.BluetoothLeService" />
 

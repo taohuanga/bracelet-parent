@@ -277,7 +277,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                     .IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
 
-            notificationManager.notify(notifyId, builder.build());
         }
         notificationManager.notify(notifyId, builder.build());
 
