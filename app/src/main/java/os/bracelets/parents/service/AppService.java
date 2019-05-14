@@ -14,9 +14,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.NotificationCompat;
 
@@ -30,7 +28,6 @@ import java.util.Date;
 import java.util.List;
 
 import aio.health2world.http.HttpResult;
-import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
 import os.bracelets.parents.AppConfig;
@@ -52,11 +49,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
     public static final String TAG = "AppService";
 
-    private NotificationManager notificationManager;
-
-    private NotificationCompat.Builder builder;
-
-    private int notifyId = 1;
+    private int notifyId = 11;
 
     private int countFile = 0;
 
@@ -94,7 +87,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
      */
     private int previousStepCount = 0;
 
-    private RxPermissions rxPermissions;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -104,15 +96,22 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
     @Override
     public void onCreate() {
         super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(1, new Notification());
+        }
+    }
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         //蓝牙数据回调监听
         BleDataForSensor.getInstance().setSensorListener(this);
-        //通知
-        initNotify();
         //计步器
         initSensor();
 
         timer.start();
 
+        return super.onStartCommand(intent, flags, startId);
     }
 
     //计时器 十分钟执行一次数据上传操作
@@ -130,31 +129,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             uploadStepNum();
         }
     };
-
-    private void initNotify() {
-        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        builder = new NotificationCompat.Builder(this);//创建通知消息实例
-        builder.setContentTitle("衣带保父母端");
-        builder.setContentText("正在上传蓝牙设备数据");
-        builder.setWhen(System.currentTimeMillis());//通知栏显示时间
-        builder.setSmallIcon(R.mipmap.ic_app_logo);//通知栏小图标
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_logo));//通知栏下拉是图标
-        builder.setPriority(NotificationCompat.PRIORITY_MAX);//设置通知消息优先级
-        builder.setAutoCancel(true);//设置点击通知栏消息后，通知消息自动消失
-        builder.setVibrate(new long[]{0, 1000, 1000, 1000});//通知栏消息震动
-        builder.setLights(Color.GREEN, 1000, 2000);//通知栏消息闪灯(亮一秒间隔两秒再亮)
-        builder.setDefaults(NotificationCompat.DEFAULT_ALL);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String CHANNEL_ID = "my_channel_01";
-            CharSequence name = "name_channel";
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, NotificationManager
-                    .IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-
-            notificationManager.notify(notifyId,builder.build());
-        }
-    }
 
     private void initSensor() {
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
@@ -283,7 +257,30 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         if (!isLogin)
             return;
 
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);//创建通知消息实例
+        builder.setContentTitle("衣带保父母端");
+        builder.setContentText("正在上传蓝牙设备数据");
+        builder.setWhen(System.currentTimeMillis());//通知栏显示时间
+        builder.setSmallIcon(R.mipmap.ic_app_logo);//通知栏小图标
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_logo));//通知栏下拉是图标
+        builder.setPriority(NotificationCompat.PRIORITY_MAX);//设置通知消息优先级
+        builder.setAutoCancel(true);//设置点击通知栏消息后，通知消息自动消失
+        builder.setVibrate(new long[]{0, 1000, 1000, 1000});//通知栏消息震动
+        builder.setLights(Color.GREEN, 1000, 2000);//通知栏消息闪灯(亮一秒间隔两秒再亮)
+        builder.setDefaults(NotificationCompat.DEFAULT_ALL);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String CHANNEL_ID = "my_channel_01";
+            CharSequence name = "name_channel";
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, NotificationManager
+                    .IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+
+            notificationManager.notify(notifyId, builder.build());
+        }
         notificationManager.notify(notifyId, builder.build());
+
         for (final File file : fileList) {
 
             ApiRequest.uploadFile(file, new HttpSubscriber() {
@@ -293,7 +290,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                     super.onError(e);
                     countFile++;
                     if (countFile == fileList.size()) {
-                        notificationManager.cancel(notifyId);
                         countFile = 0;
                     }
                 }
@@ -303,7 +299,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                     super.onNext(result);
                     countFile++;
                     if (countFile == fileList.size()) {
-                        notificationManager.cancel(notifyId);
                         countFile = 0;
                     }
                     if (result.code.equals(AppConfig.SUCCESS)) {
