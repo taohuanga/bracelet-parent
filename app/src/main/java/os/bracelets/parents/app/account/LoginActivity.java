@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.huichenghe.bleControl.Ble.BluetoothLeService;
+
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.DeviceUtil;
 import aio.health2world.utils.MD5Util;
@@ -26,6 +28,7 @@ import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.jpush.JPushUtil;
 import os.bracelets.parents.jpush.TagAliasOperatorHelper;
+import os.bracelets.parents.service.AppService;
 import rx.functions.Action1;
 
 /**
@@ -82,6 +85,9 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
         linePwd = findView(R.id.linePwd);
         layoutPhone = findView(R.id.layoutPhone);
         layoutAccount = findView(R.id.layoutAccount);
+
+        startService(new Intent(this, AppService.class));
+        startService(new Intent(this, BluetoothLeService.class));
     }
 
     @Override
