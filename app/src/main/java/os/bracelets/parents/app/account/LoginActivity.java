@@ -85,9 +85,6 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
         linePwd = findView(R.id.linePwd);
         layoutPhone = findView(R.id.layoutPhone);
         layoutAccount = findView(R.id.layoutAccount);
-
-        startService(new Intent(this, AppService.class));
-        startService(new Intent(this, BluetoothLeService.class));
     }
 
     @Override

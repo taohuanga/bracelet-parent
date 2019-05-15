@@ -66,6 +66,7 @@ import os.bracelets.parents.common.MsgEvent;
 import os.bracelets.parents.db.DBManager;
 import os.bracelets.parents.jpush.JPushUtil;
 import os.bracelets.parents.jpush.TagAliasOperatorHelper;
+import os.bracelets.parents.service.AppService;
 import os.bracelets.parents.utils.DataString;
 import os.bracelets.parents.view.BatteryView;
 import rx.functions.Action1;
@@ -130,6 +131,10 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
     @Override
     protected void initData() {
+
+        startService(new Intent(this, BluetoothLeService.class));
+        startService(new Intent(this, AppService.class));
+
         String userId = (String) SPUtils.get(this, AppConfig.USER_ID, "");
         JPushInterface.init(this);
         JPushUtil.setJPushAlias(TagAliasOperatorHelper.ACTION_SET, userId);

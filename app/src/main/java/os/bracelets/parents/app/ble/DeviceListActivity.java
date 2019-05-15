@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.huichenghe.bleControl.Ble.BleByteDataSendTool;
 import com.huichenghe.bleControl.Ble.BleScanUtils;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
@@ -36,6 +37,7 @@ import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
 import os.bracelets.parents.common.BaseActivity;
 import os.bracelets.parents.common.MsgEvent;
+import os.bracelets.parents.utils.StringUtils;
 import rx.functions.Action1;
 
 /**
@@ -123,6 +125,9 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).stopScan();
         entity = (LocalDeviceEntity) adapter.getItem(position);
+        byte[] b = entity.getmScanRecord();
+        String data = StringUtils.bytesToHexString(b);
+        Logger.i("lsy",data);
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
             ToastUtil.showShort("请开启蓝牙");
             return;
