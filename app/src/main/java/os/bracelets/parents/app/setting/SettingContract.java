@@ -1,6 +1,7 @@
 package os.bracelets.parents.app.setting;
 
 import os.bracelets.parents.bean.BaseInfo;
+import os.bracelets.parents.bean.WalletInfo;
 import os.bracelets.parents.common.BasePresenter;
 import os.bracelets.parents.common.BaseView;
 
@@ -14,6 +15,8 @@ public interface SettingContract {
 
         void loadInfoSuccess(BaseInfo info);
 
+        void loadWalletInfoSuccess(WalletInfo info);
+
     }
 
     abstract class Presenter extends BasePresenter<View> {
@@ -23,6 +26,8 @@ public interface SettingContract {
         }
 
         abstract void loadBaseInfo();
+
+        abstract void walletInfo();
     }
 
 }

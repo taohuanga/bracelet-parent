@@ -164,4 +164,10 @@ interface ApiService {
      */
     @POST("sys/app/about")
     Observable<HttpResult> aboutApp(@Body Map<String, Object> map);
+
+    /**
+     * 钱包信息
+     */
+    @POST("sys/wallet/walletInfo")
+    Observable<HttpResult> walletInfo(@Body Map<String, Object> map);
 }

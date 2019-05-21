@@ -21,6 +21,7 @@ import os.bracelets.parents.app.about.FeedBackActivity;
 import os.bracelets.parents.app.account.LoginActivity;
 import os.bracelets.parents.app.personal.PersonalMsgActivity;
 import os.bracelets.parents.bean.BaseInfo;
+import os.bracelets.parents.bean.WalletInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
@@ -68,6 +69,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
     protected void initData() {
         TitleBarUtil.setAttr(this, "", "设置", titleBar);
         mPresenter.loadBaseInfo();
+        mPresenter.walletInfo();
     }
 
 
@@ -148,6 +150,12 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
                 })
                 .create()
                 .show();
+    }
+
+
+    @Override
+    public void loadWalletInfoSuccess(WalletInfo info) {
+
     }
 
     @Override

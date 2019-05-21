@@ -379,4 +379,15 @@ public class ApiRequest {
                 .compose(RxTransformer.<HttpResult>defaultSchedulers())
                 .subscribe(subscriber);
     }
+
+    //钱包信息
+    public static Subscription walletInfo(Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .walletInfo(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
 }
