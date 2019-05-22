@@ -19,6 +19,7 @@ import os.bracelets.parents.R;
 import os.bracelets.parents.app.about.AboutActivity;
 import os.bracelets.parents.app.about.FeedBackActivity;
 import os.bracelets.parents.app.account.LoginActivity;
+import os.bracelets.parents.app.personal.IntegralDetailActivity;
 import os.bracelets.parents.app.personal.PersonalMsgActivity;
 import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.WalletInfo;
@@ -36,7 +37,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     private ImageView ivImage;
 
-    private TextView tvName;
+    private TextView tvName, tvIntegral;
 
     private Button btnLogout;
 
@@ -57,6 +58,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
         titleBar = findView(R.id.titleBar);
         ivImage = findView(R.id.ivImage);
         tvName = findView(R.id.tvName);
+        tvIntegral = findView(R.id.tvIntegral);
         btnLogout = findView(R.id.btnLogout);
         layoutUpdatePwd = findView(R.id.layoutUpdatePwd);
         layoutSensorMsg = findView(R.id.layoutSensorMsg);
@@ -82,6 +84,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
         setOnClickListener(layoutUpdateMsg);
         setOnClickListener(layoutFeedBack);
         setOnClickListener(layoutAbout);
+        setOnClickListener(tvIntegral);
         titleBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +127,9 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
             case R.id.layoutAbout:
                 startActivity(new Intent(this, AboutActivity.class));
                 break;
+            case R.id.tvIntegral:
+                startActivity(new Intent(this, IntegralDetailActivity.class));
+                break;
         }
     }
 
@@ -155,7 +161,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     @Override
     public void loadWalletInfoSuccess(WalletInfo info) {
-
+        tvIntegral.setText("积分" + info.getIntegral());
     }
 
     @Override

@@ -107,6 +107,8 @@
 
         <activity android:name=".app.personal.UpdateLocationActivity" />
 
+        <activity android:name=".app.personal.IntegralDetailActivity"/>
+
         <service
             android:name=".service.AppService" />
 

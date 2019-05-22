@@ -76,7 +76,6 @@ interface ApiService {
 
     /**
      * 首页日常运动数据
-     *
      */
     @POST("parent/home/dailySports")
     Observable<HttpResult> dailySports(@Body Map<String, Object> map);
@@ -170,4 +169,10 @@ interface ApiService {
      */
     @POST("sys/wallet/walletInfo")
     Observable<HttpResult> walletInfo(@Body Map<String, Object> map);
+
+    /**
+     * 积分流水信息
+     */
+    @POST("sys/wallet/integralSerialList")
+    Observable<HttpResult> integralSerialList(@Body Map<String, Object> map);
 }
