@@ -107,12 +107,18 @@
 
         <activity android:name=".app.personal.UpdateLocationActivity" />
 
-        <activity android:name=".app.personal.IntegralDetailActivity"/>
+        <activity android:name=".app.personal.IntegralDetailActivity" />
 
-        <activity android:name=".app.setting.SystemMsgActivity"/>
+        <activity android:name=".app.setting.SystemMsgActivity">
 
-        <service
-            android:name=".service.AppService" />
+            <intent-filter>
+
+                <action android:name="os.bracelets.parents.msglist" />
+
+            </intent-filter>
+        </activity>
+
+        <service android:name=".service.AppService" />
 
         <service android:name="com.huichenghe.bleControl.Ble.BluetoothLeService" />
 

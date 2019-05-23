@@ -49,6 +49,7 @@ public class AppConfig {
     public static final String ALARM_CLOCK = "alarm_clock";
 
     public static final int CLOCK_ID = 15;
+    public static final int JUMP = 16;
 
     //手环UUID
     public static final String BLUETOOTH_NAME = "DFZ";

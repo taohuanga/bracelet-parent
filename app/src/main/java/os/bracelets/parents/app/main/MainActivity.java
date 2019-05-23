@@ -4,7 +4,6 @@ import android.Manifest;
 import android.bluetooth.BluetoothGatt;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
@@ -51,13 +50,10 @@ import os.bracelets.parents.R;
 import os.bracelets.parents.app.ble.DeviceListActivity;
 import os.bracelets.parents.app.ble.MyBleGattHelper;
 import os.bracelets.parents.app.contact.ContactActivity;
-import os.bracelets.parents.app.navigate.NavigateActivity;
 import os.bracelets.parents.app.nearby.NearbyActivity;
 import os.bracelets.parents.app.news.HealthInfoActivity;
 import os.bracelets.parents.app.personal.PersonalMsgActivity;
-import os.bracelets.parents.app.personal.UpdateLocationActivity;
 import os.bracelets.parents.app.setting.SettingActivity;
-import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.RemindBean;
 import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.bean.WeatherInfo;
@@ -190,11 +186,11 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     @Override
     public void loadMsgSuccess(int stepNum, List<RemindBean> list) {
         tvStep.setText(String.valueOf(stepNum));
-        if(info!=null){
+        if (info != null) {
             //性别描述0 未知 1 男 2 女
-            if(info.getSex()==2){
+            if (info.getSex() == 2) {
                 ivSports.setImageResource(R.mipmap.icon_sports_woman);
-            }else {
+            } else {
                 ivSports.setImageResource(R.mipmap.icon_sports_man);
             }
         }
@@ -294,6 +290,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
             batteryView.setPower(10);
             tvBattery.setText("---");
         }
+
     }
 
     @Override
