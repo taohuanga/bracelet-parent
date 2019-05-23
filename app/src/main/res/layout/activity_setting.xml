@@ -36,12 +36,15 @@
                 android:textSize="@dimen/sp_16" />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tvIntegral"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
+                android:background="@drawable/shape_integral_bg"
+                android:padding="@dimen/dp_2"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_16" />
+                android:textSize="@dimen/sp_15" />
         </LinearLayout>
 
 

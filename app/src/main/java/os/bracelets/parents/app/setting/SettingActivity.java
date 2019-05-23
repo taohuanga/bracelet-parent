@@ -161,7 +161,8 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     @Override
     public void loadWalletInfoSuccess(WalletInfo info) {
-        tvIntegral.setText("积分" + info.getIntegral());
+        tvIntegral.setVisibility(View.VISIBLE);
+        tvIntegral.setText(info.getIntegral() + "积分");
     }
 
     @Override

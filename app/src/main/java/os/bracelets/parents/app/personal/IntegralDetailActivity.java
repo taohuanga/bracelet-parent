@@ -43,6 +43,7 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
         recyclerView = findView(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        refreshLayout.setEnabled(false);
     }
 
     @Override
