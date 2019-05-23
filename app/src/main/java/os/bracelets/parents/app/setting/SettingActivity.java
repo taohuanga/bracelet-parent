@@ -91,6 +91,13 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
                 finish();
             }
         });
+
+        titleBar.addAction(new TitleBar.ImageAction(R.mipmap.icon_msg) {
+            @Override
+            public void performAction(View view) {
+                startActivity(new Intent(SettingActivity.this,SystemMsgActivity.class));
+            }
+        });
     }
 
     @Override

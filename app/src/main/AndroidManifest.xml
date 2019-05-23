@@ -109,6 +109,8 @@
 
         <activity android:name=".app.personal.IntegralDetailActivity"/>
 
+        <activity android:name=".app.setting.SystemMsgActivity"/>
+
         <service
             android:name=".service.AppService" />
 

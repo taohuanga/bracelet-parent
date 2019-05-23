@@ -401,4 +401,18 @@ public class ApiRequest {
                 .compose(RxTransformer.<HttpResult>defaultSchedulers())
                 .subscribe(subscriber);
     }
+
+    //系统消息
+    public static Subscription systemMsg(int type,int pageNo,Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("type", String.valueOf(type));
+        map.put("pageNo", String.valueOf(pageNo));
+        map.put("pageSize", String.valueOf(AppConfig.PAGE_SIZE));
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .systemMsg(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
 }

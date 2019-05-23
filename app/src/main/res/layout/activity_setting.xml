@@ -44,7 +44,7 @@
                 android:background="@drawable/shape_integral_bg"
                 android:padding="@dimen/dp_2"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_15" />
+                android:textSize="@dimen/sp_14" />
         </LinearLayout>
 
 

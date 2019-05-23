@@ -175,4 +175,11 @@ interface ApiService {
      */
     @POST("sys/wallet/integralSerialList")
     Observable<HttpResult> integralSerialList(@Body Map<String, Object> map);
+
+    /**
+     * 系统消息
+     */
+    @POST("sys/message/list")
+    Observable<HttpResult> systemMsg(@Body Map<String, Object> map);
+
 }
