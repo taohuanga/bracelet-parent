@@ -109,14 +109,9 @@
 
         <activity android:name=".app.personal.IntegralDetailActivity" />
 
-        <activity android:name=".app.setting.SystemMsgActivity">
+        <activity android:name=".app.setting.SystemMsgActivity" />
 
-            <intent-filter>
-
-                <action android:name="os.bracelets.parents.msglist" />
-
-            </intent-filter>
-        </activity>
+        <activity android:name=".app.personal.AmapSearchActivity" />
 
         <service android:name=".service.AppService" />
 

@@ -21,16 +21,15 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.Text;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.TranslateAnimation;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
-import com.j256.ormlite.stmt.query.In;
 
 import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
@@ -124,12 +123,21 @@ public class UpdateLocationActivity extends AppCompatActivity implements View.On
             }
         });
 
+        titleBar.addAction(new TitleBar.TextAction("搜索") {
+            @Override
+            public void performAction(View view) {
+                Intent intent = new Intent(UpdateLocationActivity.this, AmapSearchActivity.class);
+                startActivityForResult(intent, 0x02);
+            }
+        });
+
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
                 addMarkersToMap();
             }
         });
+
 
         // 设置可视范围变化时的回调的接口方法
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
@@ -231,6 +239,25 @@ public class UpdateLocationActivity extends AppCompatActivity implements View.On
                 break;
         }
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK)
+            return;
+        if (requestCode == 0x02) {
+            double latitude = data.getDoubleExtra("latitude",0.0);
+            double longitude = data.getDoubleExtra("longitude",0.0);
+            String location = data.getStringExtra("location");
+            tvLocation.setText(location);
+            latLng = new LatLng(latitude, longitude);
+            aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18, 30, 30)));
+            aMap.moveCamera(CameraUpdateFactory.zoomTo((float) 13.5));
+        }
+    }
+
+
 
     //dip和px转换
     private static int dip2px(Context context, float dpValue) {
