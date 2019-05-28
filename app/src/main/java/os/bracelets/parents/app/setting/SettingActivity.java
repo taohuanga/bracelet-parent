@@ -22,6 +22,7 @@ import os.bracelets.parents.app.account.LoginActivity;
 import os.bracelets.parents.app.personal.IntegralDetailActivity;
 import os.bracelets.parents.app.personal.PersonalMsgActivity;
 import os.bracelets.parents.bean.BaseInfo;
+import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.bean.WalletInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.utils.TitleBarUtil;
@@ -173,7 +174,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
     }
 
     @Override
-    public void loadInfoSuccess(BaseInfo info) {
+    public void loadInfoSuccess(UserInfo info) {
         if (!TextUtils.isEmpty(info.getName())) {
             tvName.setText(info.getNickName() + "(" + info.getName() + ")");
         } else {

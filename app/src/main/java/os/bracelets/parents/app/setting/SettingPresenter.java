@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import aio.health2world.http.HttpResult;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.bean.BaseInfo;
+import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.bean.WalletInfo;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
@@ -49,7 +50,7 @@ public class SettingPresenter extends SettingContract.Presenter {
                 if (result.code.equals(AppConfig.SUCCESS)) {
                     try {
                         JSONObject object = new JSONObject(new Gson().toJson(result.data));
-                        BaseInfo info = BaseInfo.parseBean(object);
+                        UserInfo info = UserInfo.parseBean(object);
                         if (mView != null)
                             mView.loadInfoSuccess(info);
                     } catch (JSONException e) {

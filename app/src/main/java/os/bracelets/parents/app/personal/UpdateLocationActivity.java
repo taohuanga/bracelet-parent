@@ -32,7 +32,9 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.j256.ormlite.stmt.query.In;
 
+import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
+import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
@@ -98,6 +100,14 @@ public class UpdateLocationActivity extends AppCompatActivity implements View.On
             double latitude1 = Double.parseDouble(latitude);
             double longitude1 = Double.parseDouble(longitude);
             latLng = new LatLng(latitude1, longitude1);
+        } else {
+            String longitude = (String) SPUtils.get(this, AppConfig.LONGITUDE, "");
+            String latitude = (String) SPUtils.get(this, AppConfig.LATITUDE, "");
+            if (!TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(longitude)) {
+                double latitude1 = Double.parseDouble(latitude);
+                double longitude1 = Double.parseDouble(longitude);
+                latLng = new LatLng(latitude1, longitude1);
+            }
         }
 
         aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18, 30, 30)));
