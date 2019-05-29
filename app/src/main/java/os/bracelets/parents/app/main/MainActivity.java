@@ -54,6 +54,7 @@ import os.bracelets.parents.app.nearby.NearbyActivity;
 import os.bracelets.parents.app.news.HealthInfoActivity;
 import os.bracelets.parents.app.personal.PersonalMsgActivity;
 import os.bracelets.parents.app.setting.SettingActivity;
+import os.bracelets.parents.app.setting.SystemMsgActivity;
 import os.bracelets.parents.bean.RemindBean;
 import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.bean.WeatherInfo;
@@ -71,7 +72,7 @@ import rx.functions.Action1;
 public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implements MainContract.View,
         INaviInfoCallback {
 
-    private View layoutDialing, layoutNews, layoutSetting, layoutNavigation, layoutNearby;
+    private View layoutDialing, layoutNews, layoutSetting, layoutNavigation, layoutNearby,msgLayout;
 
     private TextView tvWeek, tvWeather, tvConnect, tvBattery, tvCity, tvStep;
 
@@ -110,6 +111,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         layoutNearby = findView(R.id.layoutNearby);
         layoutNavigation = findView(R.id.layoutNavigation);
         ivSports = findView(R.id.ivSports);
+        msgLayout = findView(R.id.msgLayout);
 
         tvWeek = findView(R.id.tvWeek);
         tvCity = findView(R.id.tvCity);
@@ -181,6 +183,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         layoutNavigation.setOnClickListener(this);
         bleLayout.setOnClickListener(this);
         layoutNearby.setOnClickListener(this);
+        msgLayout.setOnClickListener(this);
     }
 
     @Override
@@ -270,6 +273,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                 break;
             case R.id.bleLayout:
                 startActivity(new Intent(this, DeviceListActivity.class));
+                break;
+            case R.id.msgLayout:
+                startActivity(new Intent(this, SystemMsgActivity.class));
                 break;
 
         }
