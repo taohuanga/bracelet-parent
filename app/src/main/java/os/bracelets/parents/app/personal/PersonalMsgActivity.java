@@ -71,7 +71,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
     private TitleBar titleBar;
 
     private View layoutHeadImg, layoutNickName, layoutName, layoutSex, layoutBirthday, layoutWeight,
-            layoutHeight, layoutPhone, layoutHomeAddress;
+            layoutHeight, layoutHomeAddress;
 
     private TextView tvNickName, tvName, tvSex, tvBirthday, tvWeight, tvHeight, tvPhone, tvHomeAddress,
             tvLongitude, tvLatitude;
@@ -126,7 +126,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
         layoutBirthday = findViewById(R.id.layoutBirthday);
         layoutWeight = findViewById(R.id.layoutWeight);
         layoutHeight = findViewById(R.id.layoutHeight);
-        layoutPhone = findViewById(R.id.layoutPhone);
+//        layoutPhone = findViewById(R.id.layoutPhone);
         layoutHomeAddress = findViewById(R.id.layoutHomeAddress);
     }
 
@@ -152,7 +152,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
         layoutBirthday.setOnClickListener(this);
         layoutWeight.setOnClickListener(this);
         layoutHeight.setOnClickListener(this);
-        layoutPhone.setOnClickListener(this);
+//        layoutPhone.setOnClickListener(this);
         layoutHomeAddress.setOnClickListener(this);
         titleBar.setLeftClickListener(new View.OnClickListener() {
             @Override
@@ -273,12 +273,12 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
                 intentWeight.putExtra(InputMsgActivity.TYPE, ITEM_WEIGHT);
                 startActivityForResult(intentWeight, ITEM_WEIGHT);
                 break;
-            case R.id.layoutPhone:
-                //修改手机号
-                Intent intentPhone = new Intent(this, UpdatePhoneActivity.class);
-                intentPhone.putExtra("phone", tvPhone.getText().toString());
-                startActivityForResult(intentPhone, ITEM_PHONE);
-                break;
+//            case R.id.layoutPhone:
+//                //修改手机号
+//                Intent intentPhone = new Intent(this, UpdatePhoneActivity.class);
+//                intentPhone.putExtra("phone", tvPhone.getText().toString());
+//                startActivityForResult(intentPhone, ITEM_PHONE);
+//                break;
             case R.id.layoutHomeAddress:
                 //修改家庭住址
                 Intent intentAddress = new Intent(this, UpdateLocationActivity.class);
