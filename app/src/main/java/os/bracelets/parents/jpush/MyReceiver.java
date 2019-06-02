@@ -1,9 +1,13 @@
 package os.bracelets.parents.jpush;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 
 import org.json.JSONException;
@@ -50,9 +54,27 @@ public class MyReceiver extends BroadcastReceiver {
 
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
                 Logger.d(TAG, "[MyReceiver] 用户点击打开了通知");
-                Intent intent1 = new Intent(context, SystemMsgActivity.class);
-                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent1);
+
+                String message = bundle.getString(JPushInterface.EXTRA_EXTRA);
+                JSONObject object = new JSONObject(message);
+                String type = object.optString("type");
+                if (type.equals("fallNotify")) {
+                    String phoneNum = object.optString("phone");
+                    Intent intent2 = new Intent(Intent.ACTION_CALL);
+                    Uri data = Uri.parse("tel:" + phoneNum);
+                    intent2.setData(data);
+                    intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    context.startActivity(intent2);
+                } else {
+                    Intent intent1 = new Intent(context, SystemMsgActivity.class);
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent1);
+                }
+
             } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
                 Logger.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
                 //在这里根据 JPushInterface.EXTRA_EXTRA 的内容处理代码，比如打开新的Activity， 打开一个网页等..
