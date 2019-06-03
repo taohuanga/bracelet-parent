@@ -19,6 +19,7 @@ import aio.health2world.utils.Logger;
 import aio.health2world.utils.ToastUtil;
 import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.MyApplication;
+import os.bracelets.parents.app.contact.ContactActivity;
 import os.bracelets.parents.app.main.MainActivity;
 import os.bracelets.parents.app.setting.SystemMsgActivity;
 import os.bracelets.parents.bean.SystemMsg;
@@ -58,17 +59,20 @@ public class MyReceiver extends BroadcastReceiver {
                 String message = bundle.getString(JPushInterface.EXTRA_EXTRA);
                 JSONObject object = new JSONObject(message);
                 String type = object.optString("type");
-                if (type.equals("fallNotify")) {
-                    String phoneNum = object.optString("phone");
-                    Intent intent2 = new Intent(Intent.ACTION_CALL);
-                    Uri data = Uri.parse("tel:" + phoneNum);
-                    intent2.setData(data);
+                if (type.equals("parentFallNotify")) {
+                    Intent intent2= new Intent(context, ContactActivity.class);
                     intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
                     context.startActivity(intent2);
+//                    String phoneNum = object.optString("phone");
+//                    Intent intent2 = new Intent(Intent.ACTION_CALL);
+//                    Uri data = Uri.parse("tel:" + phoneNum);
+//                    intent2.setData(data);
+//                    intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)
+//                            != PackageManager.PERMISSION_GRANTED) {
+//                        return;
+//                    }
+//                    context.startActivity(intent2);
                 } else {
                     Intent intent1 = new Intent(context, SystemMsgActivity.class);
                     intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
