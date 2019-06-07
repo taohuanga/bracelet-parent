@@ -16,7 +16,7 @@ public interface SettingContract {
 
         void loadInfoSuccess(UserInfo info);
 
-        void loadWalletInfoSuccess(WalletInfo info);
+//        void loadWalletInfoSuccess(WalletInfo info);
 
     }
 
@@ -28,7 +28,7 @@ public interface SettingContract {
 
         abstract void loadBaseInfo();
 
-        abstract void walletInfo();
+//        abstract void walletInfo();
     }
 
 }

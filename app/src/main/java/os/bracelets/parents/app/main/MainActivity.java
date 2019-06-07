@@ -52,6 +52,7 @@ import os.bracelets.parents.app.ble.MyBleGattHelper;
 import os.bracelets.parents.app.contact.ContactActivity;
 import os.bracelets.parents.app.nearby.NearbyActivity;
 import os.bracelets.parents.app.news.HealthInfoActivity;
+import os.bracelets.parents.app.personal.IntegralDetailActivity;
 import os.bracelets.parents.app.personal.PersonalMsgActivity;
 import os.bracelets.parents.app.setting.SettingActivity;
 import os.bracelets.parents.app.setting.SystemMsgActivity;
@@ -72,9 +73,9 @@ import rx.functions.Action1;
 public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implements MainContract.View,
         INaviInfoCallback {
 
-    private View layoutDialing, layoutNews, layoutSetting, layoutNavigation, layoutNearby,msgLayout;
+    private View layoutDialing, layoutNews, layoutSetting, layoutNavigation, layoutNearby, msgLayout;
 
-    private TextView tvWeek, tvWeather, tvConnect, tvBattery, tvCity, tvStep;
+    private TextView tvWeek, tvWeather, tvConnect, tvBattery, tvCity, tvStep, tvIntegral;
 
     private ImageView ivSports;
 
@@ -114,6 +115,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         msgLayout = findView(R.id.msgLayout);
 
         tvWeek = findView(R.id.tvWeek);
+        tvIntegral = findView(R.id.tvIntegral);
         tvCity = findView(R.id.tvCity);
         tvWeather = findView(R.id.tvWeather);
         tvConnect = findView(R.id.tvConnect);
@@ -184,6 +186,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         bleLayout.setOnClickListener(this);
         layoutNearby.setOnClickListener(this);
         msgLayout.setOnClickListener(this);
+        tvIntegral.setOnClickListener(this);
     }
 
     @Override
@@ -276,6 +279,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                 break;
             case R.id.msgLayout:
                 startActivity(new Intent(this, SystemMsgActivity.class));
+                break;
+            case R.id.tvIntegral:
+                startActivity(new Intent(this, IntegralDetailActivity.class));
                 break;
 
         }

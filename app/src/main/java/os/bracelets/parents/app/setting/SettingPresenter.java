@@ -61,23 +61,23 @@ public class SettingPresenter extends SettingContract.Presenter {
         });
     }
 
-    @Override
-    void walletInfo() {
-        ApiRequest.walletInfo(new HttpSubscriber() {
-            @Override
-            public void onNext(HttpResult result) {
-                super.onNext(result);
-                if(result.code.equals(AppConfig.SUCCESS)){
-                    try {
-                        JSONObject object = new JSONObject(new Gson().toJson(result.data));
-                        WalletInfo info = WalletInfo.parseBean(object);
-                        if(mView!=null)
-                            mView.loadWalletInfoSuccess(info);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
+//    @Override
+//    void walletInfo() {
+//        ApiRequest.walletInfo(new HttpSubscriber() {
+//            @Override
+//            public void onNext(HttpResult result) {
+//                super.onNext(result);
+//                if(result.code.equals(AppConfig.SUCCESS)){
+//                    try {
+//                        JSONObject object = new JSONObject(new Gson().toJson(result.data));
+//                        WalletInfo info = WalletInfo.parseBean(object);
+//                        if(mView!=null)
+//                            mView.loadWalletInfoSuccess(info);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+//    }
 }

@@ -228,8 +228,8 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) + "\n" + content + "\n" +
                     "结束时间：" + formatter.format(currentTime), "test6Sensor" + formatter.format(currentTime) + ".csv");
 
-            uploadFile();
             fallMsg();
+            uploadFile();
         } else if (data.substring(10, 14).equals("5453")) {//若第11位至第14位是5453，则原始数据上传
             sb.append(data + "\n");
             EventBus.getDefault().post(new MsgEvent<>(data));

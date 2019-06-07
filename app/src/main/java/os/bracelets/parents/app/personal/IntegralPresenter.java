@@ -11,6 +11,7 @@ import java.util.List;
 
 import aio.health2world.http.HttpResult;
 import os.bracelets.parents.AppConfig;
+import os.bracelets.parents.bean.WalletInfo;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
 
@@ -20,6 +21,26 @@ public class IntegralPresenter extends IntegralContract.Presenter {
         super(mView);
     }
 
+
+    @Override
+    void walletInfo() {
+        ApiRequest.walletInfo(new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+                if(result.code.equals(AppConfig.SUCCESS)){
+                    try {
+                        JSONObject object = new JSONObject(new Gson().toJson(result.data));
+                        WalletInfo info = WalletInfo.parseBean(object);
+                        if(mView!=null)
+                            mView.loadWalletInfoSuccess(info);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
 
     @Override
     void integralSerialList() {

@@ -72,7 +72,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
     protected void initData() {
         TitleBarUtil.setAttr(this, "", "设置", titleBar);
         mPresenter.loadBaseInfo();
-        mPresenter.walletInfo();
+//        mPresenter.walletInfo();
     }
 
 
@@ -167,11 +167,11 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
     }
 
 
-    @Override
-    public void loadWalletInfoSuccess(WalletInfo info) {
-        tvIntegral.setVisibility(View.VISIBLE);
-        tvIntegral.setText(info.getIntegral() + "积分");
-    }
+//    @Override
+//    public void loadWalletInfoSuccess(WalletInfo info) {
+//        tvIntegral.setVisibility(View.VISIBLE);
+//        tvIntegral.setText(info.getIntegral() + "积分");
+//    }
 
     @Override
     public void loadInfoSuccess(UserInfo info) {

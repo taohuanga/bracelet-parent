@@ -165,13 +165,36 @@
         android:layout_weight="2"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="8dp"
-            android:text="今日待办"
-            android:textSize="15sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_8"
+                android:text="今日待办"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvIntegral"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FFA500"
+                android:padding="@dimen/dp_4"
+                android:layout_marginEnd="@dimen/dp_4"
+                android:text="个人积分"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </LinearLayout>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"

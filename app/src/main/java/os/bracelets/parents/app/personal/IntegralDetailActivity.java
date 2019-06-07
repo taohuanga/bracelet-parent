@@ -5,16 +5,20 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import aio.health2world.brvah.BaseQuickAdapter;
 import os.bracelets.parents.R;
+import os.bracelets.parents.bean.WalletInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
 
-public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Presenter> implements IntegralContract.View {
+public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Presenter> implements
+        IntegralContract.View{
 
     private TitleBar titleBar;
 
@@ -25,6 +29,8 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
     private IntegralDetailAdapter detailAdapter;
 
     private List<IntegralInfo> infoList;
+
+    private TextView tvAllCount;
 
     @Override
     protected IntegralContract.Presenter getPresenter() {
@@ -39,6 +45,7 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
     @Override
     protected void initView() {
         titleBar = findView(R.id.titleBar);
+        tvAllCount = findView(R.id.tvAllCount);
         refreshLayout = findView(R.id.refreshLayout);
         recyclerView = findView(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -67,6 +74,17 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
                 finish();
             }
         });
+//        detailAdapter.setOnLoadMoreListener(this,recyclerView);
+    }
+
+//    @Override
+//    public void onLoadMoreRequested() {
+//
+//    }
+
+    @Override
+    public void loadWalletInfoSuccess(WalletInfo info) {
+        tvAllCount.setText(info.getIntegral() + "积分");
     }
 
     @Override
