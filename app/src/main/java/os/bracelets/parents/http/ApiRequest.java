@@ -199,9 +199,10 @@ public class ApiRequest {
     }
 
     //跌倒信息上传
-    public static Subscription fall(Subscriber<HttpResult> subscriber) {
+    public static Subscription fall(int fallType,Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("tokenId", String.valueOf(fallType));
         map.put("longitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LONGITUDE, "")));
         map.put("latitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LATITUDE, "")));
         return ServiceFactory.getInstance()

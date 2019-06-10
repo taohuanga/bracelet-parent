@@ -228,8 +228,10 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) + "\n" + content + "\n" +
                     "结束时间：" + formatter.format(currentTime), "test6Sensor" + formatter.format(currentTime) + ".csv");
 
-            fallMsg();
+            fallMsg(0);
             uploadFile();
+        } else if (data.contains("68a80c0001545301")) {
+            fallMsg(1);
         } else if (data.substring(10, 14).equals("5453")) {//若第11位至第14位是5453，则原始数据上传
             sb.append(data + "\n");
             EventBus.getDefault().post(new MsgEvent<>(data));
@@ -308,13 +310,13 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         }
     }
 
-    private void fallMsg() {
+    private void fallMsg(int fallType) {
         //跳转到拨号界面
         Intent dialIntent = new Intent(this, ContactActivity.class);
         dialIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(dialIntent);
 
-        ApiRequest.fall(new HttpSubscriber() {
+        ApiRequest.fall(fallType, new HttpSubscriber() {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
