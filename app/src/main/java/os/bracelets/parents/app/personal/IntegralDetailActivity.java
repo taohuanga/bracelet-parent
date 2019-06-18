@@ -5,6 +5,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
 
     private TextView tvAllCount;
 
+    private LinearLayout layoutIntegral;
+
     @Override
     protected IntegralContract.Presenter getPresenter() {
         return new IntegralPresenter(this);
@@ -46,11 +49,13 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
     protected void initView() {
         titleBar = findView(R.id.titleBar);
         tvAllCount = findView(R.id.tvAllCount);
+        layoutIntegral = findView(R.id.layoutIntegral);
         refreshLayout = findView(R.id.refreshLayout);
         recyclerView = findView(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         refreshLayout.setEnabled(false);
+        layoutIntegral.setVisibility(View.VISIBLE);
     }
 
     @Override
