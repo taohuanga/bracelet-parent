@@ -182,4 +182,15 @@ interface ApiService {
     @POST("sys/message/list")
     Observable<HttpResult> systemMsg(@Body Map<String, Object> map);
 
+    /**
+     * 绑定设备信息
+     */
+    @POST("parent/setting/deviceBindInfo")
+    Observable<HttpResult> deviceBind(@Body Map<String, Object> map);
+
+    /**
+     * 解绑设备信息
+     */
+    @POST("parent/setting/deviceUnbind")
+    Observable<HttpResult> deviceUnbind(@Body Map<String, Object> map);
 }

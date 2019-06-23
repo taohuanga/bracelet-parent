@@ -42,7 +42,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     private Button btnLogout;
 
-    private View layoutUpdatePwd, layoutSensorMsg, layoutUpdateMsg, layoutFeedBack, layoutAbout;
+    private View layoutUpdatePwd, layoutSensorMsg,layoutDeviceBind, layoutUpdateMsg, layoutFeedBack, layoutAbout;
 
     @Override
     protected SettingContract.Presenter getPresenter() {
@@ -65,6 +65,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
         layoutSensorMsg = findView(R.id.layoutSensorMsg);
         layoutUpdateMsg = findView(R.id.layoutUpdateMsg);
         layoutFeedBack = findView(R.id.layoutFeedBack);
+        layoutDeviceBind = findView(R.id.layoutDeviceBind);
         layoutAbout = findView(R.id.layoutAbout);
     }
 
@@ -86,6 +87,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
         setOnClickListener(layoutFeedBack);
         setOnClickListener(layoutAbout);
         setOnClickListener(tvIntegral);
+        setOnClickListener(layoutDeviceBind);
         titleBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +130,9 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
                 break;
             case R.id.layoutSensorMsg:
                 startActivity(new Intent(this, SensorMsgActivity.class));
+                break;
+            case R.id.layoutDeviceBind:
+                startActivity(new Intent(this,DeviceBindActivity.class));
                 break;
             case R.id.layoutFeedBack:
                 startActivity(new Intent(this, FeedBackActivity.class));

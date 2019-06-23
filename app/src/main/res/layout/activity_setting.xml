@@ -36,10 +36,10 @@
                 android:textSize="@dimen/sp_16" />
 
             <TextView
-                android:layout_marginTop="@dimen/dp_4"
                 android:id="@+id/tvIntegral"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
                 android:background="@drawable/shape_integral_bg"
                 android:paddingLeft="@dimen/dp_4"
                 android:paddingTop="@dimen/dp_4"
@@ -158,6 +158,45 @@
             android:layout_height="16dp"
             android:src="@mipmap/icon_right" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:layout_marginRight="@dimen/dp_8"
+        android:background="#f6f6f6" />
+
+    <LinearLayout
+        android:id="@+id/layoutDeviceBind"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/selector_item_click_bg"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_8"
+        android:paddingRight="@dimen/dp_8">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_device_bind" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_weight="1"
+            android:text="设备绑定"
+            android:textColor="@color/black6"
+            android:textSize="@dimen/sp_16" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="16dp"
+            android:src="@mipmap/icon_right" />
+    </LinearLayout>
+
 
     <View
         android:layout_width="match_parent"

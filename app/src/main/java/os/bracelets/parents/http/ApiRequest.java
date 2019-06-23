@@ -199,7 +199,7 @@ public class ApiRequest {
     }
 
     //跌倒信息上传
-    public static Subscription fall(int fallType,Subscriber<HttpResult> subscriber) {
+    public static Subscription fall(int fallType, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("tokenId", String.valueOf(fallType));
@@ -404,7 +404,7 @@ public class ApiRequest {
     }
 
     //系统消息
-    public static Subscription systemMsg(int type,int pageNo,Subscriber<HttpResult> subscriber) {
+    public static Subscription systemMsg(int type, int pageNo, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("type", String.valueOf(type));
@@ -413,6 +413,28 @@ public class ApiRequest {
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .systemMsg(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //查询绑定的设备
+    public static Subscription deviceBind(Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .deviceBind(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+    //解除绑定
+    public static Subscription deviceUnbind(String deviceInfo, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("deviceInfo", deviceInfo);
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .deviceUnbind(map)
                 .compose(RxTransformer.<HttpResult>defaultSchedulers())
                 .subscribe(subscriber);
     }
