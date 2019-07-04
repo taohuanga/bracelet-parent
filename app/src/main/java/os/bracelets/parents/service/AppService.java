@@ -258,29 +258,48 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         boolean isLogin = (boolean) SPUtils.get(MyApplication.getInstance(), AppConfig.IS_LOGIN, false);
         if (!isLogin)
             return;
-
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);//创建通知消息实例
-        builder.setContentTitle("衣带保父母端");
-        builder.setContentText("正在上传蓝牙设备数据");
+        String channelID = "channel_id";
+        String channelName = "channel_name";
+        NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.createNotificationChannel(channel);
+        Notification.Builder builder =new Notification.Builder(this);
+        builder.setContentText("衣带保父母端");
+        builder.setContentTitle("正在上传蓝牙设备数据");
         builder.setWhen(System.currentTimeMillis());//通知栏显示时间
         builder.setSmallIcon(R.mipmap.ic_app_logo);//通知栏小图标
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_logo));//通知栏下拉是图标
-        builder.setPriority(NotificationCompat.PRIORITY_MAX);//设置通知消息优先级
         builder.setAutoCancel(true);//设置点击通知栏消息后，通知消息自动消失
         builder.setVibrate(new long[]{0, 1000, 1000, 1000});//通知栏消息震动
         builder.setLights(Color.GREEN, 1000, 2000);//通知栏消息闪灯(亮一秒间隔两秒再亮)
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
+        //创建通知时指定channelID
+        builder.setChannelId(channelID);
+        Notification notification = builder.build();
+        notification.notify();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String CHANNEL_ID = "my_channel_01";
-            CharSequence name = "name_channel";
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, NotificationManager
-                    .IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-
-        }
-        notificationManager.notify(notifyId, builder.build());
+//        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);//创建通知消息实例
+//        builder.setContentTitle("衣带保父母端");
+//        builder.setContentText("正在上传蓝牙设备数据");
+//        builder.setWhen(System.currentTimeMillis());//通知栏显示时间
+//        builder.setSmallIcon(R.mipmap.ic_app_logo);//通知栏小图标
+//        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_logo));//通知栏下拉是图标
+//        builder.setPriority(NotificationCompat.PRIORITY_MAX);//设置通知消息优先级
+//        builder.setAutoCancel(true);//设置点击通知栏消息后，通知消息自动消失
+//        builder.setVibrate(new long[]{0, 1000, 1000, 1000});//通知栏消息震动
+//        builder.setLights(Color.GREEN, 1000, 2000);//通知栏消息闪灯(亮一秒间隔两秒再亮)
+//        builder.setDefaults(NotificationCompat.DEFAULT_ALL);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            String CHANNEL_ID = "my_channel_01";
+//            CharSequence name = "name_channel";
+//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, NotificationManager
+//                    .IMPORTANCE_DEFAULT);
+//            notificationManager.createNotificationChannel(channel);
+//
+//        }
+//        notificationManager.notify(notifyId, builder.build());
 
         for (final File file : fileList) {
 
