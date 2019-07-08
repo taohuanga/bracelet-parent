@@ -131,7 +131,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
     @Override
     protected void initData() {
-
         startService(new Intent(this, BluetoothLeService.class));
         startService(new Intent(this, AppService.class));
 

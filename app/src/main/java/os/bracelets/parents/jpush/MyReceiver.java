@@ -63,16 +63,6 @@ public class MyReceiver extends BroadcastReceiver {
                     Intent intent2= new Intent(context, ContactActivity.class);
                     intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent2);
-//                    String phoneNum = object.optString("phone");
-//                    Intent intent2 = new Intent(Intent.ACTION_CALL);
-//                    Uri data = Uri.parse("tel:" + phoneNum);
-//                    intent2.setData(data);
-//                    intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)
-//                            != PackageManager.PERMISSION_GRANTED) {
-//                        return;
-//                    }
-//                    context.startActivity(intent2);
                 } else {
                     Intent intent1 = new Intent(context, SystemMsgActivity.class);
                     intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
