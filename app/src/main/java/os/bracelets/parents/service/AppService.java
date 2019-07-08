@@ -227,9 +227,9 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         } else if (data.contains("68a80c00015453aa")) {//结束写入
             sb.append(data + "\n");
             String content = sb.toString();
-            fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) + "\n" + content + "\n" +
-                    "结束时间：" + formatter.format(currentTime), "test6Sensor" + formatter.format(currentTime) + ".csv");
-
+            fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) +
+                    "\n" + content + "\n" + "结束时间：" + formatter.format(currentTime),
+                    "test6Sensor" + formatter.format(currentTime) + ".csv");
             uploadFile();
         } else if (data.contains("68a80c0001545301") || data.contains("68a80c0001545303")) {
             fallMsg(0);
@@ -296,14 +296,14 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         }
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        Notification notification = new Notification.Builder(this).setChannelId(CHANNEL_ONE_ID)
+        final Notification notification = new Notification.Builder(this).setChannelId(CHANNEL_ONE_ID)
                 .setTicker("Nature")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_app_logo)
                 .setContentTitle("衣带保父母端")
                 .setContentIntent(pendingIntent)
                 .setContentText("正在上传蓝牙设备数据")
                 .build();
-        notification.flags |= Notification.FLAG_NO_CLEAR;
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
         startForeground(1, notification);
 
         for (final File file : fileList) {
@@ -328,6 +328,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                     }
                     if (result.code.equals(AppConfig.SUCCESS)) {
                         fileUtils.deleteFile(file.getName());
+
                     }
                 }
             });
