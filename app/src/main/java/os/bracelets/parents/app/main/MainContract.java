@@ -42,6 +42,8 @@ public interface MainContract {
         abstract void uploadLocation();
 
         abstract void dailySports();
+
+        abstract void uploadPower(String mac,int power);
     }
 
 }

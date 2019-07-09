@@ -106,8 +106,7 @@ public class DeviceBindActivity extends BaseActivity {
 
 
     private void getBindMsg() {
-        ApiRequest.deviceBind(new HttpSubscriber() {
-
+        ApiRequest.deviceBindQuery(new HttpSubscriber() {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
@@ -143,6 +142,31 @@ public class DeviceBindActivity extends BaseActivity {
 
     private void bindDevice(String deviceNo) {
 
+        ApiRequest.deviceBind(deviceNo, new HttpSubscriber() {
+            @Override
+            public void onStart() {
+                if(dialog!=null)
+                    dialog.show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+            }
+
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+                if (result.code.equals(AppConfig.SUCCESS)) {
+                    ToastUtil.showShort(getString(R.string.action_success));
+                    finish();
+                }
+            }
+        });
     }
 
     private void unbindDevice(String deviceNo) {

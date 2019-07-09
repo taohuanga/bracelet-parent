@@ -4,6 +4,7 @@ import android.Manifest;
 import android.bluetooth.BluetoothGatt;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
@@ -23,6 +24,7 @@ import com.amap.api.navi.AmapNaviType;
 import com.amap.api.navi.AmapRouteActivity;
 import com.amap.api.navi.INaviInfoCallback;
 import com.amap.api.navi.model.AMapNaviLocation;
+import com.huichenghe.bleControl.Ble.BleBaseDataManage;
 import com.huichenghe.bleControl.Ble.BleDataForBattery;
 import com.huichenghe.bleControl.Ble.BleDataforSyn;
 import com.huichenghe.bleControl.Ble.BleGattHelperListener;
@@ -47,6 +49,7 @@ import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
+import os.bracelets.parents.app.ble.BleDataForSensor;
 import os.bracelets.parents.app.ble.DeviceListActivity;
 import os.bracelets.parents.app.ble.MyBleGattHelper;
 import os.bracelets.parents.app.contact.ContactActivity;
@@ -342,8 +345,13 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         String data = FormatUtils.bytesToHexString(bytes);
                         Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
                         int batteryInt = batteryLong.intValue();
-                        tvBattery.setText(String.valueOf(batteryInt) + "%");
+                        tvBattery.setText(batteryInt + "%");
                         batteryView.setPower(batteryInt);
+                        if (batteryInt <= 25) {
+                            LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+                            String mac = entity == null ? "" : entity.getAddress();
+                            mPresenter.uploadPower(mac, batteryInt);
+                        }
                     }
                 });
 

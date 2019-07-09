@@ -186,11 +186,25 @@ interface ApiService {
      * 绑定设备信息
      */
     @POST("parent/setting/deviceBindInfo")
-    Observable<HttpResult> deviceBind(@Body Map<String, Object> map);
+    Observable<HttpResult> deviceBindQuery(@Body Map<String, Object> map);
 
     /**
      * 解绑设备信息
      */
     @POST("parent/setting/deviceUnbind")
     Observable<HttpResult> deviceUnbind(@Body Map<String, Object> map);
+
+    /**
+     * 绑定设备信息
+     */
+    @POST("parent/setting/deviceBind")
+    Observable<HttpResult> deviceBind(@Body Map<String, Object> map);
+
+    /**
+     * 上传设备电量
+     */
+    @POST("parent/home/devPowerUpload")
+    Observable<HttpResult> devPowerUpload(@Body Map<String, Object> map);
+
+
 }

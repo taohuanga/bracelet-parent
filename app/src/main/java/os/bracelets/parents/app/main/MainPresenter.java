@@ -196,4 +196,19 @@ public class MainPresenter extends MainContract.Presenter {
             }
         });
     }
+
+    @Override
+    void uploadPower(String mac, int power) {
+        ApiRequest.devPowerUpload(mac, power, new HttpSubscriber() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
+
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+            }
+        });
+    }
 }

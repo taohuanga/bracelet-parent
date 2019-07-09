@@ -202,7 +202,7 @@ public class ApiRequest {
     public static Subscription fall(int fallType, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        map.put("tokenId", String.valueOf(fallType));
+        map.put("fallType", String.valueOf(fallType));
         map.put("longitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LONGITUDE, "")));
         map.put("latitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LATITUDE, "")));
         return ServiceFactory.getInstance()
@@ -418,15 +418,16 @@ public class ApiRequest {
     }
 
     //查询绑定的设备
-    public static Subscription deviceBind(Subscriber<HttpResult> subscriber) {
+    public static Subscription deviceBindQuery(Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
-                .deviceBind(map)
+                .deviceBindQuery(map)
                 .compose(RxTransformer.<HttpResult>defaultSchedulers())
                 .subscribe(subscriber);
     }
+
     //解除绑定
     public static Subscription deviceUnbind(String deviceInfo, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
@@ -435,6 +436,31 @@ public class ApiRequest {
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .deviceUnbind(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //绑定设备
+    public static Subscription deviceBind(String mac, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("equipmentSn", mac);
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .deviceBind(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //上传设备电量
+    public static Subscription devPowerUpload(String mac, int power, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("equipmentSn", mac);
+        map.put("power", String.valueOf(power));
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .devPowerUpload(map)
                 .compose(RxTransformer.<HttpResult>defaultSchedulers())
                 .subscribe(subscriber);
     }
