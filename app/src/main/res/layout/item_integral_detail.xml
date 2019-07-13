@@ -29,7 +29,7 @@
             android:id="@+id/tvIntegral"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+20"
+            android:text=""
             android:textSize="@dimen/sp15" />
 
 
