@@ -106,6 +106,8 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
         optionsPickerView = TimePickerUtil.initOptions(this, optionsSelectListener);
         optionsPickerView.setPicker(entityList);
 
+        mPresenter.walletInfo();
+
         onRefresh();
 
     }
@@ -121,7 +123,7 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
         llStartTime.setOnClickListener(this);
         llEndTime.setOnClickListener(this);
         llType.setOnClickListener(this);
-        refreshLayout.setOnClickListener(this);
+        refreshLayout.setOnRefreshListener(this);
         titleBar.setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,7 +215,7 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
 
     @Override
     public void loadWalletInfoSuccess(WalletInfo info) {
-        tvAllCount.setText(info.getIntegral() + "积分");
+        tvAllCount.setText(info.getIntegral() + " 积分");
     }
 
     @Override

@@ -23,13 +23,15 @@ public class IntegralDetailAdapter extends BaseQuickAdapter<IntegralInfo, BaseVi
         helper.setText(R.id.tvRemark, item.getRemark());
         //+积分
         if (item.getChangeType() == 0) {
-            helper.setText(R.id.tvIntegral, "+" + item.getIntegral());
-            helper.setTextColor(R.id.tvIntegral,mContext.getResources().getColor(R.color.appThemeColor));
+
         }
         //-积分
         if (item.getChangeType() == 1) {
             helper.setText(R.id.tvIntegral, "-" + item.getIntegral());
             helper.setTextColor(R.id.tvIntegral,mContext.getResources().getColor(R.color.red));
+        }else {
+            helper.setText(R.id.tvIntegral, "+" + item.getIntegral());
+            helper.setTextColor(R.id.tvIntegral,mContext.getResources().getColor(R.color.appThemeColor));
         }
 
     }
