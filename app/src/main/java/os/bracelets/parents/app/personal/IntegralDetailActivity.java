@@ -9,9 +9,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import aio.health2world.DataEntity;
 import aio.health2world.brvah.BaseQuickAdapter;
+import aio.health2world.pickeview.OptionsPickerView;
+import aio.health2world.pickeview.TimePickerView;
+import aio.health2world.utils.DateUtil;
+import aio.health2world.utils.TimePickerUtil;
+import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.R;
 import os.bracelets.parents.bean.WalletInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
@@ -19,7 +27,7 @@ import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
 
 public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Presenter> implements
-        IntegralContract.View{
+        IntegralContract.View, SwipeRefreshLayout.OnRefreshListener {
 
     private TitleBar titleBar;
 
@@ -31,9 +39,23 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
 
     private List<IntegralInfo> infoList;
 
-    private TextView tvAllCount;
+    private TextView tvAllCount, startTime, endTime, type;
 
-    private LinearLayout layoutIntegral;
+    private LinearLayout llStartTime, llEndTime, llType;
+
+    private TimePickerView startPickView, endPickView;
+
+    private OptionsPickerView optionsPickerView;
+
+    private List<String> entityList = new ArrayList<>();
+
+    private int mType = -1;
+
+    private String mStartTime = "", mEndTime = "";
+
+//    private boolean[] typeShow = new boolean[]{true, true, true, false, false, false};
+//
+//    private Calendar calendar = Calendar.getInstance();
 
     @Override
     protected IntegralContract.Presenter getPresenter() {
@@ -42,20 +64,25 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_info_list;
+        return R.layout.activity_integral_list;
     }
 
     @Override
     protected void initView() {
         titleBar = findView(R.id.titleBar);
         tvAllCount = findView(R.id.tvAllCount);
-        layoutIntegral = findView(R.id.layoutIntegral);
+        llStartTime = findView(R.id.llStartTime);
+        llEndTime = findView(R.id.llEndTime);
+        llType = findView(R.id.llType);
+        startTime = findView(R.id.startTime);
+        endTime = findView(R.id.endTime);
+        type = findView(R.id.type);
         refreshLayout = findView(R.id.refreshLayout);
         recyclerView = findView(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
-        refreshLayout.setEnabled(false);
-        layoutIntegral.setVisibility(View.VISIBLE);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        refreshLayout.setColorSchemeColors(getResources().getColor(R.color.appThemeColor));
     }
 
     @Override
@@ -68,24 +95,121 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
         detailAdapter.bindToRecyclerView(recyclerView);
         detailAdapter.setEmptyView(R.layout.layout_empty_view);
 
-        mPresenter.integralSerialList();
+        startPickView = TimePickerUtil.init(this, listenerStart);
+        endPickView = TimePickerUtil.init(this, listenerEnd);
+
+
+        entityList.add("全部");
+        entityList.add("增加");
+        entityList.add("消费");
+
+        optionsPickerView = TimePickerUtil.initOptions(this, optionsSelectListener);
+        optionsPickerView.setPicker(entityList);
+
+        onRefresh();
+
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshLayout.setRefreshing(true);
+        mPresenter.integralSerialList(mType, mStartTime, mEndTime);
     }
 
     @Override
     protected void initListener() {
+        llStartTime.setOnClickListener(this);
+        llEndTime.setOnClickListener(this);
+        llType.setOnClickListener(this);
+        refreshLayout.setOnClickListener(this);
         titleBar.setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-//        detailAdapter.setOnLoadMoreListener(this,recyclerView);
     }
 
-//    @Override
-//    public void onLoadMoreRequested() {
-//
-//    }
+    private TimePickerView.OnTimeSelectListener listenerStart = new TimePickerView.OnTimeSelectListener() {
+        @Override
+        public void onTimeSelect(Date date, View v) {
+            String start = DateUtil.getTime(date);
+            String end = endTime.getText().toString();
+            if (end.equals("--")) {
+                startTime.setText(start);
+                mStartTime = start;
+            } else {
+                long a = Long.parseLong(start.replace("-", ""));
+                long b = Long.parseLong(end.replace("-", ""));
+                if (a > b) {
+                    ToastUtil.showLong("起止时间选择有误");
+                } else {
+                    startTime.setText(start);
+                    mStartTime = start;
+                    //刷新
+                    onRefresh();
+                }
+            }
+
+        }
+    };
+
+    private TimePickerView.OnTimeSelectListener listenerEnd = new TimePickerView.OnTimeSelectListener() {
+        @Override
+        public void onTimeSelect(Date date, View v) {
+            String start = startTime.getText().toString();
+            String end = DateUtil.getTime(date);
+            if (start.equals("--")) {
+                endTime.setText(end);
+                mEndTime = end;
+            } else {
+                long a = Long.parseLong(start.replace("-", ""));
+                long b = Long.parseLong(end.replace("-", ""));
+                if (a > b) {
+                    ToastUtil.showLong("起止时间选择有误");
+                } else {
+                    endTime.setText(end);
+                    mEndTime = end;
+                    //刷新
+                    onRefresh();
+                }
+            }
+
+        }
+    };
+
+
+    private OptionsPickerView.OnOptionsSelectListener optionsSelectListener = new OptionsPickerView.OnOptionsSelectListener() {
+        @Override
+        public void onOptionsSelect(int options1, int options2, int options3, View v) {
+            String s = entityList.get(options1);
+            type.setText(s);
+            if (s.equals("全部")) {
+                mType = -1;
+            } else if (s.equals("增加")) {
+                mType = 0;
+            } else {
+                mType = 1;
+            }
+            onRefresh();
+        }
+    };
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()) {
+            case R.id.llStartTime:
+                startPickView.show();
+                break;
+            case R.id.llEndTime:
+                endPickView.show();
+                break;
+            case R.id.llType:
+                optionsPickerView.show();
+                break;
+        }
+    }
 
     @Override
     public void loadWalletInfoSuccess(WalletInfo info) {
@@ -94,8 +218,14 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
 
     @Override
     public void integralSuccess(List<IntegralInfo> list) {
+        refreshLayout.setRefreshing(false);
         infoList.clear();
         infoList.addAll(list);
         detailAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void integralError() {
+        refreshLayout.setRefreshing(false);
     }
 }

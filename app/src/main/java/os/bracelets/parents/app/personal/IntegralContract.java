@@ -12,6 +12,9 @@ public interface IntegralContract {
     interface View extends BaseView<Presenter> {
         void integralSuccess(List<IntegralInfo> list);
 
+        void integralError();
+
+
         void loadWalletInfoSuccess(WalletInfo info);
     }
 
@@ -21,7 +24,7 @@ public interface IntegralContract {
             super(mView);
         }
 
-        abstract void integralSerialList();
+        abstract void integralSerialList(int type,String startTime,String endTime);
 
         abstract void  walletInfo();
 

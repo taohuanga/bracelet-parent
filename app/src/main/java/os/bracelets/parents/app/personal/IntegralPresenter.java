@@ -28,11 +28,11 @@ public class IntegralPresenter extends IntegralContract.Presenter {
             @Override
             public void onNext(HttpResult result) {
                 super.onNext(result);
-                if(result.code.equals(AppConfig.SUCCESS)){
+                if (result.code.equals(AppConfig.SUCCESS)) {
                     try {
                         JSONObject object = new JSONObject(new Gson().toJson(result.data));
                         WalletInfo info = WalletInfo.parseBean(object);
-                        if(mView!=null)
+                        if (mView != null)
                             mView.loadWalletInfoSuccess(info);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -43,33 +43,46 @@ public class IntegralPresenter extends IntegralContract.Presenter {
     }
 
     @Override
-    void integralSerialList() {
-        ApiRequest.integralSerialList(new HttpSubscriber() {
+    void integralSerialList(int type, String startTime, String endTime) {
+        ApiRequest.integralSerialList(type, startTime, endTime, new HttpSubscriber() {
+
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
+                if (mView != null)
+                    mView.integralError();
             }
 
             @Override
             public void onNext(HttpResult result) {
                 super.onNext(result);
-                if(result.code.equals(AppConfig.SUCCESS)){
+                if (result.code.equals(AppConfig.SUCCESS)) {
                     try {
                         JSONObject object = new JSONObject(new Gson().toJson(result.data));
                         JSONArray array = object.optJSONArray("list");
                         List<IntegralInfo> list = new ArrayList<>();
-                        if(array!=null){
+                        if (array != null) {
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject obj = array.optJSONObject(i);
                                 IntegralInfo info = IntegralInfo.parseBean(obj);
                                 list.add(info);
                             }
                         }
-                        if(mView!=null)
+                        if (mView != null)
                             mView.integralSuccess(list);
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        if (mView != null)
+                            mView.integralError();
                     }
+                } else {
+                    if (mView != null)
+                        mView.integralError();
                 }
             }
         });

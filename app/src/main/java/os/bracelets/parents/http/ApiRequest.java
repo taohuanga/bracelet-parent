@@ -393,9 +393,16 @@ public class ApiRequest {
     }
 
     //积分流水信息
-    public static Subscription integralSerialList(Subscriber<HttpResult> subscriber) {
+    public static Subscription integralSerialList(int type, String startTime, String endTime,
+                                                  Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
+        if (type != -1)
+            map.put("type", String.valueOf(type));
+        if (!TextUtils.isEmpty(startTime))
+            map.put("startTime", startTime);
+        if (!TextUtils.isEmpty(endTime))
+            map.put("endTime", endTime);
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .integralSerialList(map)
