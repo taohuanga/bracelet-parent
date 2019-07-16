@@ -1,6 +1,7 @@
 package os.bracelets.parents.app.main;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -164,14 +165,19 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         @Override
                         public void call(Boolean aBoolean) {
                             if (aBoolean) {
+                                MyApplication.getInstance().startScan();
                             } else {
-                                ToastUtil.showShort("读写权限被拒绝");
+                                ToastUtil.showShort("相关权限被拒绝");
                             }
                         }
                     });
+        } else {
+            BluetoothAdapter.getDefaultAdapter().enable();
+            MyApplication.getInstance().startScan();
         }
         mPresenter.getWeather();
         mPresenter.uploadLocation();
+
 //        if (getIntent().hasExtra("info"))
 //            info = (BaseInfo) getIntent().getSerializableExtra("info");
 //        if (info != null)

@@ -125,9 +125,9 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).stopScan();
         entity = (LocalDeviceEntity) adapter.getItem(position);
-        byte[] b = entity.getmScanRecord();
-        String data = StringUtils.bytesToHexString(b);
-        Logger.i("lsy",data);
+//        byte[] b = entity.getmScanRecord();
+//        String data = StringUtils.bytesToHexString(b);
+//        Logger.i("lsy",data);
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
             ToastUtil.showShort("请开启蓝牙");
             return;

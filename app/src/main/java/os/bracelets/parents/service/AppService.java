@@ -31,6 +31,7 @@ import java.util.List;
 import aio.health2world.http.HttpResult;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
+import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
@@ -317,6 +318,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                     if (countFile == fileList.size()) {
                         countFile = 0;
                     }
+                    ToastUtil.showShort("文件上传失败");
                 }
 
                 @Override
@@ -328,7 +330,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                     }
                     if (result.code.equals(AppConfig.SUCCESS)) {
                         fileUtils.deleteFile(file.getName());
-
                     }
                 }
             });

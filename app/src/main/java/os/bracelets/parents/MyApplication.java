@@ -11,11 +11,13 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.huichenghe.bleControl.Ble.BleScanUtils;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.DeviceConfig;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
@@ -37,6 +39,7 @@ import aio.health2world.SApplication;
 import aio.health2world.utils.AppManager;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
+import aio.health2world.utils.ToastUtil;
 import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.receiver.AlarmReceiver;
 import os.bracelets.parents.receiver.BleReceiver;
@@ -164,6 +167,41 @@ public class MyApplication extends Application implements AMapLocationListener {
         mlocationClient.stopLocation();
         mlocationClient.onDestroy();
     }
+
+    public void startScan() {
+        if (BluetoothAdapter.getDefaultAdapter() == null)
+            return;
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled())
+            return;
+        BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
+        //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
+        BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).setmOnDeviceScanFoundListener(deviceFoundListener);
+        BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).scanDevice(null);
+    }
+
+    /**
+     * 实例化设备监听器，并对扫描到的设备进行监听
+     */
+    private BleScanUtils.OnDeviceScanFoundListener deviceFoundListener = new BleScanUtils.OnDeviceScanFoundListener() {
+        @Override
+        public void OnDeviceFound(LocalDeviceEntity mLocalDeviceEntity) {
+            String deviceName = mLocalDeviceEntity.getName();
+            if (deviceName != null && deviceName.startsWith("DFZ")) {
+                Logger.i("lsy", "扫描到设备" + deviceName);
+                MyApplication.getInstance().addDevice(mLocalDeviceEntity);
+            }
+            //根据绑定的设备自带链接
+            String macAddress = (String) SPUtils.get(INSTANCE, AppConfig.MAC_ADDRESS, "");
+            if (!TextUtils.isEmpty(macAddress) && mLocalDeviceEntity.getAddress().equals(macAddress)) {
+                BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
+            }
+        }
+
+        @Override
+        public void onScanStateChange(boolean isChange) {
+        }
+
+    };
 
     /**
      * 添加设备到集合
