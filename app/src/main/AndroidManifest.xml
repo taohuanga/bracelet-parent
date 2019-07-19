@@ -120,6 +120,8 @@
 
         <activity android:name=".app.setting.DeviceBindActivity"/>
 
+        <activity android:name="aio.health2world.qrcode.CaptureActivity"/>
+
         <service android:name=".service.AppService" />
 
         <service android:name="com.huichenghe.bleControl.Ble.BluetoothLeService" />
