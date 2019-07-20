@@ -21,6 +21,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.NotificationCompat;
 
 import com.huichenghe.bleControl.Ble.DataSendCallback;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -189,6 +190,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
     @Override
     public void sendFailed() {
+        CrashReport.postCatchedException(new Throwable("数据接收失败"));
 
     }
 
@@ -231,13 +233,8 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             String content = sb.toString();
             fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) +
                             "\n" + content + "\n" + "结束时间：" + formatter.format(currentTime),
-                    "test6Sensor" + formatter.format(currentTime) + ".csv");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    uploadFile();
-                }
-            }, 5000);
+                    "test6Sensor_" + formatter.format(currentTime) + ".csv");
+            uploadFile();
         } else if (data.substring(10, 14).equals("5453")) {//若第11位至第14位是5453，则原始数据上传
             sb.append(data + "\n");
             EventBus.getDefault().post(new MsgEvent<>(data));
@@ -269,50 +266,31 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         boolean isLogin = (boolean) SPUtils.get(MyApplication.getInstance(), AppConfig.IS_LOGIN, false);
         if (!isLogin)
             return;
-//        String channelID = "channel_id";
-//        String channelName = "channel_name";
-//        NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
-//        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        manager.createNotificationChannel(channel);
-//        Notification.Builder builder =new Notification.Builder(this);
-//        builder.setContentText("衣带保父母端");
-//        builder.setContentTitle("正在上传蓝牙设备数据");
-//        builder.setWhen(System.currentTimeMillis());//通知栏显示时间
-//        builder.setSmallIcon(R.mipmap.ic_app_logo);//通知栏小图标
-//        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_logo));//通知栏下拉是图标
-//        builder.setAutoCancel(true);//设置点击通知栏消息后，通知消息自动消失
-//        builder.setVibrate(new long[]{0, 1000, 1000, 1000});//通知栏消息震动
-//        builder.setLights(Color.GREEN, 1000, 2000);//通知栏消息闪灯(亮一秒间隔两秒再亮)
-//        builder.setDefaults(NotificationCompat.DEFAULT_ALL);
-//        //创建通知时指定channelID
-//        builder.setChannelId(channelID);
-//        Notification notification = builder.build();
-//        notification.notify();
-        String CHANNEL_ONE_ID = "CHANNEL_ONE_ID";
-        String CHANNEL_ONE_NAME = "CHANNEL_ONE_ID";
-        NotificationChannel notificationChannel = null;
-        //进行8.0的判断
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
-                    CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_HIGH);
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setShowBadge(true);
-            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            manager.createNotificationChannel(notificationChannel);
-        }
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        final Notification notification = new Notification.Builder(this).setChannelId(CHANNEL_ONE_ID)
-                .setTicker("Nature")
-                .setSmallIcon(R.mipmap.ic_app_logo)
-                .setContentTitle("衣带保父母端")
-                .setContentIntent(pendingIntent)
-                .setContentText("正在上传蓝牙设备数据")
-                .build();
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        startForeground(1, notification);
+//        String CHANNEL_ONE_ID = "CHANNEL_ONE_ID";
+//        String CHANNEL_ONE_NAME = "CHANNEL_ONE_ID";
+//        NotificationChannel notificationChannel = null;
+//        //进行8.0的判断
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//            notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
+//                    CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_HIGH);
+//            notificationChannel.enableLights(true);
+//            notificationChannel.setLightColor(Color.RED);
+//            notificationChannel.setShowBadge(true);
+//            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+//            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//            manager.createNotificationChannel(notificationChannel);
+//        }
+//        Intent intent = new Intent(this, MainActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+//        final Notification notification = new Notification.Builder(this).setChannelId(CHANNEL_ONE_ID)
+//                .setTicker("Nature")
+//                .setSmallIcon(R.mipmap.ic_app_logo)
+//                .setContentTitle("衣带保父母端")
+//                .setContentIntent(pendingIntent)
+//                .setContentText("正在上传蓝牙设备数据")
+//                .build();
+//        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+//        startForeground(1, notification);
 
         for (final File file : fileList) {
 
