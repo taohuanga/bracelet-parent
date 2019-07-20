@@ -15,6 +15,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.NotificationCompat;
@@ -231,7 +232,12 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) +
                             "\n" + content + "\n" + "结束时间：" + formatter.format(currentTime),
                     "test6Sensor" + formatter.format(currentTime) + ".csv");
-            uploadFile();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    uploadFile();
+                }
+            }, 5000);
         } else if (data.substring(10, 14).equals("5453")) {//若第11位至第14位是5453，则原始数据上传
             sb.append(data + "\n");
             EventBus.getDefault().post(new MsgEvent<>(data));
@@ -247,6 +253,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             EventBus.getDefault().post(new MsgEvent<>("X轴角速度：" + accXD + "\n" + "Y轴角速度：" + accYD + "\n" + "Z轴角速度：" + accZD + "\n" + "X轴加速度：" + gyrXD + "\n" + "Y轴加速度：" + gyrYD + "\n" + "Z轴加速度：" + gyrZD));
         }
         lastTime = currentTime;
+
         if (data.contains("68a80c0001545301") || data.contains("68a80c0001545303")) {
             fallMsg(0);
         } else if (data.contains("68a80c0001545302")) {
