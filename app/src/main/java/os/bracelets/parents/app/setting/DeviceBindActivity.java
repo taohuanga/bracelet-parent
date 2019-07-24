@@ -78,8 +78,11 @@ public class DeviceBindActivity extends BaseActivity {
             return;
         if (requestCode == 0x11) {
             String result = data.getStringExtra("result");
-            if (!TextUtils.isEmpty(result))
+            if (!TextUtils.isEmpty(result)) {
+                result = result.replace(":", "").toUpperCase();
                 edDeviceNo.setText(result);
+            }
+
         }
     }
 
@@ -91,7 +94,7 @@ public class DeviceBindActivity extends BaseActivity {
             startActivityForResult(intent, 0x11);
         }
         if (v.getId() == R.id.btnBind) {
-            String deviceNo = edDeviceNo.getText().toString().trim();
+            String deviceNo = edDeviceNo.getText().toString().trim().replace(":", "").toUpperCase();
             if (TextUtils.isEmpty(deviceNo)) {
                 ToastUtil.showShort("请输入设备编号");
                 return;
@@ -123,6 +126,7 @@ public class DeviceBindActivity extends BaseActivity {
                     try {
                         JSONObject object = new JSONObject(new Gson().toJson(result.data));
                         String macAddress = object.optString("macAddress");
+                        macAddress = macAddress.replace(":", "").toUpperCase();
                         if (!TextUtils.isEmpty(macAddress)) {
                             edDeviceNo.setText(macAddress);
                             edDeviceNo.setSelection(edDeviceNo.getText().length());
@@ -145,7 +149,7 @@ public class DeviceBindActivity extends BaseActivity {
         ApiRequest.deviceBind(deviceNo, new HttpSubscriber() {
             @Override
             public void onStart() {
-                if(dialog!=null)
+                if (dialog != null)
                     dialog.show();
             }
 

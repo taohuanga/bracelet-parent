@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="姓名"
+            android:text="Mac地址"
             android:textColor="@color/black6"
             android:textSize="@dimen/sp15" />
 
@@ -66,7 +66,7 @@
             android:layout_marginStart="8dp"
             android:background="@color/white"
             android:gravity="right|center_vertical"
-            android:hint="设备号"
+            android:hint="忽略大小写和冒号"
             android:maxLines="1"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
