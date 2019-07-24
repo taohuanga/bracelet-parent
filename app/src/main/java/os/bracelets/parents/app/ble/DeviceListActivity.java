@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -78,6 +79,8 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
     @Override
     protected void initData() {
         macAddress = (String) SPUtils.get(this, AppConfig.MAC_ADDRESS, "");
+        if (!TextUtils.isEmpty(macAddress))
+            macAddress = macAddress.replace(":", "").toUpperCase();
         listAdapter = new DeviceListAdapter(MyApplication.getInstance().getDeviceList());
         recyclerView.setAdapter(listAdapter);
 
@@ -213,9 +216,9 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
                 listAdapter.notifyDataSetChanged();
             }
             //根据绑定的设备自带链接
-            if (mLocalDeviceEntity != null && mLocalDeviceEntity.getAddress().equals(macAddress)) {
+            String mac = mLocalDeviceEntity.getAddress().replace(":", "").toUpperCase();
+            if (macAddress.equals(mac))
                 BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
-            }
         }
 
         @Override

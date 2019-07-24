@@ -192,8 +192,11 @@ public class MyApplication extends Application implements AMapLocationListener {
             }
             //根据绑定的设备自带链接
             String macAddress = (String) SPUtils.get(INSTANCE, AppConfig.MAC_ADDRESS, "");
-            if (!TextUtils.isEmpty(macAddress) && mLocalDeviceEntity.getAddress().equals(macAddress)) {
-                BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
+            if (!TextUtils.isEmpty(macAddress)) {
+                String mAddress = mLocalDeviceEntity.getAddress().replace(":", "").toUpperCase();
+                if (macAddress.equals(mAddress)) {
+                    BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
+                }
             }
         }
 

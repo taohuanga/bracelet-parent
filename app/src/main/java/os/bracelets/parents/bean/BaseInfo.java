@@ -1,5 +1,7 @@
 package os.bracelets.parents.bean;
 
+import android.text.TextUtils;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * Created by lishiyou on 2019/1/27.
  */
 
-public class BaseInfo implements Serializable{
+public class BaseInfo implements Serializable {
 
 //      "tokenId":"c1ceb8b610234aacb130b0fae4ca44c8",
 //              "realName":"",
@@ -137,7 +139,11 @@ public class BaseInfo implements Serializable{
         info.setBirthday(object.optString("birthday"));
         info.setBluetoothName(object.optString("bluetoothName"));
         info.setEquipmentSn(object.optString("equipmentSn"));
-        info.setMacAddress(object.optString("macAddress"));
+        String mac = object.optString("macAddress");
+        if (!TextUtils.isEmpty(mac)) {
+            mac = mac.replace(":", "").toUpperCase();
+            info.setMacAddress(mac);
+        }
         info.setName(object.optString("name"));
         return info;
     }
