@@ -142,8 +142,8 @@ public class BaseInfo implements Serializable {
         String mac = object.optString("macAddress");
         if (!TextUtils.isEmpty(mac)) {
             mac = mac.replace(":", "").toUpperCase();
-            info.setMacAddress(mac);
         }
+        info.setMacAddress(mac);
         info.setName(object.optString("name"));
         return info;
     }

@@ -2,6 +2,7 @@ package os.bracelets.parents.app.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -42,7 +43,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     private Button btnLogout;
 
-    private View layoutUpdatePwd, layoutSensorMsg,layoutDeviceBind, layoutUpdateMsg, layoutFeedBack, layoutAbout;
+    private View layoutUpdatePwd, layoutSensorMsg,layoutDeviceBind, layoutUpdateMsg, layoutFeedBack, layoutAbout,layoutDisplay;
 
     @Override
     protected SettingContract.Presenter getPresenter() {
@@ -67,6 +68,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
         layoutFeedBack = findView(R.id.layoutFeedBack);
         layoutDeviceBind = findView(R.id.layoutDeviceBind);
         layoutAbout = findView(R.id.layoutAbout);
+        layoutDisplay = findView(R.id.layoutDisplay);
     }
 
     @Override
@@ -88,6 +90,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
         setOnClickListener(layoutAbout);
         setOnClickListener(tvIntegral);
         setOnClickListener(layoutDeviceBind);
+        setOnClickListener(layoutDisplay);
         titleBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +145,10 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
                 break;
             case R.id.tvIntegral:
                 startActivity(new Intent(this, IntegralDetailActivity.class));
+                break;
+            case R.id.layoutDisplay:
+                Intent intent = new Intent(Settings.ACTION_DISPLAY_SETTINGS);
+                startActivity(intent);
                 break;
         }
     }

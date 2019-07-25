@@ -1,10 +1,12 @@
 package os.bracelets.parents.app.account;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import aio.health2world.utils.MD5Util;
@@ -25,6 +27,7 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
 
     private Button btnRegister;
 
+    private LinearLayout llAgreement;
 
     @Override
     protected RegisterContract.Presenter getPresenter() {
@@ -43,6 +46,7 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
         edPwd = findView(R.id.edPwd);
         tvCode = findView(R.id.tvCode);
         btnRegister = findView(R.id.btnRegister);
+        llAgreement = findView(R.id.llAgreement);
     }
 
     @Override
@@ -54,6 +58,7 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
     @Override
     protected void initListener() {
         tvCode.setOnClickListener(this);
+        llAgreement.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
     }
 
@@ -66,6 +71,9 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
                 break;
             case R.id.btnRegister:
                 register();
+                break;
+            case R.id.llAgreement:
+                startActivity(new Intent(this,AgreementActivity.class));
                 break;
         }
     }

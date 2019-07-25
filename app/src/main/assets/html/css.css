@@ -1,0 +1,82 @@
+html, body, div, span, applet, object, h1, h2,dt,dd,li,input, button, select,textarea {border:none;outline: none;background: none;margin: 0;padding: 0;font-family: "微软雅黑",Arial, Helvetica, sans-serif;	}
+
+ol, ul, li,dl,dt,dd{list-style: none;}
+img{ border:none}
+body {
+	font-family: "微软雅黑",Arial, Helvetica, sans-serif;
+	min-width:340px;
+	font-size:14px;
+	line-height:40px;
+	color:#000;
+	letter-spacing:0px;
+	
+}
+input{font-size:26px;outline:none;border:none;}
+
+
+
+.blue, .blue a {color:#299df4}
+.clear {clear:both; }
+a {color:#333; cursor:pointer}
+a:link, a:visited {text-decoration:none;}
+a:hover {color:#000; text-decoration:none}
+.red ,.red a{color:#f3041a}
+.c-9 {color:#999}
+.c-6{color:#666}
+.c-83{color:#838181}
+.c-0{color:#000}
+.black{ color:#000}
+.org,.org a{ color:#f86b03}
+.green{ color:#2ccb71}
+.left {float:left}
+.txt{ border:1px solid #d6d6d6;border-radius:6px}
+
+
+.f32{ font-size:32px;}
+.right {float:right}
+.f40{ font-size:40px;}
+.f30{ font-size:30px;}
+.f28{font-size:28px;}
+.f24{font-size:24px;}
+.f22{font-size:22px;}
+.f20{font-size:20px;}
+.f18{font-size:18px;}
+
+
+
+.pad2em{ padding:2rem; overflow:hidden}
+.pad1em{ padding:1rem; overflow:hidden}
+.mtop-2rem{ margin-top:2rem}
+.mtop-1rem{ margin-top:1rem}
+
+* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+/* 头部*/
+.header{ text-align:center; height:100px; background:url(images/index_02.jpg) repeat-x;overflow:hidden}
+.header img{ float:left; margin-top:20px; margin-left:30px;}
+/* fooder*/
+.fooder{ background:#666768; color:#ccc; padding-left:30px; padding-right:30px; font-size:18px; line-height:80px; height:80px;overflow:hidden; text-align:center}
+/*------------------------------------内容------------------*/
+.web_box{ padding:30px; overflow:hidden; background:#fff}
+.web_box ul,.web_box ol{ padding-bottom:30px; overflow:hidden}
+.web_box ul li{ background:url(images/ico.png) left 15px no-repeat; padding-left:30px; border-bottom:1px  solid #ccc; font-size:12px; margin-bottom:20px; padding-bottom:20px; overflow:hidden; line-height:36px;}
+.web_box ol{ margin-bottom:0px;}
+.web_box ol li{ margin-top:20px; font-size:12px; line-height:30px;}
+.web_box dl{ text-align:right;}
+
+.wz{ padding:20px; background: #d6f2fc;border-radius:10px; margin-bottom:10px;}
+
+.title{ text-align:center; border-bottom:1px solid #ddd; padding-bottom:30px; margin-bottom:40px;}
+.title .f24{ margin-bottom:10px;}
+.m-m30{ margin-bottom:30px;}
+.bt{ margin-bottom:30px;}
+
+

@@ -41,6 +41,7 @@ import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import cn.jpush.android.api.JPushInterface;
+import os.bracelets.parents.app.account.AgreementActivity;
 import os.bracelets.parents.receiver.AlarmReceiver;
 import os.bracelets.parents.receiver.BleReceiver;
 import os.bracelets.parents.service.AppService;
@@ -70,7 +71,6 @@ public class MyApplication extends Application implements AMapLocationListener {
         SApplication.init(this, AppConfig.IS_DEBUG);
 
         initApp();
-
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //            startForegroundService(new Intent(this, AppService.class));
