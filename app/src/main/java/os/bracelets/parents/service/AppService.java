@@ -132,6 +132,9 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             //计时结束 分发数据
             EventBus.getDefault().post(new MsgEvent<>(AppConfig.MSG_STEP_COUNT, CURRENT_STEP));
             uploadStepNum();
+            if (!MyApplication.getInstance().isBleConnect()) {
+                MyApplication.getInstance().startScan();
+            }
         }
     };
 
