@@ -138,6 +138,7 @@
             android:textSize="15sp" />
 
         <LinearLayout
+            android:visibility="gone"
             android:padding="@dimen/dp_8"
             android:id="@+id/llAgreement"
             android:layout_width="match_parent"

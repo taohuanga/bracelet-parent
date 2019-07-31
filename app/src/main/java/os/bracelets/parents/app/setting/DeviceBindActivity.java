@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.ReplacementTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,7 +58,7 @@ public class DeviceBindActivity extends BaseActivity {
         tvName = findView(R.id.tvName);
         btnBind = findView(R.id.btnBind);
 
-        edDeviceNo.setFilters(new InputFilter[]{typeFilter, new InputFilter.LengthFilter(12)});
+        edDeviceNo.setTransformationMethod(new UpperCaseTransform());
     }
 
     @Override
@@ -209,12 +210,24 @@ public class DeviceBindActivity extends BaseActivity {
         });
     }
 
-    private InputFilter typeFilter = new InputFilter() {
+    public class UpperCaseTransform extends ReplacementTransformationMethod {
         @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            Pattern p = Pattern.compile("[^a-zA-Z0-9]");
-            Matcher m = p.matcher(source.toString());
-            return m.replaceAll("").trim().toUpperCase();
+        protected char[] getOriginal() {
+            char[] aa = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+            return aa;
         }
-    };
+
+        @Override
+        protected char[] getReplacement() {
+            char[] cc = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+            return cc;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dialog != null)
+            dialog = null;
+    }
 }

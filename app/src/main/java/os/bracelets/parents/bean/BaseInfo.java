@@ -139,7 +139,7 @@ public class BaseInfo implements Serializable {
         info.setBirthday(object.optString("birthday"));
         info.setBluetoothName(object.optString("bluetoothName"));
         info.setEquipmentSn(object.optString("equipmentSn"));
-        String mac = object.optString("macAddress");
+        String mac = object.optString("macAddress","");
         if (!TextUtils.isEmpty(mac)) {
             mac = mac.replace(":", "").toUpperCase();
         }
