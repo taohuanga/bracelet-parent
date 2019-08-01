@@ -87,7 +87,7 @@ public class FeedBackActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        TitleBarUtil.setAttr(this, "", "意见反馈", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.feedback), titleBar);
         rxPermissions = new RxPermissions(this);
         dialog = new LoadingDialog(this);
     }
