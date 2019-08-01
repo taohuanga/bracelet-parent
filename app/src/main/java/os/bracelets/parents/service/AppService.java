@@ -20,10 +20,13 @@ import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.NotificationCompat;
 
+import com.google.gson.Gson;
 import com.huichenghe.bleControl.Ble.DataSendCallback;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -40,6 +43,7 @@ import os.bracelets.parents.R;
 import os.bracelets.parents.app.ble.BleDataForSensor;
 import os.bracelets.parents.app.contact.ContactActivity;
 import os.bracelets.parents.app.main.MainActivity;
+import os.bracelets.parents.app.setting.DeviceBindActivity;
 import os.bracelets.parents.common.MsgEvent;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
@@ -132,6 +136,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             //计时结束 分发数据
             EventBus.getDefault().post(new MsgEvent<>(AppConfig.MSG_STEP_COUNT, CURRENT_STEP));
             uploadStepNum();
+            getBindDeviceInfo();
             if (!MyApplication.getInstance().isBleConnect()) {
                 MyApplication.getInstance().startScan();
             }
@@ -345,6 +350,28 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             @Override
             public void onNext(HttpResult result) {
                 super.onNext(result);
+            }
+        });
+    }
+
+    private void getBindDeviceInfo() {
+        ApiRequest.deviceBindQuery(new HttpSubscriber() {
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onNext(HttpResult result) {
+                if (result.code.equals(AppConfig.SUCCESS)) {
+                    try {
+                        JSONObject object = new JSONObject(new Gson().toJson(result.data));
+                        String macAddress = object.optString("macAddress");
+                        macAddress = macAddress.replace(":", "").toUpperCase();
+                        SPUtils.put(MyApplication.INSTANCE, AppConfig.MAC_ADDRESS, macAddress);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }

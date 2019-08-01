@@ -195,6 +195,7 @@ public class MyApplication extends Application implements AMapLocationListener {
             if (!TextUtils.isEmpty(macAddress)) {
                 String mAddress = mLocalDeviceEntity.getAddress().replace(":", "").toUpperCase();
                 if (macAddress.equals(mAddress)) {
+                    BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
                     BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
                 }
             }

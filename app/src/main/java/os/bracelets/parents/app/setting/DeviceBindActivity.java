@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import aio.health2world.http.HttpResult;
 import aio.health2world.qrcode.CaptureActivity;
+import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import aio.health2world.view.LoadingDialog;
 import os.bracelets.parents.AppConfig;
@@ -152,7 +153,7 @@ public class DeviceBindActivity extends BaseActivity {
         });
     }
 
-    private void bindDevice(String deviceNo) {
+    private void bindDevice(final String deviceNo) {
         if (deviceNo.length() != 12) {
             ToastUtil.showShort("请输入正确的mac地址");
             return;
@@ -178,6 +179,7 @@ public class DeviceBindActivity extends BaseActivity {
                     dialog.dismiss();
                 if (result.code.equals(AppConfig.SUCCESS)) {
                     ToastUtil.showShort(getString(R.string.action_success));
+                    SPUtils.put(DeviceBindActivity.this, AppConfig.MAC_ADDRESS, deviceNo);
                     finish();
                 }
             }

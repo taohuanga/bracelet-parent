@@ -356,7 +356,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         if (batteryInt <= 25) {
                             LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
                             String mac = entity == null ? "" : entity.getAddress();
-                            mPresenter.uploadPower(mac, batteryInt);
+                            mac = mac.replace(":", "").toUpperCase();
+                            if (!TextUtils.isEmpty(mac))
+                                mPresenter.uploadPower(mac, batteryInt);
                         }
                     }
                 });
