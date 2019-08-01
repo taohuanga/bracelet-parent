@@ -20,7 +20,7 @@ public class AboutActivity extends BaseActivity {
 
     private TitleBar titleBar;
 
-    private TextView tvTitle,tvContent;
+    private TextView tvTitle, tvContent;
 
     @Override
     protected int getLayoutId() {
@@ -36,8 +36,8 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        TitleBarUtil.setAttr(this, "", "关于我们", titleBar);
-        tvTitle.setText("衣带保父母端 V"+ AppUtils.getAppVersionName(this));
+        TitleBarUtil.setAttr(this, "", getString(R.string.about_us), titleBar);
+        tvTitle.setText(getString(R.string.bracelet_parent) + AppUtils.getAppVersionName(this));
         tvContent.setText("\r\r\r\r\r\r\r\r" + getResources().getString(R.string.about_content));
     }
 
