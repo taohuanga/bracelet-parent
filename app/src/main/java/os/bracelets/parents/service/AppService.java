@@ -227,29 +227,28 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         double gyrXD = (double) gyrXInt * 9.8 / 0x8000 * 16;
         double gyrYD = (double) gyrYInt * 9.8 / 0x8000 * 16;
         double gyrZD = (double) gyrZInt * 9.8 / 0x8000 * 16;
-
         long currentTime = System.currentTimeMillis();
 
         if (data.contains("68a80c0001545355")) {//开始
-            //清空sb
-            sb.delete(0, sb.length());
-            sb.append(data + "\n");
-            startTime = currentTime;
+//            //清空sb
+//            sb.delete(0, sb.length());
+//            sb.append(data + "\n");
+//            startTime = currentTime;
             EventBus.getDefault().post(new MsgEvent<>(data));
         } else if (data.substring(10, 14).equals("5453")) {//若第11位至第14位是5453，则原始数据上传
-            sb.append(data + "\n");
+//            sb.append(data + "\n");
             EventBus.getDefault().post(new MsgEvent<>(data));
         } else if (data.substring(10, 14).equals("5454")) {
-            sb.append(data + "\n");
+//            sb.append(data + "\n");
         } else if (data.contains("68a80c00015453aa")) {//结束写入
-            sb.append(data + "\n");
-            String content = sb.toString();
-            fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) +
-                            "\n" + content + "\n" + "结束时间：" + formatter.format(currentTime),
-                    "test6Sensor_" + formatter.format(currentTime) + ".csv");
-            uploadFile();
+//            sb.append(data + "\n");
+//            String content = sb.toString();
+//            fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) +
+//                            "\n" + content + "\n" + "结束时间：" + formatter.format(currentTime),
+//                    "test6Sensor_" + formatter.format(currentTime) + ".csv");
+//            uploadFile();
         } else {
-            sb.append(accXD + "," + accYD + "," + accZD + "," + gyrXD + "," + gyrYD + "," + gyrZD + "\n");
+//            sb.append(accXD + "," + accYD + "," + accZD + "," + gyrXD + "," + gyrYD + "," + gyrZD + "\n");
             EventBus.getDefault().post(new MsgEvent<>("X轴角速度：" + accXD + "\n" + "Y轴角速度：" + accYD + "\n" + "Z轴角速度：" + accZD + "\n" + "X轴加速度：" + gyrXD + "\n" + "Y轴加速度：" + gyrYD + "\n" + "Z轴加速度：" + gyrZD));
         }
         lastTime = currentTime;
@@ -258,6 +257,14 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             fallMsg(0);
         } else if (data.contains("68a80c0001545302")) {
             fallMsg(1);
+        }
+        //跌倒
+        if (data.contains("68a80c0001545301")) {
+            sb.delete(0, sb.length());
+            sb.append(data + "\n");
+            String content = sb.toString();
+            fileUtils.writeTxtToFile("\n" + content, "test6Sensor_" + formatter.format(currentTime) + ".csv");
+            uploadFile();
         }
     }
 
