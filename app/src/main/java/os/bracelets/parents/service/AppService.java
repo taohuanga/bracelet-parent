@@ -263,7 +263,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             sb.delete(0, sb.length());
             sb.append(data + "\n");
             String content = sb.toString();
-            fileUtils.writeTxtToFile("\n" + content, "test6Sensor_" + formatter.format(currentTime) + ".csv");
+            fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
             uploadFile();
         }
     }
