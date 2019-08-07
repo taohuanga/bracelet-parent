@@ -351,8 +351,16 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         String data = FormatUtils.bytesToHexString(bytes);
                         Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
                         int batteryInt = batteryLong.intValue();
-                        tvBattery.setText(batteryInt + "%");
-                        batteryView.setPower(batteryInt);
+                        if (batteryInt <= 100) {
+                            tvBattery.setText(batteryInt + "%");
+                            batteryView.setPower(batteryInt);
+                        } else if (batteryInt > 128 && batteryInt < 228) {
+                            tvBattery.setText("正在充电");
+                            batteryView.setPower(batteryInt - 128);
+                        } else if (batteryInt == 240) {
+                            tvBattery.setText("充电完成");
+                            batteryView.setPower(100);
+                        }
                         if (batteryInt <= 25) {
                             LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
                             String mac = entity == null ? "" : entity.getAddress();
