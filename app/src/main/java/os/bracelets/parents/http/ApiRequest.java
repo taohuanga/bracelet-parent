@@ -430,6 +430,7 @@ public class ApiRequest {
     public static Subscription deviceBindQuery(Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("cancelFlag", "1");
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .deviceBindQuery(map)
@@ -450,10 +451,12 @@ public class ApiRequest {
     }
 
     //绑定设备
-    public static Subscription deviceBind(String mac, Subscriber<HttpResult> subscriber) {
+    public static Subscription deviceBind(String mac, String bindTimes, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("equipmentSn", mac);
+        if (!TextUtils.isEmpty(bindTimes))
+            map.put("bindTimes", bindTimes);
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .deviceBind(map)
