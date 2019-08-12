@@ -7,4 +7,10 @@
         穿戴舒服，美观时尚!
     </string>
 
+    <string name="action_success">操作成功</string>
+    <string name="about_us">关于我们</string>
+    <string name="bracelet_parent">衣带保父母端 V</string>
+    <string name="feedback">意见反馈</string>
+    <string name="user_agreement">用户协议</string>
+
 </resources>

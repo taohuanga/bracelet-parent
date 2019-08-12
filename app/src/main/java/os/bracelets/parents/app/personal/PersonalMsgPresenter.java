@@ -116,9 +116,9 @@ public class PersonalMsgPresenter extends PersonalMsgContract.Presenter {
 
     @Override
     void updateMsg(String profile, String nickName, final String realName, int sex, String birthday,
-                   String height, String weight, String address) {
+                   String height, String weight, String address, String longitude, String latitude) {
         ApiRequest.updateMsg(profile, nickName, realName, sex, birthday, height, weight, address,
-                new HttpSubscriber() {
+                longitude, latitude, new HttpSubscriber() {
 
                     @Override
                     public void onStart() {
@@ -147,7 +147,7 @@ public class PersonalMsgPresenter extends PersonalMsgContract.Presenter {
                                 String portrait = object.optString("profile");
                                 SPUtils.put(MyApplication.getInstance(), AppConfig.USER_IMG, portrait);
                                 SPUtils.put(MyApplication.getInstance(), AppConfig.USER_NICK, nickName);
-                                if(mView!=null)
+                                if (mView != null)
                                     mView.updateMsgSuccess();
                             } catch (JSONException e) {
                                 e.printStackTrace();

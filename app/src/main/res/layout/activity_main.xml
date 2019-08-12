@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:battery="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:battery="http://schemas.android.com/apk/res-auto"
     android:background="#eee"
     android:orientation="vertical">
 
@@ -48,8 +48,8 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="16dp"
+            android:layout_marginRight="10dp"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -68,13 +68,29 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/msgLayout"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_home_msg" />
+        </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/linearLayout"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -118,10 +134,10 @@
         <LinearLayout
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="20dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -149,13 +165,20 @@
         android:layout_weight="2"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="8dp"
-            android:text="今日待办"
-            android:textSize="15sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_8"
+                android:text="今日待办"
+                android:textSize="15sp" />
+        </LinearLayout>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -173,6 +196,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:gravity="center_vertical"
             android:padding="8dp">
 
             <TextView
@@ -180,6 +204,13 @@
                 android:layout_height="wrap_content"
                 android:text="今天的运动步数"
                 android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/ivSports"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:src="@mipmap/icon_sports_man" />
 
             <TextView
                 android:id="@+id/tvStep"
@@ -189,6 +220,22 @@
                 android:text="--"
                 android:textColor="#83A4F1"
                 android:textSize="16sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvIntegral"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_4"
+                android:background="@color/colorAccent"
+                android:padding="@dimen/dp_4"
+                android:text="个人积分"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
         </LinearLayout>
 
 
@@ -235,9 +282,9 @@
                 android:id="@+id/layoutNews"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/dp_8"
-                android:layout_marginRight="@dimen/dp_8"
                 android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:layout_weight="1"
                 android:background="#8A6AFC"
                 android:gravity="center"
@@ -269,13 +316,14 @@
                 android:id="@+id/layoutNearby"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/dp_8"
                 android:layout_marginLeft="@dimen/dp_8"
                 android:layout_marginRight="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:layout_weight="1"
                 android:background="#4f54f4"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -296,8 +344,9 @@
                 android:id="@+id/layoutNavigation"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/dp_8"
+                android:layout_marginLeft="@dimen/dp_8"
                 android:layout_marginRight="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:layout_weight="1"
                 android:background="#269aef"
                 android:gravity="center"
@@ -322,8 +371,8 @@
                 android:id="@+id/layoutSetting"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/dp_8"
                 android:layout_marginRight="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:layout_weight="1"
                 android:background="#b67af1"
                 android:gravity="center"

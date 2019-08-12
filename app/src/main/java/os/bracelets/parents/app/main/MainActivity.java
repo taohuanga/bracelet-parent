@@ -1,16 +1,20 @@
 package os.bracelets.parents.app.main;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.model.LatLng;
@@ -21,6 +25,7 @@ import com.amap.api.navi.AmapNaviType;
 import com.amap.api.navi.AmapRouteActivity;
 import com.amap.api.navi.INaviInfoCallback;
 import com.amap.api.navi.model.AMapNaviLocation;
+import com.huichenghe.bleControl.Ble.BleBaseDataManage;
 import com.huichenghe.bleControl.Ble.BleDataForBattery;
 import com.huichenghe.bleControl.Ble.BleDataforSyn;
 import com.huichenghe.bleControl.Ble.BleGattHelperListener;
@@ -39,23 +44,31 @@ import java.util.List;
 
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.DateUtil;
+import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
+import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
+import os.bracelets.parents.app.ble.BleDataForSensor;
 import os.bracelets.parents.app.ble.DeviceListActivity;
 import os.bracelets.parents.app.ble.MyBleGattHelper;
 import os.bracelets.parents.app.contact.ContactActivity;
-import os.bracelets.parents.app.navigate.NavigateActivity;
 import os.bracelets.parents.app.nearby.NearbyActivity;
 import os.bracelets.parents.app.news.HealthInfoActivity;
+import os.bracelets.parents.app.personal.IntegralDetailActivity;
+import os.bracelets.parents.app.personal.PersonalMsgActivity;
 import os.bracelets.parents.app.setting.SettingActivity;
-import os.bracelets.parents.bean.BaseInfo;
+import os.bracelets.parents.app.setting.SystemMsgActivity;
 import os.bracelets.parents.bean.RemindBean;
+import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.common.MsgEvent;
 import os.bracelets.parents.db.DBManager;
+import os.bracelets.parents.jpush.JPushUtil;
+import os.bracelets.parents.jpush.TagAliasOperatorHelper;
+import os.bracelets.parents.service.AppService;
 import os.bracelets.parents.utils.DataString;
 import os.bracelets.parents.view.BatteryView;
 import rx.functions.Action1;
@@ -64,9 +77,11 @@ import rx.functions.Action1;
 public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implements MainContract.View,
         INaviInfoCallback {
 
-    private View layoutDialing, layoutNews, layoutSetting, layoutNavigation, layoutNearby;
+    private View layoutDialing, layoutNews, layoutSetting, layoutNavigation, layoutNearby, msgLayout;
 
-    private TextView tvWeek, tvWeather, tvConnect, tvBattery, tvCity, tvStep;
+    private TextView tvWeek, tvWeather, tvConnect, tvBattery, tvCity, tvStep, tvIntegral;
+
+    private ImageView ivSports;
 
     private RecyclerView recyclerView;
 
@@ -80,7 +95,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
     private Handler handler;
 
-    private BaseInfo info;
+    private UserInfo info;
 
     @Override
     protected MainContract.Presenter getPresenter() {
@@ -100,8 +115,11 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         layoutSetting = findView(R.id.layoutSetting);
         layoutNearby = findView(R.id.layoutNearby);
         layoutNavigation = findView(R.id.layoutNavigation);
+        ivSports = findView(R.id.ivSports);
+        msgLayout = findView(R.id.msgLayout);
 
         tvWeek = findView(R.id.tvWeek);
+        tvIntegral = findView(R.id.tvIntegral);
         tvCity = findView(R.id.tvCity);
         tvWeather = findView(R.id.tvWeather);
         tvConnect = findView(R.id.tvConnect);
@@ -117,6 +135,16 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
     @Override
     protected void initData() {
+        startService(new Intent(this, BluetoothLeService.class));
+        startService(new Intent(this, AppService.class));
+
+        String userId = (String) SPUtils.get(this, AppConfig.USER_ID, "");
+        JPushInterface.init(this);
+        JPushUtil.setJPushAlias(TagAliasOperatorHelper.ACTION_SET, userId);
+//        Set<String> set = new HashSet<>();
+//        set.add("android");
+//        JPushUtil.setJPushTags(TagAliasOperatorHelper.ACTION_SET, set);
+
         handler = new Handler();
         tvConnect.setText(MyApplication.getInstance().isBleConnect() ? "已连接" : "未连接");
         //星期
@@ -131,26 +159,29 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RxPermissions rxPermissions = new RxPermissions(this);
             rxPermissions
-                    .request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .request(Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION)
                     .subscribe(new Action1<Boolean>() {
                         @Override
                         public void call(Boolean aBoolean) {
                             if (aBoolean) {
+                                MyApplication.getInstance().startScan();
                             } else {
-                                ToastUtil.showShort("读写权限被拒绝");
+                                ToastUtil.showShort("相关权限被拒绝");
                             }
                         }
                     });
+        } else {
+            BluetoothAdapter.getDefaultAdapter().enable();
+            MyApplication.getInstance().startScan();
         }
-
-        mPresenter.homeMsg();
         mPresenter.getWeather();
         mPresenter.uploadLocation();
 
-        if (getIntent().hasExtra("info"))
-            info = (BaseInfo) getIntent().getSerializableExtra("info");
-        if (info != null)
-            mPresenter.loginHx(info);
+//        if (getIntent().hasExtra("info"))
+//            info = (BaseInfo) getIntent().getSerializableExtra("info");
+//        if (info != null)
+//            mPresenter.loginHx(info);
     }
 
     @Override
@@ -162,11 +193,21 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         layoutNavigation.setOnClickListener(this);
         bleLayout.setOnClickListener(this);
         layoutNearby.setOnClickListener(this);
+        msgLayout.setOnClickListener(this);
+        tvIntegral.setOnClickListener(this);
     }
 
     @Override
     public void loadMsgSuccess(int stepNum, List<RemindBean> list) {
         tvStep.setText(String.valueOf(stepNum));
+        if (info != null) {
+            //性别描述0 未知 1 男 2 女
+            if (info.getSex() == 2) {
+                ivSports.setImageResource(R.mipmap.icon_sports_woman);
+            } else {
+                ivSports.setImageResource(R.mipmap.icon_sports_man);
+            }
+        }
         remindList.clear();
         remindList.addAll(list);
         remindAdapter.notifyDataSetChanged();
@@ -184,8 +225,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     }
 
     @Override
-    public void loadSports(String number) {
-
+    public void loadUserInfo(UserInfo userInfo) {
+        this.info = userInfo;
+        mPresenter.homeMsg();
     }
 
     @Override
@@ -202,8 +244,35 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
             case R.id.layoutNavigation:
+                if (info == null) {
+                    ToastUtil.showShort("用户信息加载失败");
+                    mPresenter.userInfo();
+                    return;
+                }
+                if (TextUtils.isEmpty(info.getLocation())) {
+                    new AlertDialog.Builder(this)
+                            .setMessage("您还没有设置家的位置，请先去设置家庭位置！")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(MainActivity.this, PersonalMsgActivity.class);
+                                    startActivityForResult(intent, 0x11);
+                                }
+                            })
+                            .show();
+                    return;
+                }
+                double latitude = Double.parseDouble(info.getLatitude());
+                double longitude = Double.parseDouble(info.getLongitude());
+                LatLng latLng = new LatLng(latitude, longitude);
                 AmapNaviParams params = new AmapNaviParams(new Poi("", null, ""),
-                        null, new Poi("", null, ""), AmapNaviType.DRIVER);
+                        null, new Poi(info.getLocation(), latLng, ""), AmapNaviType.DRIVER);
                 params.setUseInnerVoice(true);
                 AmapNaviPage.getInstance().showRouteActivity(getApplicationContext(), params,
                         MainActivity.this, AmapRouteActivity.class);
@@ -215,6 +284,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                 break;
             case R.id.bleLayout:
                 startActivity(new Intent(this, DeviceListActivity.class));
+                break;
+            case R.id.msgLayout:
+                startActivity(new Intent(this, SystemMsgActivity.class));
+                break;
+            case R.id.tvIntegral:
+                startActivity(new Intent(this, IntegralDetailActivity.class));
                 break;
 
         }
@@ -235,11 +310,13 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
             batteryView.setPower(10);
             tvBattery.setText("---");
         }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        mPresenter.userInfo();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -274,8 +351,23 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         String data = FormatUtils.bytesToHexString(bytes);
                         Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
                         int batteryInt = batteryLong.intValue();
-                        tvBattery.setText(String.valueOf(batteryInt) + "%");
-                        batteryView.setPower(batteryInt);
+                        if (batteryInt <= 100) {
+                            tvBattery.setText(batteryInt + "%");
+                            batteryView.setPower(batteryInt);
+                        } else if (batteryInt > 128 && batteryInt < 228) {
+                            tvBattery.setText("正在充电");
+                            batteryView.setPower(batteryInt - 128);
+                        } else if (batteryInt == 240) {
+                            tvBattery.setText("充电完成");
+                            batteryView.setPower(100);
+                        }
+                        if (batteryInt <= 25) {
+                            LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+                            String mac = entity == null ? "" : entity.getAddress();
+                            mac = mac.replace(":", "").toUpperCase();
+                            if (!TextUtils.isEmpty(mac))
+                                mPresenter.uploadPower(mac, batteryInt);
+                        }
                     }
                 });
 

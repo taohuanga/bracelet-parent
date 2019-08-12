@@ -2,6 +2,7 @@ package os.bracelets.parents.http;
 
 
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 
@@ -108,11 +109,13 @@ public class ApiRequest {
     }
 
     //修改密码
-    public static Subscription updatePwd(String oldPwd, String newPwd, Subscriber<HttpResult> subscriber) {
+    public static Subscription updatePwd(String oldPwd, String newPwd, String securityCode,
+                                         Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("oldPass", oldPwd);
         map.put("newPass", newPwd);
+        map.put("securityCode", securityCode);
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .updatePwd(map)
@@ -196,9 +199,10 @@ public class ApiRequest {
     }
 
     //跌倒信息上传
-    public static Subscription fall(Subscriber<HttpResult> subscriber) {
+    public static Subscription fall(int fallType, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("fallType", String.valueOf(fallType));
         map.put("longitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LONGITUDE, "")));
         map.put("latitude", String.valueOf(SPUtils.get(MyApplication.getInstance(), AppConfig.LATITUDE, "")));
         return ServiceFactory.getInstance()
@@ -235,8 +239,11 @@ public class ApiRequest {
     public static Subscription uploadFile(File file, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+        String address = entity == null ? "" : entity.getAddress();
+        if (!TextUtils.isEmpty(address))
+            address = address.replace(":", "").toLowerCase();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
-        map.put("fileType", entity == null ? "" : entity.getAddress());
+        map.put("fileType", address);
         map.put("fileData", FileUtils.file2Base64(file.getAbsolutePath()));
         map.put("fileName", file.getName());
         return ServiceFactory.getInstance()
@@ -333,7 +340,8 @@ public class ApiRequest {
 
     //修改资料
     public static Subscription updateMsg(String portrait, String nickName, String realName, int sex, String birthday,
-                                         String height, String weight, String location, Subscriber<HttpResult> subscriber) {
+                                         String height, String weight, String location, String longitude, String latitude,
+                                         Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         if (!TextUtils.isEmpty(portrait))
@@ -360,9 +368,108 @@ public class ApiRequest {
         if (!TextUtils.isEmpty(location))
             map.put("location", location);
 
+        if (!TextUtils.isEmpty(longitude))
+            map.put("longitude", longitude);
+
+        if (!TextUtils.isEmpty(latitude))
+            map.put("latitude", latitude);
+
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .updateMsg(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //钱包信息
+    public static Subscription walletInfo(Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .walletInfo(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //积分流水信息
+    public static Subscription integralSerialList(int type, int pageIndex, String startTime, String endTime,
+                                                  Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        if (type != -1)
+            map.put("type", String.valueOf(type));
+        if (!TextUtils.isEmpty(startTime))
+            map.put("startDate", startTime);
+        if (!TextUtils.isEmpty(endTime))
+            map.put("endDate", endTime);
+        map.put("pageNo", pageIndex);
+        map.put("pageSize", String.valueOf(AppConfig.PAGE_SIZE));
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .integralSerialList(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //系统消息
+    public static Subscription systemMsg(int type, int pageNo, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("type", String.valueOf(type));
+        map.put("pageNo", String.valueOf(pageNo));
+        map.put("pageSize", String.valueOf(AppConfig.PAGE_SIZE));
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .systemMsg(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //查询绑定的设备
+    public static Subscription deviceBindQuery(Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .deviceBindQuery(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //解除绑定
+    public static Subscription deviceUnbind(String deviceInfo, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("deviceInfo", deviceInfo);
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .deviceUnbind(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //绑定设备
+    public static Subscription deviceBind(String mac, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("equipmentSn", mac);
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .deviceBind(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //上传设备电量
+    public static Subscription devPowerUpload(String mac, int power, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("equipmentSn", mac);
+        map.put("power", String.valueOf(power));
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .devPowerUpload(map)
                 .compose(RxTransformer.<HttpResult>defaultSchedulers())
                 .subscribe(subscriber);
     }

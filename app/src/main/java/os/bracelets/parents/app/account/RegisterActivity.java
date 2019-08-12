@@ -1,14 +1,13 @@
 package os.bracelets.parents.app.account;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.exceptions.HyphenateException;
 
 import aio.health2world.utils.MD5Util;
 import aio.health2world.utils.MatchUtil;
@@ -28,6 +27,7 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
 
     private Button btnRegister;
 
+    private LinearLayout llAgreement;
 
     @Override
     protected RegisterContract.Presenter getPresenter() {
@@ -46,6 +46,7 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
         edPwd = findView(R.id.edPwd);
         tvCode = findView(R.id.tvCode);
         btnRegister = findView(R.id.btnRegister);
+        llAgreement = findView(R.id.llAgreement);
     }
 
     @Override
@@ -57,6 +58,7 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
     @Override
     protected void initListener() {
         tvCode.setOnClickListener(this);
+        llAgreement.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
     }
 
@@ -69,6 +71,9 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
                 break;
             case R.id.btnRegister:
                 register();
+                break;
+            case R.id.llAgreement:
+                startActivity(new Intent(this,AgreementActivity.class));
                 break;
         }
     }
@@ -117,17 +122,17 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
     @Override
     public void registerSuccess(final String phone) {
         //注册环信账号
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    EMClient.getInstance().createAccount(phone, phone);//同步方法
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        finish();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    EMClient.getInstance().createAccount(phone, phone);//同步方法
+//                } catch (HyphenateException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//        finish();
     }
 
     //计时器

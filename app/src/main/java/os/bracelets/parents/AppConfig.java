@@ -30,6 +30,7 @@ public class AppConfig {
     public static final String CITY_CODE = "city_code";
     public static final String ADDRESS = "address";
     public static final String CURRENT_DEVICE = "current_device";
+    public static final String MAC_ADDRESS = "mac_address";
     //标记当前程序是否登录
     public static final String IS_LOGIN = "is_login";
 
@@ -48,6 +49,7 @@ public class AppConfig {
     public static final String ALARM_CLOCK = "alarm_clock";
 
     public static final int CLOCK_ID = 15;
+    public static final int JUMP = 16;
 
     //手环UUID
     public static final String BLUETOOTH_NAME = "DFZ";

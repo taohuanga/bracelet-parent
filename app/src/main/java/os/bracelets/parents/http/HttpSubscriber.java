@@ -1,5 +1,7 @@
 package os.bracelets.parents.http;
 
+import com.tencent.bugly.crashreport.CrashReport;
+
 import aio.health2world.http.HttpResult;
 import aio.health2world.utils.ExceptionHandle;
 import aio.health2world.utils.ToastUtil;
@@ -20,6 +22,7 @@ public abstract class HttpSubscriber extends Subscriber<HttpResult> {
     @Override
     public void onError(Throwable e) {
         if (e != null) {
+            CrashReport.postCatchedException(e);
             ExceptionHandle.ResponseThrowable e1 = ExceptionHandle.handleException(e);
             ToastUtil.showLong(e1.message);
         }
@@ -27,11 +30,13 @@ public abstract class HttpSubscriber extends Subscriber<HttpResult> {
 
     @Override
     public void onNext(HttpResult result) {
-        //登录失效004  账号被移除009
-        if (!result.code.equals(AppConfig.SUCCESS)) {
+        if (!result.code.equals(AppConfig.SUCCESS)
+                && !result.code.equals("004")) {
             ToastUtil.showShort(result.errorMessage);
         }
-        if (result.code.equals("004") || result.code.equals("109")) {
+        //登录失效004
+        if (result.code.equals("004")) {
+            ToastUtil.showShort("账号已失效，请重新登录！");
             MyApplication.getInstance().logout();
         }
     }

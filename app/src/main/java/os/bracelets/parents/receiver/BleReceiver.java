@@ -2,13 +2,10 @@ package os.bracelets.parents.receiver;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.google.gson.Gson;
-import com.huichenghe.bleControl.Ble.BleGattHelperListener;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.DeviceConfig;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
@@ -16,20 +13,18 @@ import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 import org.greenrobot.eventbus.EventBus;
 
 import aio.health2world.utils.Logger;
-import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
-import os.bracelets.parents.app.ble.MyBleGattHelper;
-import os.bracelets.parents.app.main.MainActivity;
 import os.bracelets.parents.common.MsgEvent;
-import os.bracelets.parents.view.TitleBar;
 
 /**
  * Created by lishiyou on 2019/3/2.
  */
 
 public class BleReceiver extends BroadcastReceiver {
+
+    public static final String NOTIFICATION_SHOW = "recever_notification_show";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -60,6 +55,8 @@ public class BleReceiver extends BroadcastReceiver {
                 MyApplication.getInstance().setBleConnect(false);
                 MyApplication.getInstance().setDeviceEntity(null);
                 EventBus.getDefault().post(new MsgEvent<LocalDeviceEntity>(AppConfig.MSG_DEVICE_DISCONNECT));
+                break;
+            case NOTIFICATION_SHOW:
                 break;
         }
     }

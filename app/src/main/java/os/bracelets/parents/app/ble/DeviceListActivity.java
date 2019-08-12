@@ -8,11 +8,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.huichenghe.bleControl.Ble.BleByteDataSendTool;
 import com.huichenghe.bleControl.Ble.BleScanUtils;
 import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
@@ -27,6 +29,7 @@ import java.util.List;
 import aio.health2world.brvah.BaseQuickAdapter;
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.Logger;
+import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import aio.health2world.view.LoadingDialog;
 import aio.health2world.view.MyProgressDialog;
@@ -35,6 +38,7 @@ import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
 import os.bracelets.parents.common.BaseActivity;
 import os.bracelets.parents.common.MsgEvent;
+import os.bracelets.parents.utils.StringUtils;
 import rx.functions.Action1;
 
 /**
@@ -55,6 +59,8 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
 
     private LoadingDialog dialog;
 
+    private String macAddress = "";
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_ble_device;
@@ -72,6 +78,9 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
 
     @Override
     protected void initData() {
+        macAddress = (String) SPUtils.get(this, AppConfig.MAC_ADDRESS, "");
+        if (!TextUtils.isEmpty(macAddress))
+            macAddress = macAddress.replace(":", "").toUpperCase();
         listAdapter = new DeviceListAdapter(MyApplication.getInstance().getDeviceList());
         recyclerView.setAdapter(listAdapter);
 
@@ -79,8 +88,8 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RxPermissions rxPermissions = new RxPermissions(this);
             rxPermissions
-                    .request(Manifest.permission.BLUETOOTH, Manifest.permission.ACCESS_COARSE_LOCATION
-                            , Manifest.permission.ACCESS_FINE_LOCATION)
+                    .request(Manifest.permission.BLUETOOTH, Manifest.permission.READ_EXTERNAL_STORAGE
+                            , Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     .subscribe(new Action1<Boolean>() {
                         @Override
                         public void call(Boolean aBoolean) {
@@ -119,20 +128,29 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).stopScan();
         entity = (LocalDeviceEntity) adapter.getItem(position);
+//        byte[] b = entity.getmScanRecord();
+//        String data = StringUtils.bytesToHexString(b);
+//        Logger.i("lsy",data);
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
             ToastUtil.showShort("请开启蓝牙");
             return;
         }
-        if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
-            dialog.showDialog(true,"正在断开设备");
-            BluetoothLeService.getInstance().disconnect();
-        } else {
-            if (MyApplication.getInstance().isBleConnect()) {
-                ToastUtil.showShort("请先断开已连接的设备");
-                return;
+        if (entity == null)
+            return;
+        try {
+            if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
+                dialog.showDialog(true, "正在断开设备");
+                BluetoothLeService.getInstance().disconnect();
+            } else {
+                if (MyApplication.getInstance().isBleConnect()) {
+                    ToastUtil.showShort("请先断开已连接的设备");
+                    return;
+                }
+                dialog.showDialog(true, "正在连接设备");
+                BluetoothLeService.getInstance().connect(entity);
             }
-            dialog.showDialog(true,"正在连接设备");
-            BluetoothLeService.getInstance().connect(entity);
+        } catch (Exception e) {
+
         }
     }
 
@@ -196,6 +214,12 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
                 Logger.i("lsy", "扫描到设备" + deviceName);
                 MyApplication.getInstance().addDevice(mLocalDeviceEntity);
                 listAdapter.notifyDataSetChanged();
+            }
+            //根据绑定的设备自带链接
+            String mac = mLocalDeviceEntity.getAddress().replace(":", "").toUpperCase();
+            if (macAddress.equals(mac)) {
+                BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
+                BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
             }
         }
 

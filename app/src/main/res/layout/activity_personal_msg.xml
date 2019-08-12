@@ -304,11 +304,13 @@
             </LinearLayout>
 
             <View
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#f6f6f6" />
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/layoutPhone"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -376,7 +378,6 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:hint="未填写"
-                    android:maxLines="1"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"
                     android:textSize="@dimen/sp15" />
@@ -479,13 +480,6 @@
                     android:src="@mipmap/icon_right" />
 
             </LinearLayout>
-
-            <com.amap.api.maps.MapView
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/white"
-                android:padding="16dp" />
         </LinearLayout>
     </ScrollView>
 

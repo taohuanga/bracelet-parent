@@ -11,17 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
-
-import java.util.HashSet;
-import java.util.Set;
+import com.huichenghe.bleControl.Ble.BluetoothLeService;
 
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.DeviceUtil;
-import aio.health2world.utils.Logger;
 import aio.health2world.utils.MD5Util;
 import aio.health2world.utils.MatchUtil;
 import aio.health2world.utils.SPUtils;
@@ -34,6 +28,7 @@ import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.jpush.JPushUtil;
 import os.bracelets.parents.jpush.TagAliasOperatorHelper;
+import os.bracelets.parents.service.AppService;
 import rx.functions.Action1;
 
 /**
@@ -95,14 +90,10 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
     @Override
     protected void initData() {
 
-//        JPushInterface.init(this);
-//        JPushUtil.setJPushAlias(TagAliasOperatorHelper.ACTION_SET, DeviceUtil.getAndroidId(this));
-//        Set<String> set = new HashSet<>();
-//        set.add("android");
-//        JPushUtil.setJPushTags(TagAliasOperatorHelper.ACTION_SET, set);
-//        Logger.i("lsy", DeviceUtil.getAndroidId(this));
-
         edAccount.setSelection(edAccount.getText().length());
+
+        edPhone.setText((String) SPUtils.get(this, AppConfig.USER_PHONE, ""));
+        edPhone.setSelection(edPhone.getText().length());
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RxPermissions rxPermissions = new RxPermissions(this);
@@ -133,8 +124,8 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
     @Override
     public void loginSuccess(BaseInfo info) {
         SPUtils.put(this, AppConfig.IS_LOGIN, true);
-        Intent intent = new Intent(this,MainActivity.class);
-        intent.putExtra("info",info);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("info", info);
         startActivity(intent);
         finish();
     }
@@ -169,7 +160,7 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
                 login();
                 break;
             case R.id.btnRegister:
-                startActivity(new Intent(this, RegisterActivity.class));
+                startActivity(new Intent(this, AgreementActivity.class));
                 break;
             case R.id.btnForgetPwd:
                 startActivity(new Intent(this, ResetPwdActivity.class));

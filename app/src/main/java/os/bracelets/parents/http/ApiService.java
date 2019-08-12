@@ -76,7 +76,6 @@ interface ApiService {
 
     /**
      * 首页日常运动数据
-     *
      */
     @POST("parent/home/dailySports")
     Observable<HttpResult> dailySports(@Body Map<String, Object> map);
@@ -164,4 +163,48 @@ interface ApiService {
      */
     @POST("sys/app/about")
     Observable<HttpResult> aboutApp(@Body Map<String, Object> map);
+
+    /**
+     * 钱包信息
+     */
+    @POST("sys/wallet/walletInfo")
+    Observable<HttpResult> walletInfo(@Body Map<String, Object> map);
+
+    /**
+     * 积分流水信息
+     */
+    @POST("sys/wallet/integralSerialList")
+    Observable<HttpResult> integralSerialList(@Body Map<String, Object> map);
+
+    /**
+     * 系统消息
+     */
+    @POST("sys/message/list")
+    Observable<HttpResult> systemMsg(@Body Map<String, Object> map);
+
+    /**
+     * 绑定设备信息
+     */
+    @POST("parent/setting/deviceBindInfo")
+    Observable<HttpResult> deviceBindQuery(@Body Map<String, Object> map);
+
+    /**
+     * 解绑设备信息
+     */
+    @POST("parent/setting/deviceUnbind")
+    Observable<HttpResult> deviceUnbind(@Body Map<String, Object> map);
+
+    /**
+     * 绑定设备信息
+     */
+    @POST("parent/setting/deviceBind")
+    Observable<HttpResult> deviceBind(@Body Map<String, Object> map);
+
+    /**
+     * 上传设备电量
+     */
+    @POST("parent/home/devPowerUpload")
+    Observable<HttpResult> devPowerUpload(@Body Map<String, Object> map);
+
+
 }

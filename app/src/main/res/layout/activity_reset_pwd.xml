@@ -73,6 +73,7 @@
                 android:src="@mipmap/icon_code" />
 
             <EditText
+                android:inputType="number"
                 android:id="@+id/edCode"
                 android:layout_width="0dp"
                 android:layout_height="38dp"

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_titlebar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <os.bracelets.parents.view.MyWebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/layoutBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="1dp"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btnDisAgree"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:layout_weight="1"
+                android:background="@drawable/shape_unbind_device_bg"
+                android:text="不同意该协议"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnAgree"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="@dimen/dp_8"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:layout_weight="1"
+                android:background="@drawable/shape_button_bg"
+                android:text="同意该协议"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

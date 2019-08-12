@@ -53,7 +53,8 @@ import rx.functions.Action1;
  */
 
 public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Presenter>
-        implements PersonalMsgContract.View, TimePickerView.OnTimeSelectListener, OptionsPickerView.OnOptionsSelectListener {
+        implements PersonalMsgContract.View, TimePickerView.OnTimeSelectListener,
+        OptionsPickerView.OnOptionsSelectListener {
 
     private String headImageUrl;
 
@@ -70,7 +71,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
     private TitleBar titleBar;
 
     private View layoutHeadImg, layoutNickName, layoutName, layoutSex, layoutBirthday, layoutWeight,
-            layoutHeight, layoutPhone, layoutHomeAddress;
+            layoutHeight, layoutHomeAddress;
 
     private TextView tvNickName, tvName, tvSex, tvBirthday, tvWeight, tvHeight, tvPhone, tvHomeAddress,
             tvLongitude, tvLatitude;
@@ -84,9 +85,9 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
     private OptionsPickerView optionsPicker;
 
     private List<String> listSex = new ArrayList<>();
+    private UserInfo info;
 
-    private MapView mapView;
-    private AMap aMap;
+    private String longitude, latitude;
 
     @Override
     protected PersonalMsgContract.Presenter getPresenter() {
@@ -98,10 +99,6 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_personal_msg);
-
-        mapView = (MapView) findViewById(R.id.mapView);
-        // 此方法必须重写
-        mapView.onCreate(savedInstanceState);
         initView();
         initData();
         initListener();
@@ -129,7 +126,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
         layoutBirthday = findViewById(R.id.layoutBirthday);
         layoutWeight = findViewById(R.id.layoutWeight);
         layoutHeight = findViewById(R.id.layoutHeight);
-        layoutPhone = findViewById(R.id.layoutPhone);
+//        layoutPhone = findViewById(R.id.layoutPhone);
         layoutHomeAddress = findViewById(R.id.layoutHomeAddress);
     }
 
@@ -155,7 +152,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
         layoutBirthday.setOnClickListener(this);
         layoutWeight.setOnClickListener(this);
         layoutHeight.setOnClickListener(this);
-        layoutPhone.setOnClickListener(this);
+//        layoutPhone.setOnClickListener(this);
         layoutHomeAddress.setOnClickListener(this);
         titleBar.setLeftClickListener(new View.OnClickListener() {
             @Override
@@ -169,25 +166,6 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
                 saveMsg();
             }
         });
-    }
-
-    private void showMap(double latitude, double longitude) {
-        if (aMap == null) {
-            aMap = mapView.getMap();
-        }
-        LatLng latLng = new LatLng(latitude, longitude);
-        changeCamera(CameraUpdateFactory.newCameraPosition(
-                new CameraPosition(latLng, 18, 30, 30)));
-        aMap.addMarker(new MarkerOptions()
-                .position(latLng)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-    }
-
-    /**
-     * 根据动画按钮状态，调用函数animateCamera或moveCamera来改变可视区域
-     */
-    private void changeCamera(CameraUpdate update) {
-        aMap.moveCamera(update);
     }
 
 
@@ -204,6 +182,9 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
 
     @Override
     public void loadInfoSuccess(UserInfo info) {
+        this.info = info;
+        longitude = info.getLongitude();
+        latitude = info.getLatitude();
         headImageUrl = info.getPortrait();
         tvNickName.setText(info.getNickName());
         tvName.setText(info.getName());
@@ -222,12 +203,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
                 .error(R.mipmap.ic_default_portrait)
                 .bitmapTransform(new CropCircleTransformation(PersonalMsgActivity.this))
                 .into(ivHeadImg);
-        if (!TextUtils.isEmpty(info.getLatitude()) && !TextUtils.isEmpty(info.getLongitude())) {
-            showMap(Double.parseDouble(info.getLatitude()), Double.parseDouble(info.getLongitude()));
-        }
-
     }
-
 
     @Override
     public void updateMsgSuccess() {
@@ -242,37 +218,6 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
 //        manager.getCurrentUserInfo().setAvatar(headImageUrl);
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-        pickerView = null;
-    }
 
     @Override
     public void onClick(View v) {
@@ -328,16 +273,18 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
                 intentWeight.putExtra(InputMsgActivity.TYPE, ITEM_WEIGHT);
                 startActivityForResult(intentWeight, ITEM_WEIGHT);
                 break;
-            case R.id.layoutPhone:
-                //修改手机号
-                Intent intentPhone = new Intent(this, UpdatePhoneActivity.class);
-                intentPhone.putExtra("phone", tvPhone.getText().toString());
-                startActivityForResult(intentPhone, ITEM_PHONE);
-                break;
+//            case R.id.layoutPhone:
+//                //修改手机号
+//                Intent intentPhone = new Intent(this, UpdatePhoneActivity.class);
+//                intentPhone.putExtra("phone", tvPhone.getText().toString());
+//                startActivityForResult(intentPhone, ITEM_PHONE);
+//                break;
             case R.id.layoutHomeAddress:
                 //修改家庭住址
-                Intent intentAddress = new Intent(this, InputMsgActivity.class);
-                intentAddress.putExtra(InputMsgActivity.KEY, "修改住址");
+                Intent intentAddress = new Intent(this, UpdateLocationActivity.class);
+                intentAddress.putExtra("location", info.getLocation());
+                intentAddress.putExtra("latitude", info.getLatitude());
+                intentAddress.putExtra("longitude", info.getLongitude());
                 startActivityForResult(intentAddress, ITEM_ADDRESS);
                 break;
 
@@ -381,7 +328,9 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
                 tvPhone.setText(data.getStringExtra("newPhone"));
                 break;
             case ITEM_ADDRESS:
-                tvHomeAddress.setText(data.getStringExtra("data"));
+                tvHomeAddress.setText(data.getStringExtra("location"));
+                longitude = data.getStringExtra("longitude");
+                latitude = data.getStringExtra("latitude");
                 break;
         }
     }
@@ -414,7 +363,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
         String height = tvHeight.getText().toString().trim();
         String weight = tvWeight.getText().toString().trim();
         String address = tvHomeAddress.getText().toString().trim();
-        mPresenter.updateMsg(headImageUrl, nickName, realName, sexType, birthday, height, weight, address);
+        mPresenter.updateMsg(headImageUrl, nickName, realName, sexType, birthday, height, weight, address, longitude, latitude);
     }
 
 }

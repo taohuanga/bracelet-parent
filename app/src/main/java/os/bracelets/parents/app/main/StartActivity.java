@@ -7,6 +7,7 @@ import android.view.WindowManager;
 import aio.health2world.utils.SPUtils;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
+import os.bracelets.parents.app.account.AgreementActivity;
 import os.bracelets.parents.app.account.LoginActivity;
 import os.bracelets.parents.common.BaseActivity;
 
@@ -39,6 +40,7 @@ public class StartActivity extends BaseActivity {
                     startActivity(new Intent(StartActivity.this, LoginActivity.class));
                     finish();
                 }
+
             }
         }, 2000);
 
