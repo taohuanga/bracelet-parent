@@ -20,6 +20,7 @@ import aio.health2world.pickeview.TimePickerView;
 import aio.health2world.utils.DateUtil;
 import aio.health2world.utils.TimePickerUtil;
 import aio.health2world.utils.ToastUtil;
+import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.bean.WalletInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
@@ -27,7 +28,7 @@ import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
 
 public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Presenter> implements
-        IntegralContract.View, SwipeRefreshLayout.OnRefreshListener {
+        IntegralContract.View, SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {
 
     private TitleBar titleBar;
 
@@ -50,6 +51,7 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
     private List<String> entityList = new ArrayList<>();
 
     private int mType = -1;
+    private int pageIndex = 1;
 
     private String mStartTime = "", mEndTime = "";
 
@@ -114,8 +116,9 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
 
     @Override
     public void onRefresh() {
+        pageIndex = 1;
         refreshLayout.setRefreshing(true);
-        mPresenter.integralSerialList(mType, mStartTime, mEndTime);
+        mPresenter.integralSerialList(mType, pageIndex, mStartTime, mEndTime);
     }
 
     @Override
@@ -124,6 +127,7 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
         llEndTime.setOnClickListener(this);
         llType.setOnClickListener(this);
         refreshLayout.setOnRefreshListener(this);
+        detailAdapter.setOnLoadMoreListener(this, recyclerView);
         titleBar.setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,6 +218,12 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
     }
 
     @Override
+    public void onLoadMoreRequested() {
+        pageIndex++;
+        mPresenter.integralSerialList(mType, pageIndex, mStartTime, mEndTime);
+    }
+
+    @Override
     public void loadWalletInfoSuccess(WalletInfo info) {
         tvAllCount.setText(info.getIntegral() + " 积分");
     }
@@ -221,9 +231,15 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
     @Override
     public void integralSuccess(List<IntegralInfo> list) {
         refreshLayout.setRefreshing(false);
-        infoList.clear();
+        if (pageIndex == 1) {
+            infoList.clear();
+        }
         infoList.addAll(list);
         detailAdapter.notifyDataSetChanged();
+        if (list.size() >= AppConfig.PAGE_SIZE)
+            detailAdapter.loadMoreComplete();
+        else
+            detailAdapter.loadMoreEnd();
     }
 
     @Override

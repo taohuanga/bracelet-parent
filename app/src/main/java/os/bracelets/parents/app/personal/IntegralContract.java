@@ -24,7 +24,7 @@ public interface IntegralContract {
             super(mView);
         }
 
-        abstract void integralSerialList(int type,String startTime,String endTime);
+        abstract void integralSerialList(int type,int pageIndex,String startTime,String endTime);
 
         abstract void  walletInfo();
 
