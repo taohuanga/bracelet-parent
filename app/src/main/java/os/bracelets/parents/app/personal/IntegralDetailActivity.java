@@ -238,8 +238,13 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
         detailAdapter.notifyDataSetChanged();
         if (list.size() >= AppConfig.PAGE_SIZE)
             detailAdapter.loadMoreComplete();
-        else
-            detailAdapter.loadMoreEnd();
+        else {
+            if (pageIndex == 1) {
+                detailAdapter.loadMoreEnd(true);
+            } else {
+                detailAdapter.loadMoreEnd();
+            }
+        }
     }
 
     @Override
