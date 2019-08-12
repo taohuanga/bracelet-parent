@@ -43,8 +43,8 @@ public class IntegralPresenter extends IntegralContract.Presenter {
     }
 
     @Override
-    void integralSerialList(int type, String startTime, String endTime) {
-        ApiRequest.integralSerialList(type, startTime, endTime, new HttpSubscriber() {
+    void integralSerialList(int type, int pageIndex, String startTime, String endTime) {
+        ApiRequest.integralSerialList(type, pageIndex, startTime, endTime, new HttpSubscriber() {
 
             @Override
             public void onStart() {

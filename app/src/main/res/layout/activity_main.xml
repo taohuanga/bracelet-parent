@@ -177,22 +177,6 @@
                 android:padding="@dimen/dp_8"
                 android:text="今日待办"
                 android:textSize="15sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/tvIntegral"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#FFA500"
-                android:padding="@dimen/dp_4"
-                android:layout_marginEnd="@dimen/dp_4"
-                android:text="个人积分"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
         </LinearLayout>
 
 
@@ -236,6 +220,22 @@
                 android:text="--"
                 android:textColor="#83A4F1"
                 android:textSize="16sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvIntegral"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_4"
+                android:background="@color/colorAccent"
+                android:padding="@dimen/dp_4"
+                android:text="个人积分"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
         </LinearLayout>
 
 
