@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="1dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <Button
                 android:textSize="@dimen/sp16"
