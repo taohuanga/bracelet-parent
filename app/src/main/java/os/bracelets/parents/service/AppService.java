@@ -62,7 +62,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
     private int countFile = 0;
 
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
 
 
     private FileUtils fileUtils = new FileUtils("Bracelet");

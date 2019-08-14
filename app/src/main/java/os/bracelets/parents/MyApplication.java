@@ -214,7 +214,7 @@ public class MyApplication extends Application implements AMapLocationListener {
      *
      * @param bleDevice
      */
-    public void addDevice(LocalDeviceEntity bleDevice) {
+    public synchronized void addDevice(LocalDeviceEntity bleDevice) {
         removeDevice(bleDevice);
         deviceList.add(bleDevice);
     }
@@ -224,7 +224,7 @@ public class MyApplication extends Application implements AMapLocationListener {
      *
      * @param bleDevice
      */
-    public void removeDevice(LocalDeviceEntity bleDevice) {
+    public synchronized void removeDevice(LocalDeviceEntity bleDevice) {
         for (int i = 0; i < deviceList.size(); i++) {
             LocalDeviceEntity device = deviceList.get(i);
             if (bleDevice.getAddress().equals(device.getAddress())) {
