@@ -187,7 +187,7 @@ public class DeviceBindActivity extends BaseActivity {
                 //设备已被其他用户绑定
                 if (result.code.equals("006")) {
                     new AlertDialog.Builder(DeviceBindActivity.this)
-                            .setMessage("该设备已被其他用户绑定，是否强制绑定改设备？")
+                            .setMessage("该设备已被其他用户绑定，是否强制绑定该设备？")
                             .setNegativeButton("取消绑定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
