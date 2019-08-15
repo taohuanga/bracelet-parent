@@ -255,17 +255,27 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
         if (data.contains("68a80c0001545301") || data.contains("68a80c0001545303")) {
             fallMsg(0);
+            sb.delete(0, sb.length());
+            sb.append(data + "\n");
+            String content = sb.toString();
+            fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
+            uploadFile();
         } else if (data.contains("68a80c0001545302")) {
             fallMsg(1);
-        }
-        //跌倒
-        if (data.contains("68a80c0001545301")) {
             sb.delete(0, sb.length());
             sb.append(data + "\n");
             String content = sb.toString();
             fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
             uploadFile();
         }
+//        //跌倒
+//        if (data.contains("68a80c0001545301")) {
+//            sb.delete(0, sb.length());
+//            sb.append(data + "\n");
+//            String content = sb.toString();
+//            fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
+//            uploadFile();
+//        }
     }
 
 
