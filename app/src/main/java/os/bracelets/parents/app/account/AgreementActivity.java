@@ -1,7 +1,10 @@
 package os.bracelets.parents.app.account;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
+
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -19,7 +22,7 @@ public class AgreementActivity extends BaseActivity {
 
     private LinearLayout layoutBottom;
 
-    private Button btnDisAgree,btnAgree;
+    private Button btnDisAgree, btnAgree;
 
     @Override
     protected int getLayoutId() {
@@ -32,27 +35,32 @@ public class AgreementActivity extends BaseActivity {
         btnAgree = findView(R.id.btnAgree);
         btnDisAgree = findView(R.id.btnDisAgree);
         layoutBottom = findView(R.id.layoutBottom);
-        TitleBarUtil.setAttr(this,"","用户协议",titleBar);
+        TitleBarUtil.setAttr(this, "", "用户协议", titleBar);
 
         webView = findView(R.id.webView);
     }
 
     @Override
     protected void initData() {
-        webView.getSettings().setJavaScriptEnabled(true);
+        WebSettings settings = webView.getSettings();
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        settings.setDisplayZoomControls(true);
+        settings.setJavaScriptEnabled(true);
+        settings.setSupportZoom(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
         webView.loadUrl("http://www.zgznhh.com/Agreement.html");
-//        webView.loadUrl("file:///android_asset/html/Agreement.html");
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnDisAgree:
                 this.finish();
                 break;
             case R.id.btnAgree:
-                startActivity(new Intent(this,RegisterActivity.class));
+                startActivity(new Intent(this, RegisterActivity.class));
                 finish();
                 break;
         }
@@ -68,15 +76,15 @@ public class AgreementActivity extends BaseActivity {
                 finish();
             }
         });
-
-        webView.setOnCustomScroolChangeListener(new MyWebView.ScrollInterface() {
+        webView.setOnCustomScrollChangeListener(new MyWebView.ScrollInterface() {
             @Override
             public void onSChanged(int l, int t, int oldl, int oldt) {
                 //WebView的总高度
                 float webViewContentHeight = webView.getContentHeight() * webView.getScale();
+                Log.i("lsy", "webViewContentHeight=" + webViewContentHeight + "l=" + l + ",t=" + t + ",oldl=" + oldl + ",oldt=" + oldt);
                 //WebView的现高度
                 float webViewCurrentHeight = (webView.getHeight() + webView.getScrollY());
-                if ((webViewContentHeight - webViewCurrentHeight) == 0) {
+                if ((webViewContentHeight - webViewCurrentHeight) <= 20) {
                     layoutBottom.setVisibility(View.VISIBLE);
                 } else {
                     layoutBottom.setVisibility(View.GONE);
@@ -84,4 +92,5 @@ public class AgreementActivity extends BaseActivity {
             }
         });
     }
+
 }

@@ -24,6 +24,7 @@
             android:visibility="gone">
 
             <Button
+                android:textStyle="bold"
                 android:textSize="@dimen/sp16"
                 android:id="@+id/btnDisAgree"
                 android:layout_width="0dp"
@@ -36,6 +37,7 @@
                 android:textColor="@color/white" />
 
             <Button
+                android:textStyle="bold"
                 android:textSize="@dimen/sp16"
                 android:id="@+id/btnAgree"
                 android:layout_width="0dp"
