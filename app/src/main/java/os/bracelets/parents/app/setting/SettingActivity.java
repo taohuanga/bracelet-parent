@@ -166,11 +166,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        SPUtils.put(SettingActivity.this, AppConfig.IS_LOGIN, false);
-//                        AppManager.getInstance().finishAllActivity();
-//                        startActivity(new Intent(SettingActivity.this, LoginActivity.class));
-//                        finish();
-                        MyApplication.getInstance().logout();
+                        MyApplication.getInstance().logout(false);
                         logoutHx();
                     }
                 })

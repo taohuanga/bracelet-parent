@@ -32,8 +32,8 @@ public class ResultSubscriber<T> extends Subscriber<HttpResult<T>> {
         if (!t.code.equals(AppConfig.SUCCESS)) {
             ToastUtil.showShort(t.errorMessage);
         }
-        if (t.code.equals("004") || t.code.equals("109")) {
-            MyApplication.getInstance().logout();
+        if (t.code.equals("004")) {
+            MyApplication.getInstance().logout(true);
         }
     }
 

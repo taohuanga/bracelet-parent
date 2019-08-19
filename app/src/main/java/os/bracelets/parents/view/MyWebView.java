@@ -28,7 +28,7 @@ public class MyWebView extends WebView {
     }
 
     //供外部调用，监控滑动
-    public void setOnCustomScroolChangeListener(ScrollInterface scrollInterface) {
+    public void setOnCustomScrollChangeListener(ScrollInterface scrollInterface) {
         this.mScrollInterface = scrollInterface;
     }
 
