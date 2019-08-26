@@ -340,6 +340,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         getBattery();
     }
 
+    /**
+     * 电量数据修改：
+     * 0~100：当前正在使用电池供电，数值为电池剩余电量的百分比
+     * 128~228：当前正在充电，数值减去128后为已充电电量的百分比
+     * 240：充电完成
+     */
     private void getBattery() {
         //获取电量
         BleDataForBattery.getInstance().setBatteryListener(new DataSendCallback() {
@@ -355,6 +361,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                             tvBattery.setText(batteryInt + "%");
                             batteryView.setPower(batteryInt);
                         } else if (batteryInt > 128 && batteryInt < 228) {
+                            batteryInt = batteryInt - 128;
                             tvBattery.setText("正在充电");
                             batteryView.setPower(batteryInt - 128);
                         } else if (batteryInt == 240) {
