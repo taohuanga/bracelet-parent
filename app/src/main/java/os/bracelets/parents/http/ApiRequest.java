@@ -241,7 +241,7 @@ public class ApiRequest {
         LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
         String address = entity == null ? "" : entity.getAddress();
         if (!TextUtils.isEmpty(address))
-            address = address.replace(":", "").toLowerCase();
+            address = address.replace(":", "").toUpperCase();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("fileType", address);
         map.put("fileData", FileUtils.file2Base64(file.getAbsolutePath()));
