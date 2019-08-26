@@ -206,5 +206,10 @@ interface ApiService {
     @POST("parent/home/devPowerUpload")
     Observable<HttpResult> devPowerUpload(@Body Map<String, Object> map);
 
-
+    /**
+     * 删除操作
+     * 1.亲人  2 联系人 3 围栏 4 提醒
+     */
+    @POST("parent/home/delete")
+    Observable<HttpResult> delete(@Body Map<String, Object> map);
 }
