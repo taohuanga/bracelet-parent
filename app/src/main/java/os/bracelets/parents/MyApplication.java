@@ -36,12 +36,15 @@ import java.util.Date;
 import java.util.List;
 
 import aio.health2world.SApplication;
+import aio.health2world.http.HttpResult;
 import aio.health2world.utils.AppManager;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.app.account.AgreementActivity;
+import os.bracelets.parents.http.ApiRequest;
+import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.receiver.AlarmReceiver;
 import os.bracelets.parents.receiver.BleReceiver;
 import os.bracelets.parents.service.AppService;
@@ -278,9 +281,18 @@ public class MyApplication extends Application implements AMapLocationListener {
                         + location.getLongitude()
                         + ",城市：" + location.getCity()
                         + ",城市代码：" + location.getAdCode());
-//
-//                String address = location.getProvince()+location.getCity()+location.getAccuracy()+location.getAddress();
-//                Logger.i("lsy",address);
+                ApiRequest.uploadLocation(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()),
+                        new HttpSubscriber() {
+                            @Override
+                            public void onError(Throwable e) {
+//                                super.onError(e);
+                            }
+
+                            @Override
+                            public void onNext(HttpResult result) {
+//                                super.onNext(result);
+                            }
+                        });
 
             } else {
                 //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。

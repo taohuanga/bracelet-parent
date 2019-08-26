@@ -268,14 +268,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
             uploadFile();
         }
-//        //跌倒
-//        if (data.contains("68a80c0001545301")) {
-//            sb.delete(0, sb.length());
-//            sb.append(data + "\n");
-//            String content = sb.toString();
-//            fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
-//            uploadFile();
-//        }
     }
 
 
@@ -286,34 +278,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         boolean isLogin = (boolean) SPUtils.get(MyApplication.getInstance(), AppConfig.IS_LOGIN, false);
         if (!isLogin)
             return;
-//        String CHANNEL_ONE_ID = "CHANNEL_ONE_ID";
-//        String CHANNEL_ONE_NAME = "CHANNEL_ONE_ID";
-//        NotificationChannel notificationChannel = null;
-//        //进行8.0的判断
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//            notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
-//                    CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_HIGH);
-//            notificationChannel.enableLights(true);
-//            notificationChannel.setLightColor(Color.RED);
-//            notificationChannel.setShowBadge(true);
-//            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-//            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//            manager.createNotificationChannel(notificationChannel);
-//        }
-//        Intent intent = new Intent(this, MainActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-//        final Notification notification = new Notification.Builder(this).setChannelId(CHANNEL_ONE_ID)
-//                .setTicker("Nature")
-//                .setSmallIcon(R.mipmap.ic_app_logo)
-//                .setContentTitle("衣带保父母端")
-//                .setContentIntent(pendingIntent)
-//                .setContentText("正在上传蓝牙设备数据")
-//                .build();
-//        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-//        startForeground(1, notification);
-
         for (final File file : fileList) {
-
             ApiRequest.uploadFile(file, new HttpSubscriber() {
 
                 @Override
