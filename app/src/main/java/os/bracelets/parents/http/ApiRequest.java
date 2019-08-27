@@ -2,11 +2,13 @@ package os.bracelets.parents.http;
 
 
 import android.text.TextUtils;
+import android.util.Base64;
 import android.widget.TextView;
 
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -246,6 +248,26 @@ public class ApiRequest {
         map.put("fileType", address);
         map.put("fileData", FileUtils.file2Base64(file.getAbsolutePath()));
         map.put("fileName", file.getName());
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .uploadFile(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //上传蓝牙数据
+    public static Subscription uploadBleData(String data, Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+        String address = entity == null ? "" : entity.getAddress();
+        if (!TextUtils.isEmpty(address))
+            address = address.replace(":", "").toUpperCase();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        map.put("fileType", address);
+//        map.put("fileData", data);
+        map.put("fileData", Base64.encodeToString(data.getBytes(), Base64.DEFAULT));
+        map.put("fileName", "test6Sensor" + new SimpleDateFormat("yyyy-MM-ddHH:mm:ss")
+                .format(System.currentTimeMillis()) + ".csv");
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .uploadFile(map)

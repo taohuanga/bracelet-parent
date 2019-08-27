@@ -256,20 +256,22 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
         if (data.toUpperCase().contains("68A80C0001545301") || data.toUpperCase().contains("68A80C0001545303")) {
             fallMsg(0);
-            sb.delete(0, sb.length());
-            sb.append(data + "\n");
-            String content = sb.toString();
-            fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
-            uploadFile();
+//            sb.delete(0, sb.length());
+//            sb.append(data + "\n");
+//            String content = sb.toString();
+//            fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
+//            uploadFile();
+            uploadData(data);
         }
 
         if (data.toUpperCase().contains("68A80C0001545302")) {
             fallMsg(1);
-            sb.delete(0, sb.length());
-            sb.append(data + "\n");
-            String content = sb.toString();
-            fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
-            uploadFile();
+//            sb.delete(0, sb.length());
+//            sb.append(data + "\n");
+//            String content = sb.toString();
+//            fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
+//            uploadFile();
+            uploadData(data);
         }
     }
 
@@ -307,6 +309,15 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                 }
             });
         }
+    }
+
+    private void uploadData(String data) {
+        ApiRequest.uploadBleData(data, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+            }
+        });
     }
 
     private void fallMsg(int fallType) {
