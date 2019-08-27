@@ -58,20 +58,20 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
     public static final String TAG = "AppService";
 
-    private int notifyId = 11;
+//    private int notifyId = 11;
 
     private int countFile = 0;
 
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+//    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
 
 
     private FileUtils fileUtils = new FileUtils("Bracelet");
 
-    private StringBuilder sb = new StringBuilder();
-
-    private long lastTime = System.currentTimeMillis();
-
-    private long startTime = System.currentTimeMillis();
+//    private StringBuilder sb = new StringBuilder();
+//
+//    private long lastTime = System.currentTimeMillis();
+//
+//    private long startTime = System.currentTimeMillis();
 
 
     private SensorManager sensorManager;
@@ -105,9 +105,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
     @Override
     public void onCreate() {
         super.onCreate();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-        }
     }
 
 
@@ -227,7 +224,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         double gyrXD = (double) gyrXInt * 9.8 / 0x8000 * 16;
         double gyrYD = (double) gyrYInt * 9.8 / 0x8000 * 16;
         double gyrZD = (double) gyrZInt * 9.8 / 0x8000 * 16;
-        long currentTime = System.currentTimeMillis();
+//        long currentTime = System.currentTimeMillis();
 
         if (data.contains("68a80c0001545355")) {//开始
 //            //清空sb
@@ -252,7 +249,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             EventBus.getDefault().post(new MsgEvent<>("X轴角速度：" + accXD + "\n" + "Y轴角速度：" + accYD + "\n" + "Z轴角速度：" + accZD + "\n" + "X轴加速度：" + gyrXD + "\n" + "Y轴加速度：" + gyrYD + "\n" + "Z轴加速度：" + gyrZD));
         }
 
-        lastTime = currentTime;
+//        lastTime = currentTime;
 
         if (data.toUpperCase().contains("68A80C0001545301") || data.toUpperCase().contains("68A80C0001545303")) {
             fallMsg(0);
