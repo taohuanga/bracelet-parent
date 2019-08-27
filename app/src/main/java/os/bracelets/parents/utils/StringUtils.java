@@ -215,7 +215,7 @@ public final class StringUtils {
                 }
                 stringBuilder.append(hv);
             }
-            return stringBuilder.toString().toUpperCase();
+            return stringBuilder.toString();
         } else {
             return null;
         }
