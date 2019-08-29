@@ -189,19 +189,22 @@ public class MyApplication extends Application implements AMapLocationListener {
      */
     private BleScanUtils.OnDeviceScanFoundListener deviceFoundListener = new BleScanUtils.OnDeviceScanFoundListener() {
         @Override
-        public void OnDeviceFound(LocalDeviceEntity mLocalDeviceEntity) {
-            String deviceName = mLocalDeviceEntity.getName();
+        public void OnDeviceFound(LocalDeviceEntity entity) {
+            if (entity == null)
+                return;
+            String deviceName = entity.getName();
             if (deviceName != null && deviceName.startsWith("DFZ")) {
                 Logger.i("lsy", "扫描到设备" + deviceName);
-                MyApplication.getInstance().addDevice(mLocalDeviceEntity);
+                MyApplication.getInstance().addDevice(entity);
             }
             //根据绑定的设备自带链接
             String macAddress = (String) SPUtils.get(INSTANCE, AppConfig.MAC_ADDRESS, "");
             if (!TextUtils.isEmpty(macAddress)) {
-                String mAddress = mLocalDeviceEntity.getAddress().replace(":", "").toUpperCase();
-                if (macAddress.equals(mAddress)) {
-                    BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
-                    BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
+                String mAddress = entity.getAddress().replace(":", "").toUpperCase();
+                if (mAddress != null && macAddress.equals(mAddress)) {
+                    BleScanUtils.getBleScanUtilsInstance(INSTANCE).stopScan();
+                    if (BluetoothLeService.getInstance() != null)
+                        BluetoothLeService.getInstance().connect(entity);
                 }
             }
         }
@@ -281,12 +284,9 @@ public class MyApplication extends Application implements AMapLocationListener {
                         + location.getLongitude()
                         + ",城市：" + location.getCity()
                         + ",城市代码：" + location.getAdCode());
-                ApiRequest.uploadLocation(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()),
+                ApiRequest.uploadLocation(String.valueOf(location.getLongitude()),
+                        String.valueOf(location.getLatitude()),
                         new HttpSubscriber() {
-                            @Override
-                            public void onError(Throwable e) {
-//                                super.onError(e);
-                            }
 
                             @Override
                             public void onNext(HttpResult result) {
