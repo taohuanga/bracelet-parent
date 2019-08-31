@@ -361,7 +361,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                             tvBattery.setText(batteryInt + "%");
                             batteryView.setPower(batteryInt);
                         } else if (batteryInt > 128 && batteryInt < 228) {
-                            batteryInt = (batteryInt - 128) / 240;
+                            batteryInt = batteryInt - 128;
                             tvBattery.setText("正在充电");
                             batteryView.setPower(batteryInt);
                         } else if (batteryInt == 240) {
