@@ -487,11 +487,12 @@ public class ApiRequest {
     }
 
     //上传设备电量
-    public static Subscription devPowerUpload(String mac, int power, Subscriber<HttpResult> subscriber) {
+    public static Subscription devPowerUpload(String mac, int power, String originalPower,Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("equipmentSn", mac);
         map.put("power", String.valueOf(power));
+        map.put("originalPower", originalPower);
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .devPowerUpload(map)

@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ import java.util.List;
 
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.DateUtil;
+import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import cn.jpush.android.api.JPushInterface;
@@ -355,6 +357,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                     @Override
                     public void run() {
                         String data = FormatUtils.bytesToHexString(bytes);
+                        Logger.i("lsy", "电量数据 " + data);
                         Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
                         int batteryInt = batteryLong.intValue();
                         if (batteryInt <= 100) {
@@ -369,12 +372,13 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                             batteryView.setPower(100);
                         }
                         if (batteryInt <= 25) {
-                            LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
-                            String mac = entity == null ? "" : entity.getAddress();
-                            mac = mac.replace(":", "").toUpperCase();
-                            if (!TextUtils.isEmpty(mac))
-                                mPresenter.uploadPower(mac, batteryInt);
+
                         }
+                        LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+                        String mac = entity == null ? "" : entity.getAddress();
+                        mac = mac.replace(":", "").toUpperCase();
+                        if (!TextUtils.isEmpty(mac))
+                            mPresenter.uploadPower(mac, batteryInt, data);
                     }
                 });
 
