@@ -19,9 +19,13 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.NotificationCompat;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.huichenghe.bleControl.Ble.BleDataForBattery;
 import com.huichenghe.bleControl.Ble.DataSendCallback;
+import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
+import com.huichenghe.bleControl.Utils.FormatUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
@@ -130,6 +134,8 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
             uploadFile();
             if (!MyApplication.getInstance().isBleConnect()) {
                 MyApplication.getInstance().startScan();
+            } else {
+                getBattery();
             }
         }
     };
@@ -242,6 +248,39 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         }
     }
 
+    private void getBattery() {
+        //获取电量
+        BleDataForBattery.getInstance().setBatteryListener(new DataSendCallback() {
+            @Override
+            public void sendSuccess(final byte[] bytes) {
+                String data = FormatUtils.bytesToHexString(bytes);
+                Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
+                int batteryInt = batteryLong.intValue();
+                MsgEvent<Integer> event = new MsgEvent<>(AppConfig.MSG_DEVICE_BATTERY,batteryInt);
+                EventBus.getDefault().post(event);
+                if (batteryInt > 128 && batteryInt < 228) {
+                    batteryInt = batteryInt - 128;
+                }
+                Logger.i("lsy", "定时获取电量 " + data);
+                LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+                String mac = entity == null ? "" : entity.getAddress();
+                mac = mac.replace(":", "").toUpperCase();
+                if (!TextUtils.isEmpty(mac))
+                    uploadPower(mac, batteryInt, data);
+
+            }
+
+            @Override
+            public void sendFailed() {
+            }
+
+            @Override
+            public void sendFinished() {
+
+            }
+        });
+        BleDataForBattery.getInstance().getBatteryPx();
+    }
 
     private void uploadFile() {
         final List<File> fileList = fileUtils.getFile();
@@ -327,6 +366,14 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                         e.printStackTrace();
                     }
                 }
+            }
+        });
+    }
+
+    private void uploadPower(String mac, int power, String data) {
+        ApiRequest.devPowerUpload(mac, power, data, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
             }
         });
     }

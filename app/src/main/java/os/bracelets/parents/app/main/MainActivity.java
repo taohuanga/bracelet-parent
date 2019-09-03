@@ -371,14 +371,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                             tvBattery.setText("充电完成");
                             batteryView.setPower(100);
                         }
-                        if (batteryInt <= 25) {
-
-                        }
-                        LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
-                        String mac = entity == null ? "" : entity.getAddress();
-                        mac = mac.replace(":", "").toUpperCase();
-                        if (!TextUtils.isEmpty(mac))
-                            mPresenter.uploadPower(mac, batteryInt, data);
                     }
                 });
 

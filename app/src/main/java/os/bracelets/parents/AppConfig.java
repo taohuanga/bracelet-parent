@@ -39,6 +39,7 @@ public class AppConfig {
 
     //蓝牙连接成功
     public static final int MSG_DEVICE_CONNECT = 10;
+    public static final int MSG_DEVICE_BATTERY = 17;
     //蓝牙失去连接
     public static final int MSG_DEVICE_DISCONNECT = 11;
     //蓝牙状态发生变化
@@ -49,7 +50,6 @@ public class AppConfig {
     public static final String ALARM_CLOCK = "alarm_clock";
 
     public static final int CLOCK_ID = 15;
-    public static final int JUMP = 16;
 
     //手环UUID
     public static final String BLUETOOTH_NAME = "DFZ";
