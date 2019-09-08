@@ -141,6 +141,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
                 dialog.showDialog(true, "正在断开设备");
                 BluetoothLeService.getInstance().disconnect();
+                BluetoothLeService.getInstance().removeAllCallback();
             } else {
                 if (MyApplication.getInstance().isBleConnect()) {
                     ToastUtil.showShort("请先断开已连接的设备");

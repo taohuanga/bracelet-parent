@@ -199,9 +199,10 @@ public class MyApplication extends Application implements AMapLocationListener {
             }
             //根据绑定的设备自带链接
             String macAddress = (String) SPUtils.get(INSTANCE, AppConfig.MAC_ADDRESS, "");
+            Logger.i("lsy", "扫描到的mac=" + entity.getAddress() + ",绑定的mac=" + macAddress);
             if (!TextUtils.isEmpty(macAddress)) {
                 String mAddress = entity.getAddress().replace(":", "").toUpperCase();
-                if (mAddress != null && macAddress.equals(mAddress)) {
+                if (macAddress.equals(mAddress)) {
                     BleScanUtils.getBleScanUtilsInstance(INSTANCE).stopScan();
                     if (BluetoothLeService.getInstance() != null)
                         BluetoothLeService.getInstance().connect(entity);
