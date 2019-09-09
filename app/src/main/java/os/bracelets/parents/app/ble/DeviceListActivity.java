@@ -220,7 +220,8 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             String mac = mLocalDeviceEntity.getAddress().replace(":", "").toUpperCase();
             if (macAddress.equals(mac)) {
                 BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
-                BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
+                if (mLocalDeviceEntity != null)
+                    BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
             }
         }
 

@@ -54,6 +54,7 @@ public class BleReceiver extends BroadcastReceiver {
                 ToastUtil.showShort("设备失去连接");
                 MyApplication.getInstance().setBleConnect(false);
                 MyApplication.getInstance().setDeviceEntity(null);
+                MyApplication.getInstance().clearEntityList();
                 EventBus.getDefault().post(new MsgEvent<LocalDeviceEntity>(AppConfig.MSG_DEVICE_DISCONNECT));
                 break;
             case NOTIFICATION_SHOW:
