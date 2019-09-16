@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import aio.health2world.http.HttpResult;
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.DateUtil;
 import aio.health2world.utils.Logger;
@@ -68,11 +69,14 @@ import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.common.MsgEvent;
 import os.bracelets.parents.db.DBManager;
+import os.bracelets.parents.http.ApiRequest;
+import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.jpush.JPushUtil;
 import os.bracelets.parents.jpush.TagAliasOperatorHelper;
 import os.bracelets.parents.service.AppService;
 import os.bracelets.parents.utils.DataString;
 import os.bracelets.parents.view.BatteryView;
+import os.bracelets.parents.view.MyWebView;
 import rx.functions.Action1;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -94,8 +98,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     private View bleLayout;
 
     private BatteryView batteryView;
-
-    private Handler handler;
 
     private UserInfo info;
 
@@ -147,7 +149,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 //        set.add("android");
 //        JPushUtil.setJPushTags(TagAliasOperatorHelper.ACTION_SET, set);
 
-        handler = new Handler();
         tvConnect.setText(MyApplication.getInstance().isBleConnect() ? "已连接" : "未连接");
         //星期
         tvWeek.setText(DataString.getWeek() + "\r\n" + DateUtil.getDate(new Date(System.currentTimeMillis())));
@@ -305,6 +306,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         if (event.getAction() == AppConfig.MSG_DEVICE_CONNECT) {
             tvConnect.setText("已连接");
             onResume();
+            LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+            uploadLog(System.currentTimeMillis() + "设备" + entity == null ? "--" : entity.getAddress() + "连接成功！");
         }
         //设备失去连接
         if (event.getAction() == AppConfig.MSG_DEVICE_DISCONNECT) {
@@ -319,7 +322,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     protected void onResume() {
         super.onResume();
         mPresenter.userInfo();
-        handler.postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (BluetoothLeService.getInstance() != null) {
@@ -457,9 +460,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
         EventBus.getDefault().unregister(this);
-//        countDownTimer.cancel();
     }
 
     @Override
@@ -530,5 +531,13 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     @Override
     public void onArrivedWayPoint(int i) {
 
+    }
+
+    private void uploadLog(String log) {
+        ApiRequest.log(log, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+            }
+        });
     }
 }

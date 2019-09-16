@@ -212,4 +212,10 @@ interface ApiService {
      */
     @POST("parent/home/delete")
     Observable<HttpResult> delete(@Body Map<String, Object> map);
+
+    /**
+     * 上传日志
+     */
+    @POST("sys/app/log")
+    Observable<HttpResult> log(@Body Map<String, Object> map);
 }

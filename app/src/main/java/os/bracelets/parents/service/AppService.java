@@ -127,6 +127,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         @Override
         public void onFinish() {
             timer.start();
+            uploadLog("服务后台运行中，正常计时....,设备连接状态" + MyApplication.getInstance().isBleConnect());
             //计时结束 分发数据
             EventBus.getDefault().post(new MsgEvent<>(AppConfig.MSG_STEP_COUNT, CURRENT_STEP));
             uploadStepNum();
@@ -256,7 +257,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                 String data = FormatUtils.bytesToHexString(bytes);
                 Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
                 int batteryInt = batteryLong.intValue();
-                MsgEvent<Integer> event = new MsgEvent<>(AppConfig.MSG_DEVICE_BATTERY,batteryInt);
+                MsgEvent<Integer> event = new MsgEvent<>(AppConfig.MSG_DEVICE_BATTERY, batteryInt);
                 EventBus.getDefault().post(event);
                 if (batteryInt > 128 && batteryInt < 228) {
                     batteryInt = batteryInt - 128;
@@ -303,17 +304,22 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
     }
 
     private void uploadData(final String data) {
+        uploadLog(System.currentTimeMillis() + "设备数据上传中...");
         ApiRequest.uploadBleData(data, new HttpSubscriber() {
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
                 fileUtils.writeTxtToFile(data, "test6Sensor" + formatter.format(System.currentTimeMillis()) + ".csv");
+                uploadLog(System.currentTimeMillis() + "设备数据上传失败，已缓存到本地转为定时任务");
             }
 
             @Override
             public void onNext(HttpResult result) {
                 super.onNext(result);
+                if (result.code.equals(AppConfig.SUCCESS)) {
+                    uploadLog(System.currentTimeMillis() + "设备数据上传成功");
+                }
             }
         });
     }
@@ -372,6 +378,14 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
     private void uploadPower(String mac, int power, String data) {
         ApiRequest.devPowerUpload(mac, power, data, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+            }
+        });
+    }
+
+    private void uploadLog(String log) {
+        ApiRequest.log(log, new HttpSubscriber() {
             @Override
             public void onNext(HttpResult result) {
             }

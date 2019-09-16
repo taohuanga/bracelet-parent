@@ -178,6 +178,7 @@ public class MyApplication extends Application implements AMapLocationListener {
             return;
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled())
             return;
+        uploadLog(System.currentTimeMillis() + "开始扫描设备");
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
         //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).setmOnDeviceScanFoundListener(deviceFoundListener);
@@ -203,9 +204,11 @@ public class MyApplication extends Application implements AMapLocationListener {
             if (!TextUtils.isEmpty(macAddress)) {
                 String mAddress = entity.getAddress().replace(":", "").toUpperCase();
                 if (macAddress.equals(mAddress)) {
+                    uploadLog(System.currentTimeMillis() + "扫描到已匹配的设备" + macAddress);
                     BleScanUtils.getBleScanUtilsInstance(INSTANCE).stopScan();
                     if (BluetoothLeService.getInstance() != null)
-                        BluetoothLeService.getInstance().connect(entity);
+                        uploadLog(System.currentTimeMillis() + "开始连接设备");
+                    BluetoothLeService.getInstance().connect(entity);
                 }
             }
         }
@@ -409,4 +412,12 @@ public class MyApplication extends Application implements AMapLocationListener {
         }
 
     };
+
+    private void uploadLog(String log) {
+        ApiRequest.log(log, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+            }
+        });
+    }
 }
