@@ -206,9 +206,10 @@ public class MyApplication extends Application implements AMapLocationListener {
                 if (macAddress.equals(mAddress)) {
                     uploadLog(System.currentTimeMillis() + "扫描到已匹配的设备" + macAddress);
                     BleScanUtils.getBleScanUtilsInstance(INSTANCE).stopScan();
-                    if (BluetoothLeService.getInstance() != null)
-                        uploadLog(System.currentTimeMillis() + "开始连接设备");
-                    BluetoothLeService.getInstance().connect(entity);
+                    if (BluetoothLeService.getInstance() != null) {
+                        uploadLog(System.currentTimeMillis() + "开始连接设备" + macAddress);
+                        BluetoothLeService.getInstance().connect(entity);
+                    }
                 }
             }
         }
