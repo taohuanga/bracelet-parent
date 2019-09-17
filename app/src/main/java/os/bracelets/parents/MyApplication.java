@@ -182,7 +182,6 @@ public class MyApplication extends Application implements AMapLocationListener {
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
         //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).setmOnDeviceScanFoundListener(deviceFoundListener);
-        BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).scanDevice(null);
     }
 
     /**

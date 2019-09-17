@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
@@ -66,6 +67,8 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
     private int countFile = 0;
 
+    private PowerManager pm = null;
+
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
 
 
@@ -111,6 +114,8 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         BleDataForSensor.getInstance().setSensorListener(this);
         //计步器
         initSensor();
+
+        pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
 
         timer.start();
 
