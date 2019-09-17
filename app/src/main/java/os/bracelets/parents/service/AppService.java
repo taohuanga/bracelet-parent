@@ -63,12 +63,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
     public static final String TAG = "AppService";
 
-//    private int notifyId = 11;
-
-    private int countFile = 0;
-
-    private PowerManager pm = null;
-
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
 
 
@@ -114,8 +108,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         BleDataForSensor.getInstance().setSensorListener(this);
         //计步器
         initSensor();
-
-        pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
 
         timer.start();
 
