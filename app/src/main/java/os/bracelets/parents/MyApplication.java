@@ -203,7 +203,7 @@ public class MyApplication extends Application implements AMapLocationListener {
             if (!TextUtils.isEmpty(macAddress)) {
                 String mAddress = entity.getAddress().replace(":", "").toUpperCase();
                 if (macAddress.equals(mAddress)) {
-                    uploadLog(System.currentTimeMillis() + "扫描到已匹配的设备" + macAddress);
+                    uploadLog(System.currentTimeMillis() + "扫描到已匹配的设备" + macAddress + "，蓝牙服务状态：" + BluetoothLeService.getInstance() == null ? "异常" : "正常");
                     BleScanUtils.getBleScanUtilsInstance(INSTANCE).stopScan();
                     if (BluetoothLeService.getInstance() != null) {
                         uploadLog(System.currentTimeMillis() + "开始连接设备" + macAddress);
