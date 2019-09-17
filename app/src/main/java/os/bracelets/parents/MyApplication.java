@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -174,10 +175,12 @@ public class MyApplication extends Application implements AMapLocationListener {
     }
 
     public void startScan() {
-        if (BluetoothAdapter.getDefaultAdapter() == null)
+        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            uploadLog(System.currentTimeMillis() + "系统蓝牙异常，设备扫描未执行...");
             return;
-        if (!BluetoothAdapter.getDefaultAdapter().isEnabled())
-            return;
+        }
         uploadLog(System.currentTimeMillis() + "开始扫描设备,蓝牙服务状态:+" + BluetoothLeService.getInstance() == null ? "异常" : "正常");
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
         //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
