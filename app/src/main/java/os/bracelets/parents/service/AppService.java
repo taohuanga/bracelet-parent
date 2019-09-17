@@ -301,20 +301,20 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
     }
 
     private void uploadData(final String data) {
-        uploadLog(System.currentTimeMillis() + "设备数据上传中...");
+        uploadLog("设备数据上传中...");
         ApiRequest.uploadBleData(data, new HttpSubscriber() {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
                 fileUtils.writeTxtToFile(data, "test6Sensor" + formatter.format(System.currentTimeMillis()) + ".csv");
-                uploadLog(System.currentTimeMillis() + "设备数据上传失败，已缓存到本地转为定时任务");
+                uploadLog("设备数据上传失败，已缓存到本地转为定时任务");
             }
 
             @Override
             public void onNext(HttpResult result) {
                 super.onNext(result);
                 if (result.code.equals(AppConfig.SUCCESS)) {
-                    uploadLog(System.currentTimeMillis() + "设备数据上传成功");
+                    uploadLog("设备数据上传成功...");
                 } else {
                     fileUtils.writeTxtToFile(data, "test6Sensor" + formatter.format(System.currentTimeMillis()) + ".csv");
                     uploadLog(System.currentTimeMillis() + "设备数据上传失败，已缓存到本地转为定时任务");
@@ -328,21 +328,21 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         Intent dialIntent = new Intent(this, ContactActivity.class);
         dialIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(dialIntent);
-        uploadLog(System.currentTimeMillis() + "设备开始报警...");
+        uploadLog("设备开始报警...");
         ApiRequest.fall(fallType, new HttpSubscriber() {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                uploadLog(System.currentTimeMillis() + "报警指令送达失败...");
+                uploadLog("报警指令送达失败...");
             }
 
             @Override
             public void onNext(HttpResult result) {
                 super.onNext(result);
                 if (result.code.equals(AppConfig.SUCCESS)) {
-                    uploadLog(System.currentTimeMillis() + "报警指令送达成功...");
+                    uploadLog("报警指令送达成功...");
                 } else {
-                    uploadLog(System.currentTimeMillis() + "报警指令送达失败...");
+                    uploadLog("报警指令送达失败...");
                 }
             }
         });
