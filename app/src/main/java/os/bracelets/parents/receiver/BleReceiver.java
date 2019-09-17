@@ -46,15 +46,13 @@ public class BleReceiver extends BroadcastReceiver {
                 }
                 break;
             case BluetoothAdapter.ACTION_STATE_CHANGED:
-                MyApplication.getInstance().setBleConnect(false);
-                MyApplication.getInstance().setDeviceEntity(null);
-                MyApplication.getInstance().clearEntityList();
-                BluetoothGatt gatt = BluetoothLeService.getInstance().getBluetoothGatt();
-                if (gatt != null) {
-                    refreshGattCache(gatt);
-                    gatt.disconnect();
-                    gatt.close();
-                    gatt = null;
+                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 1000);
+                if (state == BluetoothAdapter.STATE_ON) {
+                    Logger.i("lsy", "蓝牙已开启");
+                    MyApplication.getInstance().setBlueEnable(true);
+                } else if (state == BluetoothAdapter.STATE_OFF) {
+                    Logger.i("lsy", "蓝牙已关闭");
+                    MyApplication.getInstance().setBlueEnable(false);
                 }
                 break;
             case DeviceConfig.DEVICE_CONNECTING_AUTO:

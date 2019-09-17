@@ -57,7 +57,7 @@ import os.bracelets.parents.service.AppService;
 public class MyApplication extends Application implements AMapLocationListener {
 
     public static MyApplication INSTANCE;
-
+    private boolean blueEnable = false;
     private boolean isBleConnect = false;
     //扫描到的蓝牙设备的集合
     private List<LocalDeviceEntity> deviceList = new ArrayList<>();
@@ -123,6 +123,14 @@ public class MyApplication extends Application implements AMapLocationListener {
         deviceList.clear();
     }
 
+    public boolean isBlueEnable() {
+        return blueEnable;
+    }
+
+    public void setBlueEnable(boolean blueEnable) {
+        this.blueEnable = blueEnable;
+    }
+
     //退出当前程序 回到登录界面
     public void logout(boolean flag) {
         SPUtils.put(this, AppConfig.IS_LOGIN, false);
@@ -175,13 +183,11 @@ public class MyApplication extends Application implements AMapLocationListener {
     }
 
     public void startScan() {
-        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
-            uploadLog(System.currentTimeMillis() + "系统蓝牙异常，设备扫描未执行...");
+        if (!blueEnable) {
+            uploadLog(System.currentTimeMillis() + "系统蓝牙已关闭，设备扫描未执行...");
             return;
         }
-        uploadLog(System.currentTimeMillis() + "开始扫描设备,蓝牙服务状态:+" + BluetoothLeService.getInstance() == null ? "异常" : "正常");
+        uploadLog(System.currentTimeMillis() + "开始扫描设备,蓝牙服务状态:" + (BluetoothLeService.getInstance() == null ? "异常" : "正常"));
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
         //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).setmOnDeviceScanFoundListener(deviceFoundListener);
@@ -207,7 +213,7 @@ public class MyApplication extends Application implements AMapLocationListener {
             if (!TextUtils.isEmpty(macAddress)) {
                 String mAddress = entity.getAddress().replace(":", "").toUpperCase();
                 if (macAddress.equals(mAddress)) {
-                    uploadLog(System.currentTimeMillis() + "扫描到已匹配的设备" + macAddress + ",蓝牙服务状态：" + BluetoothLeService.getInstance() == null ? "异常" : "正常");
+                    uploadLog(System.currentTimeMillis() + "扫描到已匹配的设备" + macAddress + ",蓝牙服务状态：" + (BluetoothLeService.getInstance() == null ? "异常" : "正常"));
                     BleScanUtils.getBleScanUtilsInstance(INSTANCE).stopScan();
                     if (BluetoothLeService.getInstance() != null) {
                         uploadLog(System.currentTimeMillis() + "开始连接设备" + macAddress);

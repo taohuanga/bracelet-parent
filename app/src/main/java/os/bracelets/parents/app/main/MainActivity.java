@@ -168,6 +168,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         @Override
                         public void call(Boolean aBoolean) {
                             if (aBoolean) {
+                                MyApplication.getInstance().setBlueEnable(true);
                                 MyApplication.getInstance().startScan();
                             } else {
                                 ToastUtil.showShort("相关权限被拒绝");
@@ -176,6 +177,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                     });
         } else {
             BluetoothAdapter.getDefaultAdapter().enable();
+            MyApplication.getInstance().setBlueEnable(true);
             MyApplication.getInstance().startScan();
         }
         mPresenter.getWeather();
