@@ -49,6 +49,7 @@ import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.receiver.AlarmReceiver;
 import os.bracelets.parents.receiver.BleReceiver;
 import os.bracelets.parents.service.AppService;
+import os.bracelets.parents.service.BleService;
 
 /**
  * Created by lishiyou on 2019/1/24.
@@ -167,6 +168,17 @@ public class MyApplication extends Application implements AMapLocationListener {
         CrashReport.initCrashReport(getApplicationContext(), AppConfig.BUGLY_ID, AppConfig.IS_DEBUG);
 
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5c9d7cb1");
+
+        Intent bleService = new Intent(this, BleService.class);
+        Intent appService = new Intent(this, AppService.class);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            startForegroundService(bleService);
+            startForegroundService(appService);
+        } else {
+            startService(bleService);
+            startService(appService);
+        }
+
     }
 
     @Override
@@ -183,8 +195,9 @@ public class MyApplication extends Application implements AMapLocationListener {
     }
 
     public void startScan() {
-        if (!blueEnable) {
-            uploadLog("系统蓝牙已关闭，设备扫描未执行...");
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if(adapter==null||!adapter.isEnabled()){
+            uploadLog("系统蓝牙已关闭，扫描未执行！");
             return;
         }
         uploadLog("开始扫描设备,蓝牙服务状态:" + (BluetoothLeService.getInstance() == null ? "异常" : "正常"));
