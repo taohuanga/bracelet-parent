@@ -24,7 +24,9 @@ public class BleService extends BluetoothLeService {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        createNotificationChannel();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            createNotificationChannel();
+        }
         return super.onStartCommand(intent, flags, startId);
 
     }

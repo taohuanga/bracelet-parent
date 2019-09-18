@@ -111,8 +111,9 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
         timer.start();
 
-        createNotificationChannel();
-
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            createNotificationChannel();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
