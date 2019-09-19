@@ -307,8 +307,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
             tvConnect.setText("已连接");
             onResume();
             LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
-            uploadLog("设备" + (entity == null ? "--" :
-                    entity.getAddress().replace(":", "").toUpperCase()) + "连接成功！");
+//            uploadLog("设备" + (entity == null ? "--" :
+//                    entity.getAddress().replace(":", "").toUpperCase()) + "连接成功！");
         }
         //设备失去连接
         if (event.getAction() == AppConfig.MSG_DEVICE_DISCONNECT) {
