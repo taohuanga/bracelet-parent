@@ -50,7 +50,7 @@ public class AgreementActivity extends BaseActivity {
         settings.setSupportZoom(true);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
-        webView.loadUrl("http://www.zgznhh.com/Agreement.html");
+        webView.loadUrl("http://wx.zgznhh.com/Agreement.html");
     }
 
     @Override
