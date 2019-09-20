@@ -24,6 +24,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.huichenghe.bleControl.Ble.BleDataForBattery;
+import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.DataSendCallback;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 import com.huichenghe.bleControl.Utils.FormatUtils;
@@ -59,7 +60,7 @@ import os.bracelets.parents.utils.StringUtils;
  * Created by lishiyou on 2019/1/27.
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class AppService extends Service implements DataSendCallback, SensorEventListener {
+public class AppService extends BluetoothLeService implements DataSendCallback, SensorEventListener {
 
     public static final String TAG = "AppService";
 
@@ -125,15 +126,16 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         CharSequence name = getString(R.string.channel_name);
 //         用户可以看到的通知渠道的描述
         String description = getString(R.string.channel_description);
-        int importance = NotificationManager.IMPORTANCE_HIGH;
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
         NotificationChannel mChannel = new NotificationChannel(id, name, importance);
 //         配置通知渠道的属性
         mChannel.setDescription(description);
 //         设置通知出现时的闪灯（如果 android 设备支持的话）
-        mChannel.enableLights(true); mChannel.setLightColor(Color.RED);
+        mChannel.enableLights(false);
+        mChannel.setLightColor(Color.BLUE);
 //         设置通知出现时的震动（如果 android 设备支持的话）
         mChannel.enableVibration(false);
-        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+//        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
 //         最后在notificationmanager中创建该通知渠道 //
         mNotificationManager.createNotificationChannel(mChannel);
 
@@ -143,11 +145,12 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         String CHANNEL_ID = "my_channel_01";
         // Create a notification and set the notification channel.
         Notification notification = new Notification.Builder(this)
-                .setContentTitle("衣带保父母端") .setContentText("主服务运行中...")
+//                .setContentTitle("衣带保父母端")
+                .setContentText("主服务运行中...")
                 .setSmallIcon(R.mipmap.ic_app_logo)
                 .setChannelId(CHANNEL_ID)
                 .build();
-        startForeground(notifyID,notification);
+        startForeground(notifyID, notification);
     }
 
     //计时器 十分钟执行一次数据上传操作
@@ -160,6 +163,7 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         @Override
         public void onFinish() {
             timer.start();
+            Logger.i("lsy","服务后台运行中，正常计时....,设备连接状态" + MyApplication.getInstance().isBleConnect());
 //            uploadLog("服务后台运行中，正常计时....,设备连接状态" + MyApplication.getInstance().isBleConnect());
             //计时结束 分发数据
             EventBus.getDefault().post(new MsgEvent<>(AppConfig.MSG_STEP_COUNT, CURRENT_STEP));

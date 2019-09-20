@@ -129,7 +129,7 @@
         <activity android:name=".app.account.AgreementActivity" />
 
         <service android:name=".service.AppService" />
-        <service android:name=".service.BleService" />
+        <!--<service android:name=".service.BleService" />-->
 
         <service android:name="com.huichenghe.bleControl.Ble.BluetoothLeService" />
 

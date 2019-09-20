@@ -5,11 +5,9 @@ import android.app.Application;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
@@ -41,15 +39,13 @@ import aio.health2world.http.HttpResult;
 import aio.health2world.utils.AppManager;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
-import aio.health2world.utils.ToastUtil;
 import cn.jpush.android.api.JPushInterface;
-import os.bracelets.parents.app.account.AgreementActivity;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.receiver.AlarmReceiver;
 import os.bracelets.parents.receiver.BleReceiver;
 import os.bracelets.parents.service.AppService;
-import os.bracelets.parents.service.BleService;
+//import os.bracelets.parents.service.BleService;
 
 /**
  * Created by lishiyou on 2019/1/24.
@@ -74,16 +70,7 @@ public class MyApplication extends Application implements AMapLocationListener {
         super.onCreate();
         INSTANCE = this;
         SApplication.init(this, AppConfig.IS_DEBUG);
-
         initApp();
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            startForegroundService(new Intent(this, AppService.class));
-//            startForegroundService(new Intent(this, BluetoothLeService.class));
-//        } else {
-//            startService(new Intent(this, AppService.class));
-//            startService(new Intent(this, BluetoothLeService.class));
-//        }
 
     }
 
@@ -169,13 +156,13 @@ public class MyApplication extends Application implements AMapLocationListener {
 
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5c9d7cb1");
 
-        Intent bleService = new Intent(this, BleService.class);
+//        Intent bleService = new Intent(this, BleService.class);
         Intent appService = new Intent(this, AppService.class);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            startForegroundService(bleService);
+//            startForegroundService(bleService);
             startForegroundService(appService);
         } else {
-            startService(bleService);
+//            startService(bleService);
             startService(appService);
         }
 
@@ -196,11 +183,13 @@ public class MyApplication extends Application implements AMapLocationListener {
 
     public void startScan() {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        if(adapter==null||!adapter.isEnabled()){
+        if (adapter == null || !adapter.isEnabled()) {
 //            uploadLog("系统蓝牙已关闭，扫描未执行！");
+            Logger.i("lsy", "系统蓝牙已关闭，扫描未执行！");
             return;
         }
 //        uploadLog("开始扫描设备,蓝牙服务状态:" + (BluetoothLeService.getInstance() == null ? "异常" : "正常"));
+        Logger.i("lsy", "开始扫描设备,蓝牙服务状态:" + (BluetoothLeService.getInstance() == null ? "异常" : "正常"));
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
         //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).setmOnDeviceScanFoundListener(deviceFoundListener);
@@ -275,7 +264,7 @@ public class MyApplication extends Application implements AMapLocationListener {
         //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         //设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(60 * 1000);
+        mLocationOption.setInterval(5 * 60 * 1000);
         //设置定位参数
         mlocationClient.setLocationOption(mLocationOption);
         // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
