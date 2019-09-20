@@ -16,6 +16,8 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import aio.health2world.utils.ToastUtil;
+
 /**
  * Created by zhouyezi on 16/8/24.
  */
@@ -38,7 +40,7 @@ public class FileUtils {
     }
 
     // 将字符串写入到文本文件中
-    public File writeTxtToFile(String strcontent, String fileName) {
+    public synchronized File writeTxtToFile(String strcontent, String fileName) {
         File file = null;
         //生成文件夹之后，再生成文件，不然会出错
         makeFilePath(fileName);
@@ -63,7 +65,7 @@ public class FileUtils {
 //            outTxt.write("文件内容格式不正确, 此文件已被系统删除! ");
 //            outTxt.close();
         } catch (Exception e) {
-            Log.e("TestFile", "Error on write File:" + e);
+            ToastUtil.showShort("文件写入失败,请检查是否有读写权限！");
         }
         return file;
     }
@@ -97,7 +99,7 @@ public class FileUtils {
         return file;
     }
 
-    public List<File> getFile() {
+    public synchronized List<File> getFile() {
         List<File> fileList = new ArrayList<File>();
         File file = makeRootDirectory();
         File[] fileArray = file.listFiles();
@@ -118,7 +120,7 @@ public class FileUtils {
      *
      * @return 文件删除成功返回true，否则返回false
      */
-    public boolean deleteFile(String fileName) {
+    public synchronized boolean deleteFile(String fileName) {
         File file = new File(path, fileName);
         if (file.isFile() && file.exists()) {
             return file.delete();

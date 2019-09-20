@@ -18,8 +18,8 @@ public class IntegralInfo implements Serializable {
     private int id;
     private int accountId;
     private int changeType;
-    private int integral;
-    private int balance;
+    private String integral;
+    private String balance;
     private String createDate;
     private String remark;
 
@@ -29,8 +29,8 @@ public class IntegralInfo implements Serializable {
         info.setId(object.optInt("id"));
         info.setAccountId(object.optInt("accountId"));
         info.setChangeType(object.optInt("changeType"));
-        info.setIntegral(object.optInt("integral"));
-        info.setBalance(object.optInt("balance"));
+        info.setIntegral(object.optString("integral"));
+        info.setBalance(object.optString("balance"));
         info.setCreateDate(object.optString("createDate"));
         info.setRemark(object.optString("remark"));
         return info;
@@ -61,19 +61,19 @@ public class IntegralInfo implements Serializable {
         this.changeType = changeType;
     }
 
-    public int getIntegral() {
+    public String getIntegral() {
         return integral;
     }
 
-    public void setIntegral(int integral) {
+    public void setIntegral(String integral) {
         this.integral = integral;
     }
 
-    public int getBalance() {
+    public String getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(String balance) {
         this.balance = balance;
     }
 

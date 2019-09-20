@@ -213,10 +213,8 @@ public final class StringUtils {
                 if (hv.length() < 2) {
                     stringBuilder.append(0);
                 }
-
                 stringBuilder.append(hv);
             }
-
             return stringBuilder.toString();
         } else {
             return null;

@@ -17,11 +17,16 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.NotificationCompat;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.huichenghe.bleControl.Ble.BleDataForBattery;
 import com.huichenghe.bleControl.Ble.DataSendCallback;
+import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
+import com.huichenghe.bleControl.Utils.FormatUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
@@ -58,21 +63,10 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
     public static final String TAG = "AppService";
 
-    private int notifyId = 11;
-
-    private int countFile = 0;
-
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
 
 
     private FileUtils fileUtils = new FileUtils("Bracelet");
-
-    private StringBuilder sb = new StringBuilder();
-
-    private long lastTime = System.currentTimeMillis();
-
-    private long startTime = System.currentTimeMillis();
-
 
     private SensorManager sensorManager;
     /**
@@ -105,9 +99,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
     @Override
     public void onCreate() {
         super.onCreate();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-        }
     }
 
 
@@ -120,7 +111,43 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
 
         timer.start();
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            createNotificationChannel();
+        }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void createNotificationChannel() {
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // 通知渠道的id
+        String id = "my_channel_01";
+        // 用户可以看到的通知渠道的名字.
+        CharSequence name = getString(R.string.channel_name);
+//         用户可以看到的通知渠道的描述
+        String description = getString(R.string.channel_description);
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+//         配置通知渠道的属性
+        mChannel.setDescription(description);
+//         设置通知出现时的闪灯（如果 android 设备支持的话）
+        mChannel.enableLights(true); mChannel.setLightColor(Color.RED);
+//         设置通知出现时的震动（如果 android 设备支持的话）
+        mChannel.enableVibration(false);
+        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+//         最后在notificationmanager中创建该通知渠道 //
+        mNotificationManager.createNotificationChannel(mChannel);
+
+        // 为该通知设置一个id
+        int notifyID = 1;
+        // 通知渠道的id
+        String CHANNEL_ID = "my_channel_01";
+        // Create a notification and set the notification channel.
+        Notification notification = new Notification.Builder(this)
+                .setContentTitle("衣带保父母端") .setContentText("主服务运行中...")
+                .setSmallIcon(R.mipmap.ic_app_logo)
+                .setChannelId(CHANNEL_ID)
+                .build();
+        startForeground(notifyID,notification);
     }
 
     //计时器 十分钟执行一次数据上传操作
@@ -133,12 +160,16 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         @Override
         public void onFinish() {
             timer.start();
+//            uploadLog("服务后台运行中，正常计时....,设备连接状态" + MyApplication.getInstance().isBleConnect());
             //计时结束 分发数据
             EventBus.getDefault().post(new MsgEvent<>(AppConfig.MSG_STEP_COUNT, CURRENT_STEP));
             uploadStepNum();
             getBindDeviceInfo();
+            uploadFile();
             if (!MyApplication.getInstance().isBleConnect()) {
                 MyApplication.getInstance().startScan();
+            } else {
+                getBattery();
             }
         }
     };
@@ -199,7 +230,6 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
     @Override
     public void sendFailed() {
         CrashReport.postCatchedException(new Throwable("数据接收失败"));
-
     }
 
     @Override
@@ -227,47 +257,64 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         double gyrXD = (double) gyrXInt * 9.8 / 0x8000 * 16;
         double gyrYD = (double) gyrYInt * 9.8 / 0x8000 * 16;
         double gyrZD = (double) gyrZInt * 9.8 / 0x8000 * 16;
-        long currentTime = System.currentTimeMillis();
 
         if (data.contains("68a80c0001545355")) {//开始
-//            //清空sb
-//            sb.delete(0, sb.length());
-//            sb.append(data + "\n");
-//            startTime = currentTime;
             EventBus.getDefault().post(new MsgEvent<>(data));
         } else if (data.substring(10, 14).equals("5453")) {//若第11位至第14位是5453，则原始数据上传
-//            sb.append(data + "\n");
             EventBus.getDefault().post(new MsgEvent<>(data));
         } else if (data.substring(10, 14).equals("5454")) {
-//            sb.append(data + "\n");
+
         } else if (data.contains("68a80c00015453aa")) {//结束写入
-//            sb.append(data + "\n");
-//            String content = sb.toString();
-//            fileUtils.writeTxtToFile("开始时间：" + formatter.format(startTime) +
-//                            "\n" + content + "\n" + "结束时间：" + formatter.format(currentTime),
-//                    "test6Sensor_" + formatter.format(currentTime) + ".csv");
-//            uploadFile();
+
         } else {
-//            sb.append(accXD + "," + accYD + "," + accZD + "," + gyrXD + "," + gyrYD + "," + gyrZD + "\n");
             EventBus.getDefault().post(new MsgEvent<>("X轴角速度：" + accXD + "\n" + "Y轴角速度：" + accYD + "\n" + "Z轴角速度：" + accZD + "\n" + "X轴加速度：" + gyrXD + "\n" + "Y轴加速度：" + gyrYD + "\n" + "Z轴加速度：" + gyrZD));
         }
-        lastTime = currentTime;
 
-        if (data.contains("68a80c0001545301") || data.contains("68a80c0001545303")) {
+
+        if (data.toUpperCase().contains("68A80C0001545301") || data.toUpperCase().contains("68A80C0001545303")) {
             fallMsg(0);
-        } else if (data.contains("68a80c0001545302")) {
-            fallMsg(1);
+            uploadData(data);
         }
-        //跌倒
-        if (data.contains("68a80c0001545301")) {
-            sb.delete(0, sb.length());
-            sb.append(data + "\n");
-            String content = sb.toString();
-            fileUtils.writeTxtToFile("\n" + content, "test6Sensor" + formatter.format(currentTime) + ".csv");
-            uploadFile();
+
+        if (data.toUpperCase().contains("68A80C0001545302")) {
+            fallMsg(1);
+            uploadData(data);
         }
     }
 
+    private void getBattery() {
+        //获取电量
+        BleDataForBattery.getInstance().setBatteryListener(new DataSendCallback() {
+            @Override
+            public void sendSuccess(final byte[] bytes) {
+                String data = FormatUtils.bytesToHexString(bytes);
+                Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
+                int batteryInt = batteryLong.intValue();
+                MsgEvent<Integer> event = new MsgEvent<>(AppConfig.MSG_DEVICE_BATTERY, batteryInt);
+                EventBus.getDefault().post(event);
+                if (batteryInt > 128 && batteryInt < 228) {
+                    batteryInt = batteryInt - 128;
+                }
+                Logger.i("lsy", "定时获取电量 " + data);
+                LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+                String mac = entity == null ? "" : entity.getAddress();
+                mac = mac.replace(":", "").toUpperCase();
+                if (!TextUtils.isEmpty(mac))
+                    uploadPower(mac, batteryInt, data);
+
+            }
+
+            @Override
+            public void sendFailed() {
+            }
+
+            @Override
+            public void sendFinished() {
+
+            }
+        });
+        BleDataForBattery.getInstance().getBatteryPx();
+    }
 
     private void uploadFile() {
         final List<File> fileList = fileUtils.getFile();
@@ -276,53 +323,11 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         boolean isLogin = (boolean) SPUtils.get(MyApplication.getInstance(), AppConfig.IS_LOGIN, false);
         if (!isLogin)
             return;
-//        String CHANNEL_ONE_ID = "CHANNEL_ONE_ID";
-//        String CHANNEL_ONE_NAME = "CHANNEL_ONE_ID";
-//        NotificationChannel notificationChannel = null;
-//        //进行8.0的判断
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//            notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
-//                    CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_HIGH);
-//            notificationChannel.enableLights(true);
-//            notificationChannel.setLightColor(Color.RED);
-//            notificationChannel.setShowBadge(true);
-//            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-//            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//            manager.createNotificationChannel(notificationChannel);
-//        }
-//        Intent intent = new Intent(this, MainActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-//        final Notification notification = new Notification.Builder(this).setChannelId(CHANNEL_ONE_ID)
-//                .setTicker("Nature")
-//                .setSmallIcon(R.mipmap.ic_app_logo)
-//                .setContentTitle("衣带保父母端")
-//                .setContentIntent(pendingIntent)
-//                .setContentText("正在上传蓝牙设备数据")
-//                .build();
-//        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-//        startForeground(1, notification);
-
         for (final File file : fileList) {
-
             ApiRequest.uploadFile(file, new HttpSubscriber() {
-
-                @Override
-                public void onError(Throwable e) {
-                    super.onError(e);
-                    countFile++;
-                    if (countFile == fileList.size()) {
-                        countFile = 0;
-                    }
-                    ToastUtil.showShort("文件上传失败");
-                }
-
                 @Override
                 public void onNext(HttpResult result) {
                     super.onNext(result);
-                    countFile++;
-                    if (countFile == fileList.size()) {
-                        countFile = 0;
-                    }
                     if (result.code.equals(AppConfig.SUCCESS)) {
                         fileUtils.deleteFile(file.getName());
                     }
@@ -331,21 +336,50 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
         }
     }
 
-    private void fallMsg(int fallType) {
-        //跳转到拨号界面
-        Intent dialIntent = new Intent(this, ContactActivity.class);
-        dialIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(dialIntent);
-
-        ApiRequest.fall(fallType, new HttpSubscriber() {
+    private void uploadData(final String data) {
+//        uploadLog("设备数据上传中...");
+        ApiRequest.uploadBleData(data, new HttpSubscriber() {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
+                fileUtils.writeTxtToFile(data, "test6Sensor" + formatter.format(System.currentTimeMillis()) + ".csv");
+//                uploadLog("设备数据上传失败，已缓存到本地转为定时任务");
             }
 
             @Override
             public void onNext(HttpResult result) {
                 super.onNext(result);
+                if (result.code.equals(AppConfig.SUCCESS)) {
+//                    uploadLog("设备数据上传成功...");
+                } else {
+                    fileUtils.writeTxtToFile(data, "test6Sensor" + formatter.format(System.currentTimeMillis()) + ".csv");
+//                    uploadLog(System.currentTimeMillis() + "设备数据上传失败，已缓存到本地转为定时任务");
+                }
+            }
+        });
+    }
+
+    private void fallMsg(int fallType) {
+        //跳转到拨号界面
+        Intent dialIntent = new Intent(this, ContactActivity.class);
+        dialIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(dialIntent);
+//        uploadLog("设备开始报警...");
+        ApiRequest.fall(fallType, new HttpSubscriber() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+//                uploadLog("报警指令送达失败...");
+            }
+
+            @Override
+            public void onNext(HttpResult result) {
+                super.onNext(result);
+                if (result.code.equals(AppConfig.SUCCESS)) {
+//                    uploadLog("报警指令送达成功...");
+                } else {
+//                    uploadLog("报警指令送达失败...");
+                }
             }
         });
     }
@@ -379,6 +413,22 @@ public class AppService extends Service implements DataSendCallback, SensorEvent
                         e.printStackTrace();
                     }
                 }
+            }
+        });
+    }
+
+    private void uploadPower(String mac, int power, String data) {
+        ApiRequest.devPowerUpload(mac, power, data, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+            }
+        });
+    }
+
+    private void uploadLog(String log) {
+        ApiRequest.log(log, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
             }
         });
     }

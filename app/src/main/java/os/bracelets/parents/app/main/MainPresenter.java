@@ -198,8 +198,8 @@ public class MainPresenter extends MainContract.Presenter {
     }
 
     @Override
-    void uploadPower(String mac, int power) {
-        ApiRequest.devPowerUpload(mac, power, new HttpSubscriber() {
+    void uploadPower(String mac, int power,String originalPower) {
+        ApiRequest.devPowerUpload(mac, power, originalPower,new HttpSubscriber() {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);

@@ -3,12 +3,9 @@ package os.bracelets.parents.app.about;
 import android.view.View;
 import android.widget.TextView;
 
-import aio.health2world.http.HttpResult;
-import aio.health2world.utils.AppUtils;
+import os.bracelets.parents.BuildConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.common.BaseActivity;
-import os.bracelets.parents.http.ApiRequest;
-import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
 
@@ -37,7 +34,7 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void initData() {
         TitleBarUtil.setAttr(this, "", getString(R.string.about_us), titleBar);
-        tvTitle.setText(getString(R.string.bracelet_parent) + AppUtils.getAppVersionName(this));
+        tvTitle.setText(getString(R.string.bracelet_parent) + BuildConfig.VERSION_NAME + "_" + BuildConfig.GIT_VERSION);
         tvContent.setText("\r\r\r\r\r\r\r\r" + getResources().getString(R.string.about_content));
     }
 

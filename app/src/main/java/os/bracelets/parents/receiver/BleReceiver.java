@@ -2,6 +2,7 @@ package os.bracelets.parents.receiver;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import com.huichenghe.bleControl.Ble.DeviceConfig;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.lang.reflect.Method;
 
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.ToastUtil;
@@ -28,12 +31,12 @@ public class BleReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Logger.i("lsy",intent.getAction());
+        Logger.i("lsy", intent.getAction());
         switch (intent.getAction()) {
             //设备已连接的广播
             case DeviceConfig.DEVICE_CONNECTE_AND_NOTIFY_SUCESSFUL:
                 ToastUtil.showShort("设备连接成功");
-                if(BluetoothLeService.getInstance()!=null){
+                if (BluetoothLeService.getInstance() != null) {
                     //获取当前已连接的设备currentDevice
                     LocalDeviceEntity device = BluetoothLeService.getInstance().getCurrentDevice();
                     MyApplication.getInstance().setBleConnect(true);
@@ -43,9 +46,14 @@ public class BleReceiver extends BroadcastReceiver {
                 }
                 break;
             case BluetoothAdapter.ACTION_STATE_CHANGED:
-                MyApplication.getInstance().setBleConnect(false);
-                MyApplication.getInstance().setDeviceEntity(null);
-                MyApplication.getInstance().clearEntityList();
+                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 1000);
+                if (state == BluetoothAdapter.STATE_ON) {
+                    Logger.i("lsy", "蓝牙已开启");
+                    MyApplication.getInstance().setBlueEnable(true);
+                } else if (state == BluetoothAdapter.STATE_OFF) {
+                    Logger.i("lsy", "蓝牙已关闭");
+                    MyApplication.getInstance().setBlueEnable(false);
+                }
                 break;
             case DeviceConfig.DEVICE_CONNECTING_AUTO:
 //                ToastUtil.showShort("开始连接设备");
@@ -54,10 +62,34 @@ public class BleReceiver extends BroadcastReceiver {
                 ToastUtil.showShort("设备失去连接");
                 MyApplication.getInstance().setBleConnect(false);
                 MyApplication.getInstance().setDeviceEntity(null);
+                MyApplication.getInstance().clearEntityList();
+                BluetoothGatt gatt1 = BluetoothLeService.getInstance().getBluetoothGatt();
+                if (gatt1 != null) {
+                    refreshGattCache(gatt1);
+                    gatt1.disconnect();
+                    gatt1.close();
+                    gatt1 = null;
+                }
                 EventBus.getDefault().post(new MsgEvent<LocalDeviceEntity>(AppConfig.MSG_DEVICE_DISCONNECT));
                 break;
             case NOTIFICATION_SHOW:
                 break;
         }
+    }
+
+
+    public static boolean refreshGattCache(BluetoothGatt gatt) {
+        boolean result = false;
+        try {
+            if (gatt != null) {
+                Method refresh = BluetoothGatt.class.getMethod("refresh");
+                if (refresh != null) {
+                    refresh.setAccessible(true);
+                    result = (boolean) refresh.invoke(gatt, new Object[0]);
+                }
+            }
+        } catch (Exception e) {
+        }
+        return result;
     }
 }

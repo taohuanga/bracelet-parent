@@ -8,7 +8,9 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +76,10 @@ public class ContactActivity extends MVPBaseActivity<ContactContract.Presenter> 
         recyclerView.setAdapter(contactAdapter);
 
         contactAdapter.bindToRecyclerView(recyclerView);
-        contactAdapter.setEmptyView(R.layout.layout_empty_view);
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_empty_view, null);
+        TextView text = view.findViewById(R.id.content);
+        text.setText(getString(R.string.contact_nothing));
+        contactAdapter.setEmptyView(view);
 
         onRefresh();
     }
@@ -128,8 +133,13 @@ public class ContactActivity extends MVPBaseActivity<ContactContract.Presenter> 
         contactAdapter.notifyDataSetChanged();
         if (contactList.size() >= AppConfig.PAGE_SIZE)
             contactAdapter.loadMoreComplete();
-        else
-            contactAdapter.loadMoreEnd();
+        else {
+            if (contactList.size() < AppConfig.PAGE_SIZE) {
+                contactAdapter.loadMoreEnd(true);
+            } else {
+                contactAdapter.loadMoreEnd();
+            }
+        }
     }
 
     @Override

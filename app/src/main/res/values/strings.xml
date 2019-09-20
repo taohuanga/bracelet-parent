@@ -12,5 +12,8 @@
     <string name="bracelet_parent">衣带保父母端 V</string>
     <string name="feedback">意见反馈</string>
     <string name="user_agreement">用户协议</string>
+    <string name="channel_name">衣带保父母端</string>
+    <string name="channel_description">父母端蓝牙扫描服务后台运行中</string>
+    <string name="contact_nothing">您的关联子女端目前\n还未给您设定快速联系人</string>
 
 </resources>

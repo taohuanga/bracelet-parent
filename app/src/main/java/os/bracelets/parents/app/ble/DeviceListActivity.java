@@ -128,9 +128,6 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).stopScan();
         entity = (LocalDeviceEntity) adapter.getItem(position);
-//        byte[] b = entity.getmScanRecord();
-//        String data = StringUtils.bytesToHexString(b);
-//        Logger.i("lsy",data);
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
             ToastUtil.showShort("请开启蓝牙");
             return;
@@ -141,6 +138,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
                 dialog.showDialog(true, "正在断开设备");
                 BluetoothLeService.getInstance().disconnect();
+                BluetoothLeService.getInstance().removeAllCallback();
             } else {
                 if (MyApplication.getInstance().isBleConnect()) {
                     ToastUtil.showShort("请先断开已连接的设备");
@@ -197,10 +195,10 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             return;
         }
         ToastUtil.showShort("开始扫描蓝牙设备");
-        BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
+        BleScanUtils.getBleScanUtilsInstance(this).stopScan();
         //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
-        BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).setmOnDeviceScanFoundListener(deviceFoundListener);
-        BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).scanDevice(null);
+        BleScanUtils.getBleScanUtilsInstance(this).setmOnDeviceScanFoundListener(deviceFoundListener);
+        BleScanUtils.getBleScanUtilsInstance(this).scanDevice(null);
     }
 
     /**
@@ -219,19 +217,25 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
             String mac = mLocalDeviceEntity.getAddress().replace(":", "").toUpperCase();
             if (macAddress.equals(mac)) {
                 BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
-                BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
+                if (BluetoothLeService.getInstance() != null)
+                    try {
+                        BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
             }
         }
 
         @Override
         public void onScanStateChange(boolean isChange) {
         }
-
     };
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        deviceFoundListener = null;
         EventBus.getDefault().unregister(this);
+        BleScanUtils.getBleScanUtilsInstance(this).stopScan();
     }
 }

@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -36,15 +37,19 @@ import java.util.Date;
 import java.util.List;
 
 import aio.health2world.SApplication;
+import aio.health2world.http.HttpResult;
 import aio.health2world.utils.AppManager;
 import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.app.account.AgreementActivity;
+import os.bracelets.parents.http.ApiRequest;
+import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.receiver.AlarmReceiver;
 import os.bracelets.parents.receiver.BleReceiver;
 import os.bracelets.parents.service.AppService;
+import os.bracelets.parents.service.BleService;
 
 /**
  * Created by lishiyou on 2019/1/24.
@@ -53,7 +58,7 @@ import os.bracelets.parents.service.AppService;
 public class MyApplication extends Application implements AMapLocationListener {
 
     public static MyApplication INSTANCE;
-
+    private boolean blueEnable = false;
     private boolean isBleConnect = false;
     //扫描到的蓝牙设备的集合
     private List<LocalDeviceEntity> deviceList = new ArrayList<>();
@@ -119,11 +124,21 @@ public class MyApplication extends Application implements AMapLocationListener {
         deviceList.clear();
     }
 
+    public boolean isBlueEnable() {
+        return blueEnable;
+    }
+
+    public void setBlueEnable(boolean blueEnable) {
+        this.blueEnable = blueEnable;
+    }
+
     //退出当前程序 回到登录界面
-    public void logout() {
+    public void logout(boolean flag) {
         SPUtils.put(this, AppConfig.IS_LOGIN, false);
         AppManager.getInstance().finishAllActivity();
         Intent intent = new Intent("os.bracelets.parents.login");
+        if (flag)
+            intent.putExtra("flag", true);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -153,6 +168,17 @@ public class MyApplication extends Application implements AMapLocationListener {
         CrashReport.initCrashReport(getApplicationContext(), AppConfig.BUGLY_ID, AppConfig.IS_DEBUG);
 
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5c9d7cb1");
+
+        Intent bleService = new Intent(this, BleService.class);
+        Intent appService = new Intent(this, AppService.class);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            startForegroundService(bleService);
+            startForegroundService(appService);
+        } else {
+            startService(bleService);
+            startService(appService);
+        }
+
     }
 
     @Override
@@ -169,10 +195,12 @@ public class MyApplication extends Application implements AMapLocationListener {
     }
 
     public void startScan() {
-        if (BluetoothAdapter.getDefaultAdapter() == null)
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if(adapter==null||!adapter.isEnabled()){
+//            uploadLog("系统蓝牙已关闭，扫描未执行！");
             return;
-        if (!BluetoothAdapter.getDefaultAdapter().isEnabled())
-            return;
+        }
+//        uploadLog("开始扫描设备,蓝牙服务状态:" + (BluetoothLeService.getInstance() == null ? "异常" : "正常"));
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
         //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
         BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).setmOnDeviceScanFoundListener(deviceFoundListener);
@@ -184,19 +212,26 @@ public class MyApplication extends Application implements AMapLocationListener {
      */
     private BleScanUtils.OnDeviceScanFoundListener deviceFoundListener = new BleScanUtils.OnDeviceScanFoundListener() {
         @Override
-        public void OnDeviceFound(LocalDeviceEntity mLocalDeviceEntity) {
-            String deviceName = mLocalDeviceEntity.getName();
+        public void OnDeviceFound(LocalDeviceEntity entity) {
+            if (entity == null)
+                return;
+            String deviceName = entity.getName();
             if (deviceName != null && deviceName.startsWith("DFZ")) {
                 Logger.i("lsy", "扫描到设备" + deviceName);
-                MyApplication.getInstance().addDevice(mLocalDeviceEntity);
+                MyApplication.getInstance().addDevice(entity);
             }
             //根据绑定的设备自带链接
             String macAddress = (String) SPUtils.get(INSTANCE, AppConfig.MAC_ADDRESS, "");
+            Logger.i("lsy", "扫描到的mac=" + entity.getAddress() + ",绑定的mac=" + macAddress);
             if (!TextUtils.isEmpty(macAddress)) {
-                String mAddress = mLocalDeviceEntity.getAddress().replace(":", "").toUpperCase();
+                String mAddress = entity.getAddress().replace(":", "").toUpperCase();
                 if (macAddress.equals(mAddress)) {
-                    BleScanUtils.getBleScanUtilsInstance(MyApplication.getInstance()).stopScan();
-                    BluetoothLeService.getInstance().connect(mLocalDeviceEntity);
+//                    uploadLog("扫描到已匹配的设备" + macAddress + ",蓝牙服务状态：" + (BluetoothLeService.getInstance() == null ? "异常" : "正常"));
+                    BleScanUtils.getBleScanUtilsInstance(INSTANCE).stopScan();
+                    if (BluetoothLeService.getInstance() != null) {
+//                        uploadLog("开始自动连接设备" + macAddress);
+                        BluetoothLeService.getInstance().connect(entity);
+                    }
                 }
             }
         }
@@ -212,7 +247,7 @@ public class MyApplication extends Application implements AMapLocationListener {
      *
      * @param bleDevice
      */
-    public void addDevice(LocalDeviceEntity bleDevice) {
+    public synchronized void addDevice(LocalDeviceEntity bleDevice) {
         removeDevice(bleDevice);
         deviceList.add(bleDevice);
     }
@@ -222,7 +257,7 @@ public class MyApplication extends Application implements AMapLocationListener {
      *
      * @param bleDevice
      */
-    public void removeDevice(LocalDeviceEntity bleDevice) {
+    public synchronized void removeDevice(LocalDeviceEntity bleDevice) {
         for (int i = 0; i < deviceList.size(); i++) {
             LocalDeviceEntity device = deviceList.get(i);
             if (bleDevice.getAddress().equals(device.getAddress())) {
@@ -276,9 +311,15 @@ public class MyApplication extends Application implements AMapLocationListener {
                         + location.getLongitude()
                         + ",城市：" + location.getCity()
                         + ",城市代码：" + location.getAdCode());
-//
-//                String address = location.getProvince()+location.getCity()+location.getAccuracy()+location.getAddress();
-//                Logger.i("lsy",address);
+                ApiRequest.uploadLocation(String.valueOf(location.getLongitude()),
+                        String.valueOf(location.getLatitude()),
+                        new HttpSubscriber() {
+
+                            @Override
+                            public void onNext(HttpResult result) {
+//                                super.onNext(result);
+                            }
+                        });
 
             } else {
                 //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
@@ -394,4 +435,12 @@ public class MyApplication extends Application implements AMapLocationListener {
         }
 
     };
+
+    private void uploadLog(String log) {
+        ApiRequest.log(log, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+            }
+        });
+    }
 }

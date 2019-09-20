@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,8 +43,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import aio.health2world.http.HttpResult;
 import aio.health2world.rx.rxpermissions.RxPermissions;
 import aio.health2world.utils.DateUtil;
+import aio.health2world.utils.Logger;
 import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import cn.jpush.android.api.JPushInterface;
@@ -66,11 +69,15 @@ import os.bracelets.parents.bean.WeatherInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
 import os.bracelets.parents.common.MsgEvent;
 import os.bracelets.parents.db.DBManager;
+import os.bracelets.parents.http.ApiRequest;
+import os.bracelets.parents.http.HttpSubscriber;
 import os.bracelets.parents.jpush.JPushUtil;
 import os.bracelets.parents.jpush.TagAliasOperatorHelper;
 import os.bracelets.parents.service.AppService;
+import os.bracelets.parents.service.BleService;
 import os.bracelets.parents.utils.DataString;
 import os.bracelets.parents.view.BatteryView;
+import os.bracelets.parents.view.MyWebView;
 import rx.functions.Action1;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -92,8 +99,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     private View bleLayout;
 
     private BatteryView batteryView;
-
-    private Handler handler;
 
     private UserInfo info;
 
@@ -135,9 +140,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
     @Override
     protected void initData() {
-        startService(new Intent(this, BluetoothLeService.class));
-        startService(new Intent(this, AppService.class));
-
         String userId = (String) SPUtils.get(this, AppConfig.USER_ID, "");
         JPushInterface.init(this);
         JPushUtil.setJPushAlias(TagAliasOperatorHelper.ACTION_SET, userId);
@@ -145,7 +147,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 //        set.add("android");
 //        JPushUtil.setJPushTags(TagAliasOperatorHelper.ACTION_SET, set);
 
-        handler = new Handler();
         tvConnect.setText(MyApplication.getInstance().isBleConnect() ? "已连接" : "未连接");
         //星期
         tvWeek.setText(DataString.getWeek() + "\r\n" + DateUtil.getDate(new Date(System.currentTimeMillis())));
@@ -165,6 +166,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                         @Override
                         public void call(Boolean aBoolean) {
                             if (aBoolean) {
+                                MyApplication.getInstance().setBlueEnable(true);
                                 MyApplication.getInstance().startScan();
                             } else {
                                 ToastUtil.showShort("相关权限被拒绝");
@@ -173,6 +175,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                     });
         } else {
             BluetoothAdapter.getDefaultAdapter().enable();
+            MyApplication.getInstance().setBlueEnable(true);
             MyApplication.getInstance().startScan();
         }
         mPresenter.getWeather();
@@ -303,6 +306,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         if (event.getAction() == AppConfig.MSG_DEVICE_CONNECT) {
             tvConnect.setText("已连接");
             onResume();
+            LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
+//            uploadLog("设备" + (entity == null ? "--" :
+//                    entity.getAddress().replace(":", "").toUpperCase()) + "连接成功！");
         }
         //设备失去连接
         if (event.getAction() == AppConfig.MSG_DEVICE_DISCONNECT) {
@@ -317,7 +323,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     protected void onResume() {
         super.onResume();
         mPresenter.userInfo();
-        handler.postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (BluetoothLeService.getInstance() != null) {
@@ -340,6 +346,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         getBattery();
     }
 
+    /**
+     * 电量数据修改：
+     * 0~100：当前正在使用电池供电，数值为电池剩余电量的百分比
+     * 128~228：当前正在充电，数值减去128后为已充电电量的百分比
+     * 240：充电完成
+     */
     private void getBattery() {
         //获取电量
         BleDataForBattery.getInstance().setBatteryListener(new DataSendCallback() {
@@ -349,24 +361,19 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                     @Override
                     public void run() {
                         String data = FormatUtils.bytesToHexString(bytes);
+                        Logger.i("lsy", "电量数据 " + data);
                         Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
                         int batteryInt = batteryLong.intValue();
                         if (batteryInt <= 100) {
                             tvBattery.setText(batteryInt + "%");
                             batteryView.setPower(batteryInt);
-                        } else if (batteryInt > 128 && batteryInt < 228) {
-                            tvBattery.setText("正在充电");
-                            batteryView.setPower(batteryInt - 128);
+                        } else if (batteryInt >= 128 && batteryInt <= 228) {
+                            batteryInt = batteryInt - 128;
+                            tvBattery.setText("正在充电" + batteryInt + "%");
+                            batteryView.setPower(batteryInt);
                         } else if (batteryInt == 240) {
                             tvBattery.setText("充电完成");
                             batteryView.setPower(100);
-                        }
-                        if (batteryInt <= 25) {
-                            LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
-                            String mac = entity == null ? "" : entity.getAddress();
-                            mac = mac.replace(":", "").toUpperCase();
-                            if (!TextUtils.isEmpty(mac))
-                                mPresenter.uploadPower(mac, batteryInt);
                         }
                     }
                 });
@@ -454,9 +461,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
         EventBus.getDefault().unregister(this);
-//        countDownTimer.cancel();
     }
 
     @Override
@@ -527,5 +532,13 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     @Override
     public void onArrivedWayPoint(int i) {
 
+    }
+
+    private void uploadLog(String log) {
+        ApiRequest.log(log, new HttpSubscriber() {
+            @Override
+            public void onNext(HttpResult result) {
+            }
+        });
     }
 }

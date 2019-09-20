@@ -4,47 +4,47 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_titlebar"/>
+    <include layout="@layout/layout_titlebar" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <os.bracelets.parents.view.MyWebView
+        <WebView
             android:id="@+id/webView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:id="@+id/layoutBottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="1dp"
-            android:visibility="gone">
+            android:layout_height="42dp"
+            android:visibility="visible">
 
             <Button
                 android:id="@+id/btnDisAgree"
                 android:layout_width="0dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="@dimen/dp_16"
-                android:layout_marginEnd="@dimen/dp_8"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/shape_unbind_device_bg"
+                android:background="@color/black9"
                 android:text="不同意该协议"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp17"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnAgree"
                 android:layout_width="0dp"
                 android:layout_height="42dp"
-                android:layout_marginStart="@dimen/dp_8"
-                android:layout_marginEnd="@dimen/dp_16"
                 android:layout_weight="1"
-                android:background="@drawable/shape_button_bg"
+                android:background="@color/appThemeColor"
                 android:text="同意该协议"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp17"
+                android:textStyle="bold" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

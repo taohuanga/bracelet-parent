@@ -43,7 +43,7 @@ public interface MainContract {
 
         abstract void dailySports();
 
-        abstract void uploadPower(String mac,int power);
+        abstract void uploadPower(String mac,int power,String uploadPower);
     }
 
 }
