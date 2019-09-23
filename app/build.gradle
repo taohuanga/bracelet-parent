@@ -23,7 +23,7 @@ android {
         buildConfigField "String", "GIT_VERSION", "\"" + gitVersion() + "\""
         ndk {
             //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
-            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86"
+            abiFilters "armeabi", "armeabi-v7a", "x86"
         }
     }
 
@@ -97,10 +97,10 @@ afterEvaluate {
         def mergeTask = tasks.getByName(mergeTaskName)
         mergeTask.doLast {
             copy {
-                int i=0
+                int i = 0
                 from(android.sourceSets.main.res.srcDirs) {
                     include 'values/public.xml'
-                    rename 'public.xml', (i == 0? "public.xml": "public_${i}.xml")
+                    rename 'public.xml', (i == 0 ? "public.xml" : "public_${i}.xml")
                     i++
                 }
                 into(mergeTask.outputDir)
