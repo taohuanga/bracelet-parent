@@ -55,7 +55,7 @@ public class UpdatePhoneActivity extends MVPBaseActivity<UpdatePhoneContract.Pre
 
     @Override
     protected void initData() {
-        TitleBarUtil.setAttr(this, "", "修改手机号", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.update_phone), titleBar);
         if (getIntent().hasExtra("phone")) {
             phone = getIntent().getStringExtra("phone");
         }
@@ -85,14 +85,15 @@ public class UpdatePhoneActivity extends MVPBaseActivity<UpdatePhoneContract.Pre
     private CountDownTimer countDownTimer = new CountDownTimer(59000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            tvCode.setText(millisUntilFinished / 1000 + "秒后获取");
+//            tvCode.setText(millisUntilFinished / 1000 + "秒后获取");
+            tvCode.setText(String.format(getString(R.string.code_later),millisUntilFinished/1000));
         }
 
         @Override
         public void onFinish() {
             tvCode.setEnabled(true);
             tvCode.setTextColor(mContext.getResources().getColor(R.color.blue));
-            tvCode.setText("获取验证码");
+            tvCode.setText(getString(R.string.verification_code));
         }
     };
 
@@ -127,11 +128,11 @@ public class UpdatePhoneActivity extends MVPBaseActivity<UpdatePhoneContract.Pre
     private void getCode() {
         String phone = edOldPhone.getText().toString().trim();
         if (TextUtils.isEmpty(phone)) {
-            ToastUtil.showShort("请输入原手机号");
+            ToastUtil.showShort(getString(R.string.input_password));
             return;
         }
         if (!MatchUtil.isPhoneLegal(phone)) {
-            ToastUtil.showShort("原手机号格式不正确");
+            ToastUtil.showShort(getString(R.string.phone_incorrect));
             return;
         }
         mPresenter.securityCode(3, phone);
@@ -146,11 +147,11 @@ public class UpdatePhoneActivity extends MVPBaseActivity<UpdatePhoneContract.Pre
         String loginPwd = edLoginPwd.getText().toString();
         String newPhone = edNewPhone.getText().toString();
         if (TextUtils.isEmpty(loginPwd)) {
-            ToastUtil.showShort("请输入登录密码");
+            ToastUtil.showShort(getString(R.string.input_password));
             return;
         }
         if (!MatchUtil.isPhoneLegal(newPhone)) {
-            ToastUtil.showShort("新手机号格式不正确");
+            ToastUtil.showShort(getString(R.string.phone_incorrect));
             return;
         }
 

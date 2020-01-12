@@ -65,7 +65,7 @@ public class HealthInfoActivity extends MVPBaseActivity<HealthInfoContract.Prese
 
     @Override
     protected void initData() {
-        TitleBarUtil.setAttr(this, "", "资讯列表", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.information_list), titleBar);
         refreshLayout.setColorSchemeColors(mContext.getResources().getColor(R.color.appThemeColor));
 
         infoList = new ArrayList<>();

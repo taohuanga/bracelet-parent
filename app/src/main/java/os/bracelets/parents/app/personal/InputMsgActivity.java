@@ -74,7 +74,7 @@ public class InputMsgActivity extends BaseActivity {
                 finish();
             }
         });
-        titleBar.addAction(new TitleBar.TextAction("确定") {
+        titleBar.addAction(new TitleBar.TextAction(getString(R.string.sure)) {
             @Override
             public void performAction(View view) {
                 save();
@@ -85,7 +85,7 @@ public class InputMsgActivity extends BaseActivity {
     private void save() {
         String msg = editText.getText().toString().trim();
         if (TextUtils.isEmpty(msg)) {
-            ToastUtil.showShort("请输入内容");
+            ToastUtil.showShort(getString(R.string.input_content));
             return;
         }
         Intent intent = new Intent();

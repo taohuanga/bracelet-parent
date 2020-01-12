@@ -39,7 +39,7 @@ public class ExceptionHandle {
                 case SERVICE_UNAVAILABLE:
                 default:
                     //ex.code = httpException.code();
-                    ex.message = "服务器异常";
+                    ex.message = "Server exception";
                     break;
             }
             return ex;
@@ -52,31 +52,31 @@ public class ExceptionHandle {
                 || e instanceof JSONException
                 /*|| e instanceof ParseException*/) {
             ex = new ResponseThrowable(e, ERROR.PARSE_ERROR);
-            ex.message = "数据解析错误";
+            ex.message = "Data parsing error";
             return ex;
         } else if (e instanceof ConnectException) {
             ex = new ResponseThrowable(e, ERROR.NETWORK_ERROR);
-            ex.message = "服务连接失败";
+            ex.message = "Server connection defeat";
             return ex;
         } else if (e instanceof javax.net.ssl.SSLHandshakeException) {
             ex = new ResponseThrowable(e, ERROR.SSL_ERROR);
-            ex.message = "证书验证失败";
+            ex.message = "Certificate validation failed";
             return ex;
         } else if (e instanceof java.net.SocketTimeoutException) {
             ex = new ResponseThrowable(e, ERROR.HTTP_TIME_OUT);
-            ex.message = "网络请求超时";
+            ex.message = "Network request timeout";
             return ex;
         } else if (e instanceof java.net.UnknownHostException) {
             ex = new ResponseThrowable(e, ERROR.HTTP_ERROR);
-            ex.message = "请重启一体机网络";
+            ex.message = "Please restart the device network";
             return ex;
         } else if (e instanceof java.net.SocketException) {
             ex = new ResponseThrowable(e, ERROR.HTTP_SERVER_ERROR);
-            ex.message = "服务器异常";
+            ex.message = "Server exception";
             return ex;
         } else {
             ex = new ResponseThrowable(e, ERROR.UNKNOWN);
-            ex.message = "未知错误";
+            ex.message = "Unknown error";
             return ex;
         }
     }

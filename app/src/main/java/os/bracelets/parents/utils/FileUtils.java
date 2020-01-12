@@ -65,7 +65,7 @@ public class FileUtils {
 //            outTxt.write("文件内容格式不正确, 此文件已被系统删除! ");
 //            outTxt.close();
         } catch (Exception e) {
-            ToastUtil.showShort("文件写入失败,请检查是否有读写权限！");
+//            ToastUtil.showShort("文件写入失败,请检查是否有读写权限！");
         }
         return file;
     }

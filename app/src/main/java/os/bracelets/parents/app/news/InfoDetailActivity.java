@@ -63,7 +63,7 @@ public class InfoDetailActivity extends MVPBaseActivity<InfoDetailContract.Prese
     @Override
     protected void initData() {
         infoId = getIntent().getStringExtra(INFO_ID);
-        TitleBarUtil.setAttr(this, "", "资讯详情", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.information_detail), titleBar);
         mPresenter.loadInfoDetail(infoId);
     }
 

@@ -25,7 +25,7 @@
             android:layout_marginEnd="@dimen/dp_8"
             android:layout_weight="1"
             android:background="@color/white"
-            android:hint="输入关键字搜索"
+            android:hint="@string/input_keyword_search"
             android:padding="@dimen/dp_8"
             android:textColor="@color/black3"
             android:textSize="@dimen/sp15" />

@@ -55,7 +55,7 @@ public class SystemMsgActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        TitleBarUtil.setAttr(this, "", "消息列表", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.message_list), titleBar);
         refreshLayout.setColorSchemeColors(mContext.getResources().getColor(R.color.appThemeColor));
 
         msgList = new ArrayList<>();

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:style="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     package="os.bracelets.parents"
     android:installLocation="internalOnly">
@@ -127,6 +126,8 @@
         <activity android:name="aio.health2world.qrcode.CaptureActivity" />
 
         <activity android:name=".app.account.AgreementActivity" />
+
+        <activity android:name=".app.about.HelpActivity" />
 
         <service android:name=".service.AppService" />
         <!--<service android:name=".service.BleService" />-->

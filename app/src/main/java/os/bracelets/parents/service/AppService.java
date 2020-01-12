@@ -146,7 +146,7 @@ public class AppService extends BluetoothLeService implements DataSendCallback, 
         // Create a notification and set the notification channel.
         Notification notification = new Notification.Builder(this)
 //                .setContentTitle("衣带保父母端")
-                .setContentText("主服务运行中...")
+                .setContentText(getString(R.string.service_is_running))
                 .setSmallIcon(R.mipmap.ic_app_logo)
                 .setChannelId(CHANNEL_ID)
                 .build();
@@ -163,7 +163,7 @@ public class AppService extends BluetoothLeService implements DataSendCallback, 
         @Override
         public void onFinish() {
             timer.start();
-            Logger.i("lsy","服务后台运行中，正常计时....,设备连接状态" + MyApplication.getInstance().isBleConnect());
+//            Logger.i("lsy","服务后台运行中，正常计时....,设备连接状态" + MyApplication.getInstance().isBleConnect());
 //            uploadLog("服务后台运行中，正常计时....,设备连接状态" + MyApplication.getInstance().isBleConnect());
             //计时结束 分发数据
             EventBus.getDefault().post(new MsgEvent<>(AppConfig.MSG_STEP_COUNT, CURRENT_STEP));
@@ -271,7 +271,12 @@ public class AppService extends BluetoothLeService implements DataSendCallback, 
         } else if (data.contains("68a80c00015453aa")) {//结束写入
 
         } else {
-            EventBus.getDefault().post(new MsgEvent<>("X轴角速度：" + accXD + "\n" + "Y轴角速度：" + accYD + "\n" + "Z轴角速度：" + accZD + "\n" + "X轴加速度：" + gyrXD + "\n" + "Y轴加速度：" + gyrYD + "\n" + "Z轴加速度：" + gyrZD));
+            EventBus.getDefault().post(new MsgEvent<>(getString(R.string.x_axis_angular_speed) + accXD + "\n"
+                    + getString(R.string.y_axis_angular_speed) + accYD + "\n"
+                    + getString(R.string.z_axis_angular_speed) + accZD + "\n"
+                    + getString(R.string.x_axis_accelerated_speed) + gyrXD + "\n"
+                    + getString(R.string.y_axis_accelerated_speed) + gyrYD + "\n"
+                    + getString(R.string.z_axis_accelerated_speed) + gyrZD));
         }
 
 
@@ -299,7 +304,7 @@ public class AppService extends BluetoothLeService implements DataSendCallback, 
                 if (batteryInt > 128 && batteryInt < 228) {
                     batteryInt = batteryInt - 128;
                 }
-                Logger.i("lsy", "定时获取电量 " + data);
+//                Logger.i("lsy", "定时获取电量 " + data);
                 LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
                 String mac = entity == null ? "" : entity.getAddress();
                 mac = mac.replace(":", "").toUpperCase();

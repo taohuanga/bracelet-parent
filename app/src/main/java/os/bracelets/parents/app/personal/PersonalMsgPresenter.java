@@ -14,6 +14,7 @@ import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
+import os.bracelets.parents.R;
 import os.bracelets.parents.bean.UserInfo;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
@@ -140,7 +141,6 @@ public class PersonalMsgPresenter extends PersonalMsgContract.Presenter {
                         if (mView != null)
                             mView.hideLoading();
                         if (result.code.equals(AppConfig.SUCCESS)) {
-                            ToastUtil.showShort("资料保存成功");
                             try {
                                 JSONObject object = new JSONObject(new Gson().toJson(result.data));
                                 String nickName = object.optString("nickName");

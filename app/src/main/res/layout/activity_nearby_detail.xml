@@ -41,7 +41,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="性别"
+            android:text="@string/sex"
             android:textColor="@color/black6"
             android:textSize="@dimen/sp_16" />
 
@@ -73,7 +73,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="生日"
+            android:text="@string/birthday"
             android:textColor="@color/black6"
             android:textSize="@dimen/sp_16" />
 
@@ -106,7 +106,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="身高"
+            android:text="@string/height"
             android:textColor="@color/black6"
             android:textSize="@dimen/sp_16" />
 
@@ -139,7 +139,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="体重"
+            android:text="@string/weight"
             android:textColor="@color/black6"
             android:textSize="@dimen/sp_16" />
 
@@ -157,7 +157,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_18"
         android:background="@drawable/shape_button_bg"
-        android:text="打招呼"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="@dimen/sp16" />
 

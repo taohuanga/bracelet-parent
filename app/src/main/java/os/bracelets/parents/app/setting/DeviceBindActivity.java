@@ -55,7 +55,7 @@ public class DeviceBindActivity extends BaseActivity {
     protected void initView() {
         titleBar = findView(R.id.titleBar);
         ivScan = findView(R.id.ivScan);
-        TitleBarUtil.setAttr(this, "", "设备绑定", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.bind_device), titleBar);
 
         edDeviceNo = findView(R.id.edDeviceNo);
         tvName = findView(R.id.tvName);
@@ -107,7 +107,7 @@ public class DeviceBindActivity extends BaseActivity {
         if (v.getId() == R.id.btnBind) {
             String deviceNo = edDeviceNo.getText().toString().trim().replace(":", "").toUpperCase();
             if (TextUtils.isEmpty(deviceNo)) {
-                ToastUtil.showShort("请输入设备编号");
+                ToastUtil.showShort(getString(R.string.input_device_no));
                 return;
             }
             if (bindType == 0) {
@@ -143,7 +143,7 @@ public class DeviceBindActivity extends BaseActivity {
                             edDeviceNo.setSelection(edDeviceNo.getText().length());
                         }
                         bindType = 1;
-                        btnBind.setText("解绑该设备");
+                        btnBind.setText(getString(R.string.unbind_device));
                         btnBind.setBackgroundResource(R.drawable.shape_unbind_device_bg);
 
                     } catch (JSONException e) {
@@ -157,7 +157,7 @@ public class DeviceBindActivity extends BaseActivity {
 
     private void bindDevice(final String deviceNo,String bindTimes) {
         if (deviceNo.length() != 12) {
-            ToastUtil.showShort("请输入正确的mac地址");
+            ToastUtil.showShort(getString(R.string.please_input_correct_mac_address));
             return;
         }
         ApiRequest.deviceBind(deviceNo, bindTimes,new HttpSubscriber() {
@@ -187,14 +187,14 @@ public class DeviceBindActivity extends BaseActivity {
                 //设备已被其他用户绑定
                 if (result.code.equals("006")) {
                     new AlertDialog.Builder(DeviceBindActivity.this)
-                            .setMessage("该设备已被其他用户绑定，是否强制绑定该设备？")
-                            .setNegativeButton("取消绑定", new DialogInterface.OnClickListener() {
+                            .setMessage(getString(R.string.is_unbind_device))
+                            .setNegativeButton(getString(R.string.bind_cancel), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
                                 }
                             })
-                            .setPositiveButton("强制绑定", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getString(R.string.mandatory_binding), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String deviceNo = edDeviceNo.getText().toString().trim();
@@ -226,10 +226,10 @@ public class DeviceBindActivity extends BaseActivity {
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
                 if (result.code.equals(AppConfig.SUCCESS)) {
-                    ToastUtil.showShort("操作成功");
+                    ToastUtil.showShort(getString(R.string.action_success));
                     edDeviceNo.getText().clear();
                     bindType = 0;
-                    btnBind.setText("绑定设备");
+                    btnBind.setText(getString(R.string.bind_device));
                     btnBind.setBackgroundResource(R.drawable.shape_button_bg);
                 }
             }

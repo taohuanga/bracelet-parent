@@ -17,8 +17,8 @@ public class ResetPwdPresenter extends ResetPwdContract.Presenter {
     }
 
     @Override
-    void code(int type, String phone) {
-        ApiRequest.code(type, phone, new HttpSubscriber() {
+    void code(int type, String phone,String areaCode) {
+        ApiRequest.code(type, phone, areaCode,new HttpSubscriber() {
 
             @Override
             public void onStart() {
@@ -40,7 +40,6 @@ public class ResetPwdPresenter extends ResetPwdContract.Presenter {
                 if (mView != null)
                     mView.hideLoading();
                 if (result.code.equals(AppConfig.SUCCESS)) {
-                    ToastUtil.showShort("短信发送成功");
                     if (mView != null)
                         mView.codeSuccess();
                 }

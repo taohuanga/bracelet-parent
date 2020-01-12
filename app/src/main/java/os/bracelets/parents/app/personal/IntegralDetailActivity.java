@@ -89,7 +89,7 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
 
     @Override
     protected void initData() {
-        TitleBarUtil.setAttr(this, "", "积分明细", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.integral_detail), titleBar);
         refreshLayout.setColorSchemeColors(mContext.getResources().getColor(R.color.appThemeColor));
         infoList = new ArrayList<>();
         detailAdapter = new IntegralDetailAdapter(infoList);
@@ -101,9 +101,9 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
         endPickView = TimePickerUtil.init(this, listenerEnd);
 
 
-        entityList.add("全部");
-        entityList.add("增加");
-        entityList.add("消费");
+        entityList.add(getString(R.string.all));
+        entityList.add(getString(R.string.add));
+        entityList.add(getString(R.string.used));
 
         optionsPickerView = TimePickerUtil.initOptions(this, optionsSelectListener);
         optionsPickerView.setPicker(entityList);
@@ -148,7 +148,7 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
                 long a = Long.parseLong(start.replace("-", ""));
                 long b = Long.parseLong(end.replace("-", ""));
                 if (a > b) {
-                    ToastUtil.showLong("起止时间选择有误");
+                    ToastUtil.showLong(getString(R.string.wrong_start_and_end_times));
                 } else {
                     startTime.setText(start);
                     mStartTime = start;
@@ -172,7 +172,7 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
                 long a = Long.parseLong(start.replace("-", ""));
                 long b = Long.parseLong(end.replace("-", ""));
                 if (a > b) {
-                    ToastUtil.showLong("起止时间选择有误");
+                    ToastUtil.showLong(getString(R.string.wrong_start_and_end_times));
                 } else {
                     endTime.setText(end);
                     mEndTime = end;
@@ -190,9 +190,9 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
         public void onOptionsSelect(int options1, int options2, int options3, View v) {
             String s = entityList.get(options1);
             type.setText(s);
-            if (s.equals("全部")) {
+            if (s.equals(getString(R.string.all))) {
                 mType = -1;
-            } else if (s.equals("增加")) {
+            } else if (s.equals(getString(R.string.add))) {
                 mType = 0;
             } else {
                 mType = 1;
@@ -225,7 +225,7 @@ public class IntegralDetailActivity extends MVPBaseActivity<IntegralContract.Pre
 
     @Override
     public void loadWalletInfoSuccess(WalletInfo info) {
-        tvAllCount.setText(info.getIntegral() + " 积分");
+        tvAllCount.setText(String.format(getString(R.string.integral),info.getIntegral()));
     }
 
     @Override

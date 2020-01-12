@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/black9"
-                android:text="不同意该协议"
+                android:text="@string/disagreement"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp17"
                 android:textStyle="bold" />

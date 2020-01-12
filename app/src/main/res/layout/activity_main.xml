@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:gravity="center"
-                android:text="星期一"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="未连接"
+                android:text="@string/disconnected"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -175,7 +175,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp_8"
-                android:text="今日待办"
+                android:text="@string/today_to_do"
                 android:textSize="15sp" />
         </LinearLayout>
 
@@ -202,7 +202,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="今天的运动步数"
+                android:text="@string/today_step_number"
                 android:textSize="15sp" />
 
             <ImageView
@@ -233,7 +233,7 @@
                 android:layout_marginEnd="@dimen/dp_4"
                 android:background="@color/colorAccent"
                 android:padding="@dimen/dp_4"
-                android:text="个人积分"
+                android:text="@string/personal_integral"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -272,7 +272,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="一键拨号"
+                    android:text="@string/dialing"
                     android:textColor="@color/white"
                     android:textSize="17sp" />
 
@@ -299,7 +299,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="健康资讯"
+                    android:text="@string/health_information"
                     android:textColor="@color/white"
                     android:textSize="17sp" />
 
@@ -361,7 +361,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="导航"
+                    android:text="@string/navigation"
                     android:textColor="@color/white"
                     android:textSize="17sp" />
 
@@ -388,7 +388,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="设置"
+                    android:text="@string/setting"
                     android:textColor="@color/white"
                     android:textSize="17sp" />
 

@@ -109,7 +109,7 @@ public class DBManager {
         boolean sdExist = android.os.Environment.MEDIA_MOUNTED.equals
                 (android.os.Environment.getExternalStorageState());
         if (!sdExist) {
-            Logger.e(TAG, "SD卡不存在，请加载SD卡！");
+//            Logger.e(TAG, "SD卡不存在，请加载SD卡！");
             return;
         }
         Observable.just(DBOpenHelper.DATABASE_NAME)

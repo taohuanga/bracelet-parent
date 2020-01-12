@@ -1,0 +1,27 @@
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+    <string name="cube_ptr_pull_down">ドロップダウンリフレッシュ</string>
+    <string name="cube_ptr_pull_down_to_refresh">ドロップダウンリフレッシュ</string>
+    <string name="cube_ptr_release_to_refresh">更新を解除</string>
+    <string name="cube_ptr_refreshing">読み込み中...</string>
+    <string name="cube_ptr_refresh_complete">更新完了</string>
+
+    <string name="cube_ptr_last_update">上次更新:&#160;</string>
+    <string name="cube_ptr_seconds_ago">&#160;秒之前</string>
+    <string name="cube_ptr_minutes_ago">&#160;分钟之前</string>
+    <string name="cube_ptr_hours_ago">&#160;小时之前</string>
+
+    <string name="pickerview_cancel">キャンセル</string>
+    <string name="pickerview_submit">を選択します</string>
+    <string name="pickerview_year">年</string>
+    <string name="pickerview_month">月</string>
+    <string name="pickerview_day">日</string>
+    <string name="pickerview_hours">时</string>
+    <string name="pickerview_minutes">分</string>
+    <string name="pickerview_seconds">秒</string>
+
+    <string name="loading">読み込み中...</string>
+
+    <string name="load_failed">---読み込みに失敗しました---</string>
+
+    <string name="load_end">---もっと多くのデータがありません---</string>
+</resources>

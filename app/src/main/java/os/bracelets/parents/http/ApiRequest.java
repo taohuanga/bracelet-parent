@@ -56,10 +56,11 @@ public class ApiRequest {
     }
 
     //获取手机验证码
-    public static Subscription code(int type, String phone, Subscriber<HttpResult> subscriber) {
+    public static Subscription code(int type, String phone, String areaCode,Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("type", String.valueOf(type));
         map.put("phone", phone);
+        map.put("areaCode", areaCode);
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .code(map)
@@ -68,13 +69,12 @@ public class ApiRequest {
     }
 
     //注册
-    public static Subscription register(String phone, String securityCode, String code, String password,
+    public static Subscription register(String phone, String securityCode, String areaCode, String password,
                                         Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("phone", phone);
         map.put("securityCode", securityCode);
-        if (!TextUtils.isEmpty(code))
-            map.put("code", code);
+        map.put("areaCode", areaCode);
         map.put("password", password);
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
@@ -508,6 +508,17 @@ public class ApiRequest {
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .log(map)
+                .compose(RxTransformer.<HttpResult>defaultSchedulers())
+                .subscribe(subscriber);
+    }
+
+    //获取帮助中心网址
+    public static Subscription helpUrl(Subscriber<HttpResult> subscriber) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("tokenId", MyApplication.getInstance().getTokenId());
+        return ServiceFactory.getInstance()
+                .createService(ApiService.class)
+                .helpUrl(map)
                 .compose(RxTransformer.<HttpResult>defaultSchedulers())
                 .subscribe(subscriber);
     }

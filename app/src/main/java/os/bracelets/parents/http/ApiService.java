@@ -218,4 +218,10 @@ interface ApiService {
      */
     @POST("sys/app/log")
     Observable<HttpResult> log(@Body Map<String, Object> map);
+
+    /**
+     * 帮助中心网址
+     */
+    @POST("sys/app/helpUrl")
+    Observable<HttpResult> helpUrl(@Body Map<String, Object> map);
 }

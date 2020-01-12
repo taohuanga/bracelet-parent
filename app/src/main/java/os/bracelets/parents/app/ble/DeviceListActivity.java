@@ -97,7 +97,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
                                 if (!MyApplication.getInstance().isBleConnect())
                                     startScan();
                             } else {
-                                ToastUtil.showShort("相关权限被拒绝");
+                                ToastUtil.showShort(getString(R.string.permission_denied));
                             }
                         }
                     });
@@ -109,7 +109,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
                         startScan();
                 } else {
                     //未开启蓝牙
-                    ToastUtil.showShort("蓝牙未开启");
+                    ToastUtil.showShort(getString(R.string.bluetooth_enable));
                 }
             }
         }
@@ -129,22 +129,22 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
         BleScanUtils.getBleScanUtilsInstance(getApplicationContext()).stopScan();
         entity = (LocalDeviceEntity) adapter.getItem(position);
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            ToastUtil.showShort("请开启蓝牙");
+            ToastUtil.showShort(getString(R.string.please_open_bluetooth));
             return;
         }
         if (entity == null)
             return;
         try {
             if (BluetoothLeService.getInstance().isDeviceConnected(entity)) {
-                dialog.showDialog(true, "正在断开设备");
+                dialog.showDialog(true, getString(R.string.disconnecting_device));
                 BluetoothLeService.getInstance().disconnect();
                 BluetoothLeService.getInstance().removeAllCallback();
             } else {
                 if (MyApplication.getInstance().isBleConnect()) {
-                    ToastUtil.showShort("请先断开已连接的设备");
+                    ToastUtil.showShort(getString(R.string.please_disconnect_device));
                     return;
                 }
-                dialog.showDialog(true, "正在连接设备");
+                dialog.showDialog(true, getString(R.string.connecting_device));
                 BluetoothLeService.getInstance().connect(entity);
             }
         } catch (Exception e) {
@@ -191,10 +191,10 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
         if (BluetoothAdapter.getDefaultAdapter() == null)
             return;
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            ToastUtil.showShort("请开启蓝牙");
+            ToastUtil.showShort(getString(R.string.please_open_bluetooth));
             return;
         }
-        ToastUtil.showShort("开始扫描蓝牙设备");
+        ToastUtil.showShort(getString(R.string.start_scan_bluetooth_device));
         BleScanUtils.getBleScanUtilsInstance(this).stopScan();
         //扫描设备前，如果没有连接设备，开始监听蓝牙设备连接
         BleScanUtils.getBleScanUtilsInstance(this).setmOnDeviceScanFoundListener(deviceFoundListener);
@@ -209,7 +209,7 @@ public class DeviceListActivity extends BaseActivity implements BaseQuickAdapter
         public void OnDeviceFound(LocalDeviceEntity mLocalDeviceEntity) {
             String deviceName = mLocalDeviceEntity.getName();
             if (deviceName != null && deviceName.startsWith("DFZ")) {
-                Logger.i("lsy", "扫描到设备" + deviceName);
+//                Logger.i("lsy", "扫描到设备" + deviceName);
                 MyApplication.getInstance().addDevice(mLocalDeviceEntity);
                 listAdapter.notifyDataSetChanged();
             }

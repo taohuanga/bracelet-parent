@@ -54,8 +54,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             //发送通知
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                    .setContentTitle("待办提醒")
-                    .setContentText("您有新的待办任务，请及时处理")
+                    .setContentTitle(context.getString(R.string.todo_remind))
+                    .setContentText(context.getString(R.string.new_task_to_do))
                     .setSmallIcon(R.mipmap.ic_app_logo)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_app_logo))
                     .setDefaults(NotificationCompat.DEFAULT_ALL)

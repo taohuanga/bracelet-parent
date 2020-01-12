@@ -158,7 +158,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 //        set.add("android");
 //        JPushUtil.setJPushTags(TagAliasOperatorHelper.ACTION_SET, set);
 
-        tvConnect.setText(MyApplication.getInstance().isBleConnect() ? "已连接" : "未连接");
+        tvConnect.setText(MyApplication.getInstance().isBleConnect() ? getString(R.string.connected) : getString(R.string.disconnected));
         //星期
         tvWeek.setText(DataString.getWeek() + "\r\n" + DateUtil.getDate(new Date(System.currentTimeMillis())));
 
@@ -180,7 +180,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                                 MyApplication.getInstance().setBlueEnable(true);
                                 MyApplication.getInstance().startScan();
                             } else {
-                                ToastUtil.showShort("相关权限被拒绝");
+                                ToastUtil.showShort(getString(R.string.permission_denied));
                             }
                         }
                     });
@@ -259,20 +259,20 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                 break;
             case R.id.layoutNavigation:
                 if (info == null) {
-                    ToastUtil.showShort("用户信息加载失败");
+                    ToastUtil.showShort(getString(R.string.user_info_load_failed));
                     mPresenter.userInfo();
                     return;
                 }
                 if (TextUtils.isEmpty(info.getLocation())) {
                     new AlertDialog.Builder(this)
-                            .setMessage("您还没有设置家的位置，请先去设置家庭位置！")
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            .setMessage(getString(R.string.set_home_address_first))
+                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
                                 }
                             })
-                            .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getString(R.string.go_setting), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent intent = new Intent(MainActivity.this, PersonalMsgActivity.class);
@@ -315,7 +315,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     public void onMsgEvent(MsgEvent event) {
         //设备已连接
         if (event.getAction() == AppConfig.MSG_DEVICE_CONNECT) {
-            tvConnect.setText("已连接");
+            tvConnect.setText(getString(R.string.connected));
             onResume();
             LocalDeviceEntity entity = MyApplication.getInstance().getDeviceEntity();
 //            uploadLog("设备" + (entity == null ? "--" :
@@ -323,7 +323,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         }
         //设备失去连接
         if (event.getAction() == AppConfig.MSG_DEVICE_DISCONNECT) {
-            tvConnect.setText("未连接");
+            tvConnect.setText(getString(R.string.disconnected));
             batteryView.setPower(10);
             tvBattery.setText("---");
         }
@@ -372,7 +372,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                     @Override
                     public void run() {
                         String data = FormatUtils.bytesToHexString(bytes);
-                        Logger.i("lsy", "电量数据 " + data);
+                        Logger.i("lsy", getString(R.string.electric_quantity) + data);
                         Long batteryLong = Long.parseLong(data.substring(0, 2), 16);
                         int batteryInt = batteryLong.intValue();
                         if (batteryInt <= 100) {
@@ -380,10 +380,10 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
                             batteryView.setPower(batteryInt);
                         } else if (batteryInt >= 128 && batteryInt <= 228) {
                             batteryInt = batteryInt - 128;
-                            tvBattery.setText("正在充电" + batteryInt + "%");
+                            tvBattery.setText(getString(R.string.charging) + batteryInt + "%");
                             batteryView.setPower(batteryInt);
                         } else if (batteryInt == 240) {
-                            tvBattery.setText("充电完成");
+                            tvBattery.setText(getString(R.string.charge_complete));
                             batteryView.setPower(100);
                         }
                     }
@@ -438,14 +438,14 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
-                .setMessage("确认退出程序吗？")
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setMessage(getString(R.string.confirm_exit_application))
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 })
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.sure), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 
 import aio.health2world.SApplication;
 import aio.health2world.utils.AppUtils;
@@ -47,6 +48,8 @@ public class ParamsInterceptor implements Interceptor {
         rootMap.put("timestamp", System.currentTimeMillis() + "");//时间戳
         //设备编号 这里传androidId
         rootMap.put("deviceNo", DeviceUtil.getAndroidId(SApplication.mInstance));
+        //en：英文 zh：中文 ja：日文
+        rootMap.put("lang", Locale.getDefault().getLanguage());
         request = request.newBuilder()
                 .post(RequestBody.create(requestBody.contentType(), new Gson().toJson(rootMap)))
                 .build();

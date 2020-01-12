@@ -1,8 +1,6 @@
 package os.bracelets.parents.app.setting;
 
-import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.bean.UserInfo;
-import os.bracelets.parents.bean.WalletInfo;
 import os.bracelets.parents.common.BasePresenter;
 import os.bracelets.parents.common.BaseView;
 

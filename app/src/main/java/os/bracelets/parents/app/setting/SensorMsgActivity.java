@@ -1,7 +1,5 @@
 package os.bracelets.parents.app.setting;
 
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -20,7 +18,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
-import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.common.BaseActivity;
 import os.bracelets.parents.common.MsgEvent;
@@ -110,7 +107,7 @@ public class SensorMsgActivity extends BaseActivity {
         if (message.contains("688508")) {
             String str = message.substring(18, 20);
             if (str.equals("01")) {
-                ToastUtil.showShort("测试成功");
+                ToastUtil.showShort(getString(R.string.test_success));
             }
         } else {
             tvTestSensor.setText(message);
@@ -151,7 +148,7 @@ public class SensorMsgActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showShort("测试成功");
+                        ToastUtil.showShort(getString(R.string.test_success));
                     }
                 });
             }
@@ -161,7 +158,7 @@ public class SensorMsgActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showShort("测试失败");
+                        ToastUtil.showShort(getString(R.string.test_failed));
                     }
                 });
             }
@@ -181,7 +178,7 @@ public class SensorMsgActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showShort("操作成功");
+                        ToastUtil.showShort(getString(R.string.action_success));
                     }
                 });
             }
@@ -191,7 +188,7 @@ public class SensorMsgActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showShort("操作失败");
+                        ToastUtil.showShort(getString(R.string.action_failed));
                     }
                 });
 

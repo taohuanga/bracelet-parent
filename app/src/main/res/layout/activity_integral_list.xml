@@ -22,7 +22,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="开始：" />
+                android:text="@string/start" />
 
             <TextView
                 android:id="@+id/startTime"
@@ -42,7 +42,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="截止：" />
+                android:text="@string/end" />
 
             <TextView
                 android:id="@+id/endTime"
@@ -62,13 +62,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="类型：" />
+                android:text="@string/type" />
 
             <TextView
                 android:id="@+id/type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="全部" />
+                android:text="@string/all" />
 
         </LinearLayout>
 
@@ -88,7 +88,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="总积分 " />
+            android:text="@string/total_integral" />
 
 
         <TextView

@@ -21,7 +21,7 @@ public interface ResetPwdContract {
             super(mView);
         }
 
-        abstract void code(int type, String phone);
+        abstract void code(int type, String phone,String areaCode);
 
         abstract void resetPwd(String phone,String pwd,String securityCode);
     }

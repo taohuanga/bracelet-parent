@@ -1,6 +1,5 @@
 package os.bracelets.parents.app.contact;
 
-import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,16 +16,12 @@ import java.util.List;
 
 import aio.health2world.brvah.BaseQuickAdapter;
 import aio.health2world.rx.rxpermissions.RxPermissions;
-import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.bean.ContactBean;
-import os.bracelets.parents.bean.NearbyPerson;
 import os.bracelets.parents.common.MVPBaseActivity;
-import os.bracelets.parents.utils.StringUtils;
 import os.bracelets.parents.utils.TitleBarUtil;
 import os.bracelets.parents.view.TitleBar;
-import rx.functions.Action1;
 
 /**
  * 一键拨号
@@ -68,7 +63,7 @@ public class ContactActivity extends MVPBaseActivity<ContactContract.Presenter> 
 
     @Override
     protected void initData() {
-        TitleBarUtil.setAttr(this, "", "一键拨号", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.dialing), titleBar);
         rxPermissions = new RxPermissions(this);
         refreshLayout.setColorSchemeColors(mContext.getResources().getColor(R.color.appThemeColor));
         personList = new ArrayList<>();

@@ -1,6 +1,8 @@
 package os.bracelets.parents.app.account;
 
+import android.content.DialogInterface;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +29,11 @@ public class ResetPwdActivity extends MVPBaseActivity<ResetPwdContract.Presenter
 
     private Button btnSubmit;
 
-    private TextView tvCode;
+    private TextView tvCode,tvArea;
+
+    private String[] codeArray = new String[]{"+86", "+1", "+81"};
+    private String[] areaArray;
+    private String areaCode = "+86";
 
     @Override
     protected ResetPwdContract.Presenter getPresenter() {
@@ -48,11 +54,13 @@ public class ResetPwdActivity extends MVPBaseActivity<ResetPwdContract.Presenter
         edRePwd = findView(R.id.edRePwd);
         tvCode = findView(R.id.tvCode);
         btnSubmit = findView(R.id.btnSubmit);
+        tvArea = findView(R.id.tvArea);
     }
 
     @Override
     protected void initData() {
-        TitleBarUtil.setAttr(this, "", "找回密码", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.find_password), titleBar);
+        areaArray = getResources().getStringArray(R.array.area_code);
     }
 
 
@@ -60,6 +68,7 @@ public class ResetPwdActivity extends MVPBaseActivity<ResetPwdContract.Presenter
     protected void initListener() {
         tvCode.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
+        tvArea.setOnClickListener(this);
         titleBar.setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +79,7 @@ public class ResetPwdActivity extends MVPBaseActivity<ResetPwdContract.Presenter
 
     @Override
     public void codeSuccess() {
+        ToastUtil.showShort(getString(R.string.send_success));
         tvCode.setEnabled(false);
         tvCode.setTextColor(mContext.getResources().getColor(R.color.black9));
         countDownTimer.start();
@@ -84,14 +94,14 @@ public class ResetPwdActivity extends MVPBaseActivity<ResetPwdContract.Presenter
     private CountDownTimer countDownTimer = new CountDownTimer(59000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            tvCode.setText(millisUntilFinished / 1000 + "秒后获取");
+            tvCode.setText(String.format(getString(R.string.code_later),millisUntilFinished/1000));
         }
 
         @Override
         public void onFinish() {
             tvCode.setEnabled(true);
             tvCode.setTextColor(mContext.getResources().getColor(R.color.blue));
-            tvCode.setText("获取验证码");
+            tvCode.setText(getString(R.string.verification_code));
         }
     };
 
@@ -102,14 +112,14 @@ public class ResetPwdActivity extends MVPBaseActivity<ResetPwdContract.Presenter
             case R.id.tvCode:
                 String phone1 = edAccount.getText().toString().trim();
                 if (TextUtils.isEmpty(phone1)) {
-                    ToastUtil.showShort("请输入手机号");
+                    ToastUtil.showShort(getString(R.string.input_phone));
                     return;
                 }
                 if (!MatchUtil.isPhoneLegal(phone1)) {
-                    ToastUtil.showShort("手机号格式不正确");
+                    ToastUtil.showShort(getString(R.string.phone_incorrect));
                     return;
                 }
-                mPresenter.code(3, phone1);
+                mPresenter.code(3, phone1,areaCode);
                 break;
             case R.id.btnSubmit:
                 String phone = edAccount.getText().toString().trim();
@@ -117,26 +127,39 @@ public class ResetPwdActivity extends MVPBaseActivity<ResetPwdContract.Presenter
                 String pwd = edPwd.getText().toString().trim();
                 String rePwd = edRePwd.getText().toString().trim();
                 if (TextUtils.isEmpty(phone)) {
-                    ToastUtil.showShort("请输入手机号");
+                    ToastUtil.showShort(getString(R.string.input_phone));
                     return;
                 }
                 if (!MatchUtil.isPhoneLegal(phone)) {
-                    ToastUtil.showShort("'手机号格式不正确");
+                    ToastUtil.showShort(getString(R.string.phone_incorrect));
                     return;
                 }
                 if (TextUtils.isEmpty(code)) {
-                    ToastUtil.showShort("请输入手机验证码");
+                    ToastUtil.showShort(getString(R.string.input_code));
                     return;
                 }
                 if (TextUtils.isEmpty(pwd)) {
-                    ToastUtil.showShort("请输入密码");
+                    ToastUtil.showShort(getString(R.string.input_password));
                     return;
                 }
                 if (!TextUtils.equals(pwd, rePwd)) {
-                    ToastUtil.showShort("两次密码不一致");
+                    ToastUtil.showShort(getString(R.string.password_not_match));
                     return;
                 }
                 mPresenter.resetPwd(phone, MD5Util.getMD5String(pwd), code);
+                break;
+            case R.id.tvArea:
+                //选择区号
+                new AlertDialog.Builder(this)
+                        .setItems(areaArray, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                areaCode = codeArray[which];
+                                tvArea.setText(areaCode);
+                            }
+                        })
+                        .create()
+                        .show();
                 break;
         }
     }

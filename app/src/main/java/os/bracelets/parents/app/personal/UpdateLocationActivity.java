@@ -81,7 +81,7 @@ public class UpdateLocationActivity extends AppCompatActivity implements View.On
 
         geocodeSearch = new GeocodeSearch(this);
 
-        TitleBarUtil.setAttr(this, "", "位置", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.location), titleBar);
         tvLocation.setText(location);
 
 
@@ -123,7 +123,7 @@ public class UpdateLocationActivity extends AppCompatActivity implements View.On
             }
         });
 
-        titleBar.addAction(new TitleBar.TextAction("搜索") {
+        titleBar.addAction(new TitleBar.TextAction(getString(R.string.search)) {
             @Override
             public void performAction(View view) {
                 Intent intent = new Intent(UpdateLocationActivity.this, AmapSearchActivity.class);

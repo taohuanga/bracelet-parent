@@ -29,7 +29,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
             android:gravity="center"
-            android:text="正在请求服务器"
+            android:text="@string/loading"
             android:textColor="@android:color/white"
             android:textSize="13sp" />
     </RelativeLayout>

@@ -27,14 +27,14 @@ public class NearbyAdapter extends BaseQuickAdapter<NearbyPerson, BaseViewHolder
     @Override
     protected void convert(BaseViewHolder helper, NearbyPerson item) {
         helper.setText(R.id.personName, item.getNickName());
-        helper.setText(R.id.personSex, AppUtils.getSex(item.getSex()));
-        helper.setText(R.id.personAge, String.valueOf(item.getAge()) + "岁");
+        helper.setText(R.id.personSex, AppUtils.getSex(mContext,item.getSex()));
+        helper.setText(R.id.personAge, String.format(mContext.getString(R.string.person_age),item.getAge()));
         helper.setText(R.id.personDistance, item.getDistance());
 
         if (item.getUserType() == 0)
-            helper.setText(R.id.tvType, "[子女端]");
+            helper.setText(R.id.tvType, mContext.getString(R.string.children_end));
         else
-            helper.setText(R.id.tvType, "[父母端]");
+            helper.setText(R.id.tvType, mContext.getString(R.string.parent_end));
 
         Glide.with(mContext)
                 .load(item.getProfile())

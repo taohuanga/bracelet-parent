@@ -13,7 +13,7 @@
         android:layout_height="48dp"
         android:layout_margin="@dimen/dp_8"
         android:background="@color/white"
-        android:hint="输入标题"
+        android:hint="@string/input_title"
         android:maxLines="1"
         android:padding="@dimen/dp_4"
         android:textColor="@color/black6"
@@ -29,7 +29,7 @@
         android:layout_margin="@dimen/dp_8"
         android:background="@color/white"
         android:gravity="top"
-        android:hint="输入内容"
+        android:hint="@string/input_content"
         android:padding="@dimen/dp_4"
         android:textColor="@color/black6"
         android:textColorHint="@color/black9"
@@ -54,7 +54,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/shape_button_bg"
-        android:text="提交"
+        android:text="@string/commit"
         android:textColor="@color/white"
         android:textSize="15sp" />
 

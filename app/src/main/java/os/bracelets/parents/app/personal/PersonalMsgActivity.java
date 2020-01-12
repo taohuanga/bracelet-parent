@@ -131,13 +131,13 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
     }
 
     private void initData() {
-        TitleBarUtil.setAttr(this, "", "修改资料", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.modified_data), titleBar);
 
         rxPermissions = new RxPermissions(this);
         pickerView = TimePickerUtil.init(this, this);
         optionsPicker = TimePickerUtil.initOptions(this, this);
-        listSex.add("男");
-        listSex.add("女");
+        listSex.add(getString(R.string.man));
+        listSex.add(getString(R.string.woman));
         optionsPicker.setPicker(listSex);
 
         mPresenter.userInfo();
@@ -160,7 +160,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
                 finish();
             }
         });
-        titleBar.addAction(new TitleBar.TextAction("保存") {
+        titleBar.addAction(new TitleBar.TextAction(getString(R.string.save)) {
             @Override
             public void performAction(View view) {
                 saveMsg();
@@ -188,7 +188,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
         headImageUrl = info.getPortrait();
         tvNickName.setText(info.getNickName());
         tvName.setText(info.getName());
-        tvSex.setText(AppUtils.getSex(info.getSex()));
+        tvSex.setText(AppUtils.getSex(this,info.getSex()));
         tvBirthday.setText(info.getBirthday());
         tvWeight.setText(info.getWeight());
         tvHeight.setText(info.getHeight());
@@ -207,6 +207,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
 
     @Override
     public void updateMsgSuccess() {
+        ToastUtil.showShort(getString(R.string.information_saved_successfully));
         setResult(RESULT_OK);
         finish();
     }
@@ -234,7 +235,7 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
                                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/jpeg");
                                     startActivityForResult(intent, ITEM_HEAD);
                                 } else {
-                                    ToastUtil.showShort("相关权限被拒绝");
+                                    ToastUtil.showShort(getString(R.string.permission_denied));
                                 }
                             }
                         });
@@ -242,13 +243,13 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
             case R.id.layoutNickName:
                 //修改昵称
                 Intent intentNick = new Intent(this, InputMsgActivity.class);
-                intentNick.putExtra(InputMsgActivity.KEY, "修改昵称");
+                intentNick.putExtra(InputMsgActivity.KEY, getString(R.string.update_nick_name));
                 startActivityForResult(intentNick, ITEM_NICK);
                 break;
             case R.id.layoutName:
                 //修改真实姓名
                 Intent intentName = new Intent(this, InputMsgActivity.class);
-                intentName.putExtra(InputMsgActivity.KEY, "修改姓名");
+                intentName.putExtra(InputMsgActivity.KEY, getString(R.string.update_name));
                 startActivityForResult(intentName, ITEM_NAME);
                 break;
             case R.id.layoutSex:
@@ -262,14 +263,14 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
             case R.id.layoutHeight:
                 //修改身高
                 Intent intentHeight = new Intent(this, InputMsgActivity.class);
-                intentHeight.putExtra(InputMsgActivity.KEY, "修改身高");
+                intentHeight.putExtra(InputMsgActivity.KEY, getString(R.string.update_height));
                 intentHeight.putExtra(InputMsgActivity.TYPE, ITEM_HEIGHT);
                 startActivityForResult(intentHeight, ITEM_HEIGHT);
                 break;
             case R.id.layoutWeight:
                 //修改体重
                 Intent intentWeight = new Intent(this, InputMsgActivity.class);
-                intentWeight.putExtra(InputMsgActivity.KEY, "修改体重");
+                intentWeight.putExtra(InputMsgActivity.KEY, getString(R.string.update_weight));
                 intentWeight.putExtra(InputMsgActivity.TYPE, ITEM_WEIGHT);
                 startActivityForResult(intentWeight, ITEM_WEIGHT);
                 break;
@@ -338,24 +339,24 @@ public class PersonalMsgActivity extends MVPActivity<PersonalMsgContract.Present
     //保存资料
     private void saveMsg() {
         if (TextUtils.isEmpty(headImageUrl)) {
-            ToastUtil.showShort("请先上传头像");
+            ToastUtil.showShort(getString(R.string.please_upload_head_portrait));
             return;
         }
         String nickName = tvNickName.getText().toString().trim();
         if (TextUtils.isEmpty(nickName)) {
-            ToastUtil.showShort("昵称不能为空");
+            ToastUtil.showShort(getString(R.string.nick_name_not_null));
             return;
         }
         //0未知 1男 2女
         String sex = tvSex.getText().toString().trim();
         if (TextUtils.isEmpty(sex)) {
-            ToastUtil.showShort("性别不能为空");
+            ToastUtil.showShort(getString(R.string.sex_not_null));
             return;
         }
         int sexType = 0;
-        if (sex.equals("男")) {
+        if (sex.equals(getString(R.string.man))) {
             sexType = 1;
-        } else if (sex.equals("女")) {
+        } else if (sex.equals(getString(R.string.woman))) {
             sexType = 2;
         }
         String realName = tvName.getText().toString().trim();

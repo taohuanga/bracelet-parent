@@ -107,7 +107,7 @@ public class FeedBackActivity extends BaseActivity {
                                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/jpeg");
                                     startActivityForResult(intent, REQUEST_CODE_PHOTO);
                                 } else {
-                                    ToastUtil.showShort("相关权限被拒绝");
+                                    ToastUtil.showShort(getString(R.string.permission_denied));
                                 }
                             }
                         });
@@ -116,11 +116,11 @@ public class FeedBackActivity extends BaseActivity {
                 String title = edTitle.getText().toString().trim();
                 String content = edContent.getText().toString().trim();
                 if (TextUtils.isEmpty(title)) {
-                    ToastUtil.showShort("请输入标题");
+                    ToastUtil.showShort(getString(R.string.input_title));
                     return;
                 }
                 if (TextUtils.isEmpty(content)) {
-                    ToastUtil.showShort("请输入内容");
+                    ToastUtil.showShort(getString(R.string.input_content));
                     return;
                 }
                 if (TextUtils.isEmpty(imagePath)) {

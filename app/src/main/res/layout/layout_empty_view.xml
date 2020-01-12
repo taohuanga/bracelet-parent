@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_10"
         android:gravity="center_horizontal"
-        android:text="暂无数据"
+        android:text="@string/no_data"
         android:textSize="@dimen/sp15" />
 
 </LinearLayout>

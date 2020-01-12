@@ -3,6 +3,7 @@ package os.bracelets.parents.app.account;
 import aio.health2world.http.HttpResult;
 import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
+import os.bracelets.parents.R;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
 
@@ -17,8 +18,8 @@ public class RegisterPresenter extends RegisterContract.Presenter {
     }
 
     @Override
-    void code(int type, String phone) {
-        ApiRequest.code(type, phone, new HttpSubscriber() {
+    void code(int type, String phone, String areaCode) {
+        ApiRequest.code(type, phone, areaCode, new HttpSubscriber() {
 
             @Override
             public void onStart() {
@@ -40,7 +41,6 @@ public class RegisterPresenter extends RegisterContract.Presenter {
                 if (mView != null)
                     mView.hideLoading();
                 if (result.code.equals(AppConfig.SUCCESS)) {
-                    ToastUtil.showShort("短信发送成功");
                     if (mView != null)
                         mView.codeSuccess();
                 }
@@ -49,8 +49,8 @@ public class RegisterPresenter extends RegisterContract.Presenter {
     }
 
     @Override
-    void register(final String phone, String securityCode, String code, String password) {
-        ApiRequest.register(phone, securityCode, code, password, new HttpSubscriber() {
+    void register(final String phone, String securityCode, String areaCode, String password) {
+        ApiRequest.register(phone, securityCode, areaCode, password, new HttpSubscriber() {
 
             @Override
             public void onStart() {
@@ -72,7 +72,6 @@ public class RegisterPresenter extends RegisterContract.Presenter {
                 if (mView != null)
                     mView.hideLoading();
                 if (result.code.equals(AppConfig.SUCCESS)) {
-                    ToastUtil.showShort("注册成功");
                     mView.registerSuccess(phone);
                 } else {
                     ToastUtil.showShort(result.errorMessage);

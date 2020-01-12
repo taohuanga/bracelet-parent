@@ -1,7 +1,9 @@
 package os.bracelets.parents.app.account;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -23,11 +25,15 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
 
     private EditText edAccount, edCode, edPwd;
 
-    private TextView tvCode;
+    private TextView tvCode, tvArea;
 
     private Button btnRegister;
 
     private LinearLayout llAgreement;
+
+    private String[] codeArray = new String[]{"+86", "+1", "+81"};
+    private String[] areaArray;
+    private String areaCode = "+86";
 
     @Override
     protected RegisterContract.Presenter getPresenter() {
@@ -45,19 +51,21 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
         edCode = findView(R.id.edCode);
         edPwd = findView(R.id.edPwd);
         tvCode = findView(R.id.tvCode);
+        tvArea = findView(R.id.tvArea);
         btnRegister = findView(R.id.btnRegister);
         llAgreement = findView(R.id.llAgreement);
     }
 
     @Override
     protected void initData() {
-
+        areaArray = getResources().getStringArray(R.array.area_code);
     }
 
 
     @Override
     protected void initListener() {
         tvCode.setOnClickListener(this);
+        tvArea.setOnClickListener(this);
         llAgreement.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
     }
@@ -73,7 +81,20 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
                 register();
                 break;
             case R.id.llAgreement:
-                startActivity(new Intent(this,AgreementActivity.class));
+                startActivity(new Intent(this, AgreementActivity.class));
+                break;
+            case R.id.tvArea:
+                //选择区号
+                new AlertDialog.Builder(this)
+                        .setItems(areaArray, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                areaCode = codeArray[which];
+                                tvArea.setText(areaCode);
+                            }
+                        })
+                        .create()
+                        .show();
                 break;
         }
     }
@@ -84,14 +105,14 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
     private void getCode() {
         String phone = edAccount.getText().toString().trim();
         if (TextUtils.isEmpty(phone)) {
-            ToastUtil.showShort("请输入手机号");
+            ToastUtil.showShort(getString(R.string.input_phone));
             return;
         }
         if (!MatchUtil.isPhoneLegal(phone)) {
-            ToastUtil.showShort("手机号格式不正确");
+            ToastUtil.showShort(getString(R.string.phone_incorrect));
             return;
         }
-        mPresenter.code(1, phone);
+        mPresenter.code(1, phone, areaCode);
     }
 
     private void register() {
@@ -99,14 +120,14 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
         String code = edCode.getText().toString().trim();
         String pwd = edPwd.getText().toString().trim();
         if (TextUtils.isEmpty(code)) {
-            ToastUtil.showShort("请输入短信验证码");
+            ToastUtil.showShort(getString(R.string.input_code));
             return;
         }
         if (TextUtils.isEmpty(pwd)) {
-            ToastUtil.showShort("请输入密码");
+            ToastUtil.showShort(getString(R.string.input_password));
             return;
         }
-        mPresenter.register(phone, code, "", MD5Util.getMD5String(pwd));
+        mPresenter.register(phone, code, areaCode, MD5Util.getMD5String(pwd));
     }
 
     /**
@@ -114,6 +135,7 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
      */
     @Override
     public void codeSuccess() {
+        ToastUtil.showShort(getString(R.string.send_success));
         tvCode.setEnabled(false);
         tvCode.setTextColor(mContext.getResources().getColor(R.color.black9));
         countDownTimer.start();
@@ -121,6 +143,7 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
 
     @Override
     public void registerSuccess(final String phone) {
+        ToastUtil.showShort(getString(R.string.register_success));
         //注册环信账号
 //        new Thread(new Runnable() {
 //            @Override
@@ -139,14 +162,15 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
     private CountDownTimer countDownTimer = new CountDownTimer(59000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            tvCode.setText(millisUntilFinished / 1000 + "秒后获取");
+//            tvCode.setText(millisUntilFinished / 1000 + "秒后获取");
+            tvCode.setText(String.format(getString(R.string.code_later), millisUntilFinished / 1000));
         }
 
         @Override
         public void onFinish() {
             tvCode.setEnabled(true);
             tvCode.setTextColor(mContext.getResources().getColor(R.color.blue));
-            tvCode.setText("获取验证码");
+            tvCode.setText(getString(R.string.verification_code));
         }
     };
 }

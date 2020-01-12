@@ -18,7 +18,7 @@ public class UpdatePhonePresenter extends UpdatePhoneContract.Presenter {
 
     @Override
     void securityCode(int type, String phone) {
-        ApiRequest.code(type, phone, new HttpSubscriber() {
+        ApiRequest.code(type, phone,"", new HttpSubscriber() {
 
             @Override
             public void onStart() {

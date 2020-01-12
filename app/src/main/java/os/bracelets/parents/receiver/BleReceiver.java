@@ -19,6 +19,7 @@ import aio.health2world.utils.Logger;
 import aio.health2world.utils.ToastUtil;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
+import os.bracelets.parents.R;
 import os.bracelets.parents.common.MsgEvent;
 
 /**
@@ -35,7 +36,7 @@ public class BleReceiver extends BroadcastReceiver {
         switch (intent.getAction()) {
             //设备已连接的广播
             case DeviceConfig.DEVICE_CONNECTE_AND_NOTIFY_SUCESSFUL:
-                ToastUtil.showShort("设备连接成功");
+                ToastUtil.showShort(context.getString(R.string.device_connected_success));
                 if (BluetoothLeService.getInstance() != null) {
                     //获取当前已连接的设备currentDevice
                     LocalDeviceEntity device = BluetoothLeService.getInstance().getCurrentDevice();
@@ -48,10 +49,10 @@ public class BleReceiver extends BroadcastReceiver {
             case BluetoothAdapter.ACTION_STATE_CHANGED:
                 int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 1000);
                 if (state == BluetoothAdapter.STATE_ON) {
-                    Logger.i("lsy", "蓝牙已开启");
+                    Logger.i("lsy", context.getString(R.string.bluetooth_is_able));
                     MyApplication.getInstance().setBlueEnable(true);
                 } else if (state == BluetoothAdapter.STATE_OFF) {
-                    Logger.i("lsy", "蓝牙已关闭");
+                    Logger.i("lsy", context.getString(R.string.bluetooth_enable));
                     MyApplication.getInstance().setBlueEnable(false);
                 }
                 break;
@@ -59,7 +60,7 @@ public class BleReceiver extends BroadcastReceiver {
 //                ToastUtil.showShort("开始连接设备");
                 break;
             case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-                ToastUtil.showShort("设备失去连接");
+                ToastUtil.showShort(context.getString(R.string.device_disconnected));
                 MyApplication.getInstance().setBleConnect(false);
                 MyApplication.getInstance().setDeviceEntity(null);
                 MyApplication.getInstance().clearEntityList();

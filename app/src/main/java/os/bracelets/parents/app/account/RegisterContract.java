@@ -22,7 +22,7 @@ public interface RegisterContract {
             super(mView);
         }
 
-        abstract void code(int type, String phone);
+        abstract void code(int type, String phone,String areaCode);
 
         abstract void register(String phone,String securityCode,String code,String password);
     }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eee"
@@ -30,7 +29,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="头像"
+                    android:text="@string/portrait"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
@@ -69,7 +68,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="昵称"
+                    android:text="@string/nickname"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
@@ -81,7 +80,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="未填写"
+                    android:hint="@string/not_filled"
                     android:maxLines="1"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"
@@ -111,7 +110,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="姓名"
+                    android:text="@string/name"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
@@ -123,7 +122,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="未填写"
+                    android:hint="@string/not_filled"
                     android:maxLines="1"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"
@@ -153,7 +152,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="性别"
+                    android:text="@string/sex"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
@@ -165,7 +164,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="未填写"
+                    android:hint="@string/not_filled"
                     android:maxLines="1"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"
@@ -195,7 +194,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="生日"
+                    android:text="@string/birthday"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
@@ -207,7 +206,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="未填写"
+                    android:hint="@string/not_filled"
                     android:maxLines="1"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"
@@ -237,7 +236,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="体重(kg)"
+                    android:text="@string/weight_kg"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
@@ -249,7 +248,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="未填写"
+                    android:hint="@string/not_filled"
                     android:maxLines="1"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"
@@ -279,7 +278,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="身高(cm)"
+                    android:text="@string/height_cm"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
@@ -290,7 +289,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="未填写"
+                    android:hint="@string/not_filled"
                     android:maxLines="1"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"
@@ -334,7 +333,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="未填写"
+                    android:hint="@string/not_filled"
                     android:maxLines="1"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"
@@ -365,7 +364,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="家庭位置"
+                    android:text="@string/home_address"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
@@ -377,7 +376,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="未填写"
+                    android:hint="@string/not_filled"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"
                     android:textSize="@dimen/sp15" />
@@ -407,7 +406,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="经度"
+                    android:text="@string/longitude"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
@@ -422,7 +421,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_18"
                     android:gravity="right"
-                    android:hint="未填写"
+                    android:hint="@string/not_filled"
                     android:maxLines="1"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"
@@ -453,7 +452,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="纬度"
+                    android:text="@string/latitude"
                     android:textColor="@color/black6"
                     android:textSize="@dimen/sp15" />
 
@@ -468,7 +467,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_18"
                     android:gravity="right"
-                    android:hint="未填写"
+                    android:hint="@string/not_filled"
                     android:maxLines="1"
                     android:textColor="@color/black6"
                     android:textColorHint="@color/black9"

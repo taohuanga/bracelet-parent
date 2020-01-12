@@ -3,6 +3,7 @@ package os.bracelets.parents.app.setting;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
 import os.bracelets.parents.app.about.AboutActivity;
 import os.bracelets.parents.app.about.FeedBackActivity;
+import os.bracelets.parents.app.about.HelpActivity;
 import os.bracelets.parents.app.account.LoginActivity;
 import os.bracelets.parents.app.personal.IntegralDetailActivity;
 import os.bracelets.parents.app.personal.PersonalMsgActivity;
@@ -43,7 +45,8 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
 
     private Button btnLogout;
 
-    private View layoutUpdatePwd, layoutSensorMsg,layoutDeviceBind, layoutUpdateMsg, layoutFeedBack, layoutAbout,layoutDisplay;
+    private View layoutUpdatePwd, layoutSensorMsg,layoutDeviceBind, layoutUpdateMsg, layoutFeedBack,
+            layoutAbout,layoutDisplay,layoutHelp;
 
     @Override
     protected SettingContract.Presenter getPresenter() {
@@ -69,11 +72,12 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
         layoutDeviceBind = findView(R.id.layoutDeviceBind);
         layoutAbout = findView(R.id.layoutAbout);
         layoutDisplay = findView(R.id.layoutDisplay);
+        layoutHelp = findView(R.id.layoutHelp);
     }
 
     @Override
     protected void initData() {
-        TitleBarUtil.setAttr(this, "", "设置", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.setting), titleBar);
         mPresenter.loadBaseInfo();
 //        mPresenter.walletInfo();
     }
@@ -91,6 +95,7 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
         setOnClickListener(tvIntegral);
         setOnClickListener(layoutDeviceBind);
         setOnClickListener(layoutDisplay);
+        setOnClickListener(layoutHelp);
         titleBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,20 +155,24 @@ public class SettingActivity extends MVPBaseActivity<SettingContract.Presenter> 
                 Intent intent = new Intent(Settings.ACTION_DISPLAY_SETTINGS);
                 startActivity(intent);
                 break;
+            case R.id.layoutHelp:
+                Intent intentHelp = new Intent(this, HelpActivity.class);
+                startActivity(intentHelp);
+                break;
         }
     }
 
 
     private void logout() {
-        new android.support.v7.app.AlertDialog.Builder(this)
-                .setMessage("确认注销登录吗？")
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.sure_to_log_out))
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 })
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.sure), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         MyApplication.getInstance().logout(false);

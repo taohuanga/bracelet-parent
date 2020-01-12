@@ -41,7 +41,7 @@
         android:layout_height="44dp"
         android:layout_margin="@dimen/dp_16"
         android:background="@drawable/shape_button_bg"
-        android:text="确定"
+        android:text="@string/sure"
         android:textColor="@color/white"
         android:textSize="@dimen/sp15" />
 

@@ -10,7 +10,8 @@ public class AppConfig {
     //是否为调试模式
     public static final boolean IS_DEBUG = BuildConfig.BUILD_TYPE.equals("debug");
 
-    public static final String SERVER_URL = "http://47.101.221.44/api/";
+//    public static final String SERVER_URL = "http://47.101.221.44/api/";
+    public static final String SERVER_URL = "http://ydb.yiyhc.com/api/";
 
     /**
      * 系统程序相关

@@ -1,0 +1,308 @@
+<resources>
+    <string name="app_name">yidaibao親端</string>
+
+
+    <string name="about_content">
+           ベルトはスマートケアベルトです。予期せぬ転倒を知能的に検出し、エアバッグを開けて90%の衝撃力を減らすことができます。
+老人の両側の腰の関節、臀部、尾の椎骨と仙骨などの傷を受けやすい部位を保護して、人身の傷害を下げます。衣帯は人体工学に基づいて設計され、
+服を着るのは楽で、美しくてファッション的です
+</string>
+
+    <string name="action_success">操作が成功しました  </string>
+
+    <string name="action_failed">操作に失敗しました</string>
+
+    <string name="bracelet_parent">yidaibao 親端 V</string>
+
+    <string name="feedback">意見のフィードバック</string>
+
+    <string name="user_agreement">ユーザプロトコル</string>
+
+    <string name="channel_name">yidaibao 親端</string>
+
+    <string name="channel_description">両親がBluetoothスキャンサービスのバックグラウンドを運営しています</string>
+
+
+    <string name="contact_nothing">あなたの関連子はまだ連絡先を設定していません</string>
+
+    <string name="permission_denied">関連権限が拒否されました</string>
+
+    <string name="input_title">タイトルを入力してください</string>
+
+    <string name="input_content">内容を入力してください</string>
+
+    <string name="input_phone">携帯電話の番号を入力してください</string>
+
+    <string name="input_code">メールの検証コードを入力してください</string>
+
+    <string name="input_account">アカウントを入力してください</string>
+
+    <string name="input_password">パスワードを入力してください</string>
+
+    <string name="commit">提出</string>
+
+    <string name="sure"> 確定</string>
+
+    <string name="account_login_other_device">あなたのアカウントは他のデバイスに登録されています</string>
+
+    <string name="confirm_quit">終了の確認</string>
+
+    <string name="verification_code">認証コードを取得</string>
+
+    <string name="account_or_password_incorrect">アカウントのパスワード検証エラー</string>
+
+    <string name="phone_incorrect">携帯電話の番号のフォーマットが正しくない</string>
+
+    <string name="login_by_code">メッセージの登録</string>
+
+    <string name="login_by_pwd">パスワードの登録</string>
+
+    <string name="login">登録</string>
+
+    <string name="resister_new_account">新規にアカウントを登録する</string>
+
+    <string name="forget_password">パスワードを忘れる</string>
+
+    <string name="code_later">%d秒後に取得</string>
+
+    <string name="person_age">%d歳</string>
+
+    <string name="integral">%f積分 </string>
+
+    <string name="register">登録</string>
+
+    <string name="accept_user_agreement">注:本ソフトを使ってこれを受け入れることを示します</string>
+
+    <string name="send_success">メール送信成功</string>
+
+    <string name="register_success">登録に成功する</string>
+
+    <string name="password_not_match">2回のパスワードが一致しない</string>
+
+    <string name="input_new_password">新しいパスワードを入力してください</string>
+
+    <string name="input_old_password">元のパスワードを入力してください</string>
+
+    <string name="input_old_phone">元の携帯電話の番号を入力してください </string>
+
+    <string name="input_new_phone">新しい 携帯電話の番号を入力してください</string>
+
+    <string name="new_password_cannot_be_the_same_as_the_original_password">新しいパスワードは元のパスワードと同じではいけません。</string>
+
+    <string name="confirm_new_password">新しいパスワードを確認してください</string>
+
+    <string name="bluetooth_enable">ブルートゥースが開いていません</string>
+
+    <string name="bluetooth_is_able">ブルートゥースはすでに開いています</string>
+
+    <string name="please_open_bluetooth">ブルートゥースを開けてください </string>
+
+    <string name="disconnecting_device">デバイスを切断中</string>
+
+    <string name="please_disconnect_device">接続されたデバイスを切断してください。</string>
+
+    <string name="connecting_device">デバイスを接続中</string>
+
+    <string name="device_disconnected">デバイスが接続を失う</string>
+
+    <string name="start_scan_bluetooth_device">ブルートゥースのスキャンを開始します。</string>
+
+    <string name="bluetooth_device_manager">ブルートゥース設備管理</string>
+
+    <string name="scan_device">スキャンデバイス</string>
+
+    <string name="dialing">ワンタッチダイヤル</string>
+
+    <string name="user_info_load_failed">ユーザ情報の読み込みに失敗しました。</string>
+
+    <string name="set_home_address_first">家の位置はまだ設定されていません。まず家庭の位置を設定してください   </string>
+
+    <string name="cancel">キャンセル</string>
+
+    <string name="go_setting">設定に行きます</string>
+
+    <string name="setting">設定</string>
+
+    <string name="connected">接続済み </string>
+
+    <string name="disconnected">未接続</string>
+
+    <string name="electric_quantity">電気量データ</string>
+
+    <string name="charging">充電中</string>
+
+    <string name="charge_complete">充電完了</string>
+
+    <string name="confirm_exit_application">プログラムを終了しますか？</string>
+
+    <string name="people_nearby">近所の人</string>
+
+    <string name="children_end">[子の端]</string>
+
+    <string name="parent_end">[親端]</string>
+
+    <string name="information_list">情報リスト</string>
+
+    <string name="information_detail">情報の詳細</string>
+
+    <string name="integral_detail">積分の内訳</string>
+
+    <string name="all">全部</string>
+
+    <string name="add">追加</string>
+
+    <string name="used">消費する</string>
+
+    <string name="wrong_start_and_end_times">起止時間の選択が間違っています。</string>
+
+    <string name="modified_data">資料を変更</string>
+
+    <string name="man">男</string>
+
+    <string name="woman">女</string>
+
+    <string name="save">保存</string>
+
+    <string name="update_nick_name">ニックネームを変更</string>
+
+    <string name="update_password">パスワードを変更</string>
+
+    <string name="update_name">名前を変更</string>
+
+    <string name="update_height">身長を変更</string>
+
+    <string name="update_weight">体重を変更</string>
+
+    <string name="please_upload_head_portrait">まず画像をアップロードしてください</string>
+
+    <string name="portrait">画像</string>
+
+    <string name="nick_name_not_null">ニックネームが空になってはいけません</string>
+
+    <string name="sex_not_null">性别が空になってはいけません</string>
+
+    <string name="information_saved_successfully">データの保存に成功しました</string>
+
+    <string name="location">位置</string>
+
+    <string name="search">検索</string>
+
+    <string name="bind_device">バインディングデバイス</string>
+
+    <string name="bind">結合</string>
+
+    <string name="input_device_no">デバイス番号を入力してください</string>
+
+    <string name="unbind_device">この装置を解凍する</string>
+
+    <string name="please_input_correct_mac_address">正しいmacアドレスを入力してください。</string>
+
+    <string name="is_unbind_device">強制デバイスは他のユーザによってバインディングされました。強制的にデバイスをバインドしますか？</string>
+
+    <string name="bind_cancel">バインディングを解除する</string>
+
+    <string name="mandatory_binding">強制バインディング</string>
+
+    <string name="test_success">テストに成功しました </string>
+
+    <string name="test_failed">テストに失敗しました</string>
+
+    <string name="sure_to_log_out">ログアウトを確認しますか</string>
+
+    <string name="message_list">メッセージリスト</string>
+
+    <string name="update_phone">携帯電話番号を変更</string>
+
+    <string name="verify_phone">携帯電話の検証</string>
+
+    <string name="todo_remind">保留中のリマインダ</string>
+
+    <string name="new_task_to_do">新しい未処理の任務がありますので、速やかに処理してください。</string>
+
+    <string name="device_connected_success">デバイスの接続に成功しました </string>
+
+    <string name="service_is_running">メインサービス運転中</string>
+
+    <string name="x_axis_angular_speed"> X軸角速度：</string>
+
+    <string name="y_axis_angular_speed">Y軸角速度：</string>
+
+    <string name="z_axis_angular_speed"> Z軸角速度：</string>
+
+    <string name="x_axis_accelerated_speed">X軸加速度：</string>
+
+    <string name="y_axis_accelerated_speed">Y軸加速度 ：</string>
+
+    <string name="z_axis_accelerated_speed">Z軸加速度：</string>
+
+    <string name="unknow">不明</string>
+
+    <string name="disagreement">この協議には同意しません</string>
+
+    <string name="scan">スキャン</string>
+
+    <string name="mac_address">MACアドレス</string>
+
+    <string name="ignore_capitalize_and_colon">大文字と小文字とコロンを無視する</string>
+
+    <string name="start">開始 ：</string>
+
+    <string name="end">締め切る：</string>
+
+    <string name="type"> タイプ：</string>
+
+    <string name="total_integral">総積分</string>
+
+    <string name="today_to_do">今日やるべき</string>
+
+    <string name="today_step_number">今日の運動歩数</string>
+
+    <string name="personal_integral">個人ポイント</string>
+
+    <string name="health_information">健康情報</string>
+
+    <string name="navigation">ナビゲータ</string>
+
+    <string name="input_keyword_search">キーワード検索を入力</string>
+
+    <string name="sex">性别</string>
+
+    <string name="birthday">誕生日</string>
+
+    <string name="height">身長</string>
+
+    <string name="weight">体重</string>
+
+    <string name="nickname">ニックネーム</string>
+
+    <string name="name">名前</string>
+
+    <string name="weight_kg">体重 (kg)</string>
+
+    <string name="height_cm">身長 (cm)</string>
+
+    <string name="home_address">家庭の位置</string>
+
+    <string name="not_filled">未記入</string>
+
+    <string name="longitude">経度</string>
+
+    <string name="latitude">緯度</string>
+
+    <string name="display_setup">設定を表示</string>
+
+    <string name="feed_back">意見をフィードバックする</string>
+
+    <string name="about_us"> 私たちについて</string>
+
+    <string name="log_out">ログアウト</string>
+
+    <string name="input_login_password">ログインパスワードを入力してください。</string>
+
+    <string name="nothing_to_do">今日はやるべきことがない</string>
+
+    <string name="no_data">データがありません</string>
+
+    <string name="help_center">ヘルプセンター</string>
+    <string name="find_password">パスワードを取得</string>
+</resources>

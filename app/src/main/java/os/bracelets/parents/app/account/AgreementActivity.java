@@ -36,7 +36,7 @@ public class AgreementActivity extends BaseActivity {
         btnAgree = findView(R.id.btnAgree);
         btnDisAgree = findView(R.id.btnDisAgree);
         layoutBottom = findView(R.id.layoutBottom);
-        TitleBarUtil.setAttr(this, "", "用户协议", titleBar);
+        TitleBarUtil.setAttr(this, "", getString(R.string.user_agreement), titleBar);
 
         webView = findView(R.id.webView);
     }
