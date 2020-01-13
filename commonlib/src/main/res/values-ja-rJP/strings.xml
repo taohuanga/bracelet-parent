@@ -5,10 +5,10 @@
     <string name="cube_ptr_refreshing">読み込み中...</string>
     <string name="cube_ptr_refresh_complete">更新完了</string>
 
-    <string name="cube_ptr_last_update">上次更新:&#160;</string>
-    <string name="cube_ptr_seconds_ago">&#160;秒之前</string>
-    <string name="cube_ptr_minutes_ago">&#160;分钟之前</string>
-    <string name="cube_ptr_hours_ago">&#160;小时之前</string>
+    <string name="cube_ptr_last_update">前回の更新:&#160;</string>
+    <string name="cube_ptr_seconds_ago">&#160;秒前</string>
+    <string name="cube_ptr_minutes_ago">&#160;分前です</string>
+    <string name="cube_ptr_hours_ago">&#160;時間前</string>
 
     <string name="pickerview_cancel">キャンセル</string>
     <string name="pickerview_submit">を選択します</string>

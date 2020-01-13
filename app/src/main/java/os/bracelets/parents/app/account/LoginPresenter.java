@@ -68,8 +68,8 @@ public class LoginPresenter extends LoginContract.Presenter {
     }
 
     @Override
-    void securityCode(int type, String phone) {
-        ApiRequest.code(type, phone, "", new HttpSubscriber() {
+    void securityCode(int type, String phone,String areaCode) {
+        ApiRequest.code(type, phone, areaCode, new HttpSubscriber() {
 
             @Override
             public void onStart() {

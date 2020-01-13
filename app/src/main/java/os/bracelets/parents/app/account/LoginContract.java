@@ -26,7 +26,7 @@ public interface LoginContract {
 
 
         //获取手机验证码
-        abstract void securityCode(int type, String phone);
+        abstract void securityCode(int type, String phone,String areaCode);
 
         abstract void login(String name, String password);
 

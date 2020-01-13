@@ -56,11 +56,13 @@ public class ApiRequest {
     }
 
     //获取手机验证码
-    public static Subscription code(int type, String phone, String areaCode,Subscriber<HttpResult> subscriber) {
+    public static Subscription code(int type, String phone, String areaCode, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("type", String.valueOf(type));
         map.put("phone", phone);
-        map.put("areaCode", areaCode);
+        if (!TextUtils.isEmpty(areaCode)) {
+            map.put("areaCode", areaCode);
+        }
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)
                 .code(map)
@@ -487,7 +489,7 @@ public class ApiRequest {
     }
 
     //上传设备电量
-    public static Subscription devPowerUpload(String mac, int power, String originalPower,Subscriber<HttpResult> subscriber) {
+    public static Subscription devPowerUpload(String mac, int power, String originalPower, Subscriber<HttpResult> subscriber) {
         Map<String, Object> map = new HashMap<>();
         map.put("tokenId", MyApplication.getInstance().getTokenId());
         map.put("equipmentSn", mac);

@@ -2,8 +2,6 @@ package os.bracelets.parents.app.about;
 
 import android.graphics.Bitmap;
 import android.net.http.SslError;
-import android.os.Build;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
@@ -19,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import aio.health2world.http.HttpResult;
-import aio.health2world.utils.Logger;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.common.BaseActivity;

@@ -51,9 +51,14 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
 
     private View layoutMsg, layoutPwd, lineMsg, linePwd;
 
-    private TextView tvMsgLogin, tvPwdLogin, tvCode;
+    private TextView tvMsgLogin, tvPwdLogin, tvCode,tvArea;
 
     private View layoutPhone, layoutAccount;
+
+    private String[] codeArray = new String[]{"+86", "+1", "+81"};
+    private String[] areaArray;
+    private String areaCode = "+86";
+
 
     @Override
     protected LoginContract.Presenter getPresenter() {
@@ -93,6 +98,7 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
         tvMsgLogin = findView(R.id.tvMsgLogin);
         tvPwdLogin = findView(R.id.tvPwdLogin);
         tvCode = findView(R.id.tvCode);
+        tvArea = findView(R.id.tvArea);
         lineMsg = findView(R.id.lineMsg);
         linePwd = findView(R.id.linePwd);
         layoutPhone = findView(R.id.layoutPhone);
@@ -106,6 +112,8 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
 
         edPhone.setText((String) SPUtils.get(this, AppConfig.USER_PHONE, ""));
         edPhone.setSelection(edPhone.getText().length());
+
+        areaArray = getResources().getStringArray(R.array.area_code);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RxPermissions rxPermissions = new RxPermissions(this);
@@ -142,6 +150,7 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
     @Override
     protected void initListener() {
         tvCode.setOnClickListener(this);
+        tvArea.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
         btnForgetPwd.setOnClickListener(this);
@@ -200,6 +209,19 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
                 break;
             case R.id.tvCode:
                 getCode();
+                break;
+            case R.id.tvArea:
+                //选择区号
+                new AlertDialog.Builder(this)
+                        .setItems(areaArray, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                areaCode = codeArray[which];
+                                tvArea.setText(areaCode);
+                            }
+                        })
+                        .create()
+                        .show();
                 break;
 
         }
@@ -274,7 +296,7 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
             ToastUtil.showShort(getString(R.string.phone_incorrect));
             return;
         }
-        mPresenter.securityCode(2, phone);
+        mPresenter.securityCode(2, phone,areaCode);
     }
 
     @Override
