@@ -17,23 +17,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.huichenghe.bleControl.Ble.BluetoothLeService;
-
 import aio.health2world.rx.rxpermissions.RxPermissions;
-import aio.health2world.utils.DeviceUtil;
 import aio.health2world.utils.MD5Util;
-import aio.health2world.utils.MatchUtil;
 import aio.health2world.utils.SPUtils;
 import aio.health2world.utils.ToastUtil;
-import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.R;
 import os.bracelets.parents.app.main.MainActivity;
 import os.bracelets.parents.bean.BaseInfo;
 import os.bracelets.parents.common.MVPBaseActivity;
-import os.bracelets.parents.jpush.JPushUtil;
-import os.bracelets.parents.jpush.TagAliasOperatorHelper;
-import os.bracelets.parents.service.AppService;
 import rx.functions.Action1;
 
 /**
@@ -55,9 +47,9 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
 
     private View layoutPhone, layoutAccount;
 
-    private String[] codeArray = new String[]{"+86", "+1", "+81"};
+    private String[] codeArray = new String[]{"86","81"};
     private String[] areaArray;
-    private String areaCode = "+86";
+    private String areaCode = "86";
 
 
     @Override
@@ -271,10 +263,14 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
                 ToastUtil.showShort(getString(R.string.input_phone));
                 return;
             }
-            if (!MatchUtil.isPhoneLegal(phone)) {
+            if(phone.length()!=11){
                 ToastUtil.showShort(getString(R.string.phone_incorrect));
                 return;
             }
+//            if (!MatchUtil.isPhoneLegal(phone)) {
+//                ToastUtil.showShort(getString(R.string.phone_incorrect));
+//                return;
+//            }
             if (TextUtils.isEmpty(code)) {
                 ToastUtil.showShort(getString(R.string.input_code));
                 return;
@@ -292,10 +288,14 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
             ToastUtil.showShort(getString(R.string.input_phone));
             return;
         }
-        if (!MatchUtil.isPhoneLegal(phone)) {
+        if(phone.length()!=11){
             ToastUtil.showShort(getString(R.string.phone_incorrect));
             return;
         }
+//        if (!MatchUtil.isPhoneLegal(phone)) {
+//            ToastUtil.showShort(getString(R.string.phone_incorrect));
+//            return;
+//        }
         mPresenter.securityCode(2, phone,areaCode);
     }
 

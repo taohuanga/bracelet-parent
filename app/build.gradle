@@ -45,6 +45,10 @@ android {
             signingConfig signingConfigs.config
         }
         release {
+            lintOptions {
+                checkReleaseBuilds false
+                abortOnError false
+            }
             minifyEnabled false
             multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

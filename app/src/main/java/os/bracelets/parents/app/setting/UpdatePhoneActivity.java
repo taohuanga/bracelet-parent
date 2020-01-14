@@ -76,8 +76,8 @@ public class UpdatePhoneActivity extends MVPBaseActivity<UpdatePhoneContract.Pre
     @Override
     public void updatePhoneSuccess(String phone) {
         Intent intent = new Intent();
-        intent.putExtra("newPhone",phone);
-        setResult(RESULT_OK,intent);
+        intent.putExtra("newPhone", phone);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -86,7 +86,7 @@ public class UpdatePhoneActivity extends MVPBaseActivity<UpdatePhoneContract.Pre
         @Override
         public void onTick(long millisUntilFinished) {
 //            tvCode.setText(millisUntilFinished / 1000 + "秒后获取");
-            tvCode.setText(String.format(getString(R.string.code_later),millisUntilFinished/1000));
+            tvCode.setText(String.format(getString(R.string.code_later), millisUntilFinished / 1000));
         }
 
         @Override
@@ -121,7 +121,6 @@ public class UpdatePhoneActivity extends MVPBaseActivity<UpdatePhoneContract.Pre
     }
 
 
-
     /**
      * 获取短信验证码
      */
@@ -131,17 +130,21 @@ public class UpdatePhoneActivity extends MVPBaseActivity<UpdatePhoneContract.Pre
             ToastUtil.showShort(getString(R.string.input_password));
             return;
         }
-        if (!MatchUtil.isPhoneLegal(phone)) {
+        if (phone.length() != 11) {
             ToastUtil.showShort(getString(R.string.phone_incorrect));
             return;
         }
+//        if (!MatchUtil.isPhoneLegal(phone)) {
+//            ToastUtil.showShort(getString(R.string.phone_incorrect));
+//            return;
+//        }
         mPresenter.securityCode(3, phone);
     }
 
     /**
      * 重置手机号码
      */
-    private void resetPhone(){
+    private void resetPhone() {
         String oldPhone = edOldPhone.getText().toString();
         String code = edCode.getText().toString();
         String loginPwd = edLoginPwd.getText().toString();
@@ -150,12 +153,15 @@ public class UpdatePhoneActivity extends MVPBaseActivity<UpdatePhoneContract.Pre
             ToastUtil.showShort(getString(R.string.input_password));
             return;
         }
-        if (!MatchUtil.isPhoneLegal(newPhone)) {
+//        if (!MatchUtil.isPhoneLegal(newPhone)) {
+//            ToastUtil.showShort(getString(R.string.phone_incorrect));
+//            return;
+//        }
+        if (newPhone.length() != 11) {
             ToastUtil.showShort(getString(R.string.phone_incorrect));
             return;
         }
-
-        mPresenter.updatePhone(oldPhone,code,loginPwd,newPhone);
+        mPresenter.updatePhone(oldPhone, code, loginPwd, newPhone);
 
     }
 

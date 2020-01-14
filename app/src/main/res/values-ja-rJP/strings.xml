@@ -305,4 +305,9 @@
 
     <string name="help_center">ヘルプセンター</string>
     <string name="find_password">パスワードを取得</string>
+
+    <string-array name="area_code">
+        <item>中国 +86</item>
+        <item>日本 +81</item>
+    </string-array>
 </resources>
