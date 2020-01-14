@@ -31,9 +31,9 @@ public class ResetPwdActivity extends MVPBaseActivity<ResetPwdContract.Presenter
 
     private TextView tvCode,tvArea;
 
-    private String[] codeArray = new String[]{"86","81"};
+    private String[] codeArray = new String[]{"+86","+81"};
     private String[] areaArray;
-    private String areaCode = "86";
+    private String areaCode = "+86";
 
     @Override
     protected ResetPwdContract.Presenter getPresenter() {

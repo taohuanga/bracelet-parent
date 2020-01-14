@@ -31,9 +31,9 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.Presenter
 
     private LinearLayout llAgreement;
 
-    private String[] codeArray = new String[]{"86", "81"};
+    private String[] codeArray = new String[]{"+86", "+81"};
     private String[] areaArray;
-    private String areaCode = "86";
+    private String areaCode = "+86";
 
     @Override
     protected RegisterContract.Presenter getPresenter() {

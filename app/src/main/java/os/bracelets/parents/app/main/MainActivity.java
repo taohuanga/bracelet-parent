@@ -160,7 +160,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 
         tvConnect.setText(MyApplication.getInstance().isBleConnect() ? getString(R.string.connected) : getString(R.string.disconnected));
         //星期
-        tvWeek.setText(DataString.getWeek() + "\r\n" + DateUtil.getDate(new Date(System.currentTimeMillis())));
+        tvWeek.setText(DataString.getWeek(this) + "\r\n" + DateUtil.getDate(new Date(System.currentTimeMillis())));
 
         remindList = new ArrayList<>();
         remindAdapter = new RemindAdapter(remindList);

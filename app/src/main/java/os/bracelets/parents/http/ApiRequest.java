@@ -61,7 +61,7 @@ public class ApiRequest {
         map.put("type", String.valueOf(type));
         map.put("phone", phone);
         if (!TextUtils.isEmpty(areaCode)) {
-            map.put("areaCode", areaCode);
+            map.put("areaCode", areaCode.replace("+", ""));
         }
         return ServiceFactory.getInstance()
                 .createService(ApiService.class)

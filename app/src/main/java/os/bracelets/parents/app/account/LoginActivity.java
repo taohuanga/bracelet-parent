@@ -47,9 +47,9 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.Presenter> impl
 
     private View layoutPhone, layoutAccount;
 
-    private String[] codeArray = new String[]{"86","81"};
+    private String[] codeArray = new String[]{"+86","+81"};
     private String[] areaArray;
-    private String areaCode = "86";
+    private String areaCode = "+86";
 
 
     @Override
