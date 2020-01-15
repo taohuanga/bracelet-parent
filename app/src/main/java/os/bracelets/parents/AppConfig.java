@@ -34,6 +34,8 @@ public class AppConfig {
     public static final String MAC_ADDRESS = "mac_address";
     //标记当前程序是否登录
     public static final String IS_LOGIN = "is_login";
+    //标记程序第一次安装
+    public static final String FIRST_IN = "first_in";
 
     public static final String BUGLY_ID = "97ce25b73d";
 

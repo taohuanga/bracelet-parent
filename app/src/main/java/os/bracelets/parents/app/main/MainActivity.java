@@ -36,6 +36,7 @@ import com.huichenghe.bleControl.Ble.BluetoothLeService;
 import com.huichenghe.bleControl.Ble.DataSendCallback;
 import com.huichenghe.bleControl.Ble.LocalDeviceEntity;
 import com.huichenghe.bleControl.Utils.FormatUtils;
+import com.j256.ormlite.stmt.query.In;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,6 +56,7 @@ import cn.jpush.android.api.JPushInterface;
 import os.bracelets.parents.AppConfig;
 import os.bracelets.parents.MyApplication;
 import os.bracelets.parents.R;
+import os.bracelets.parents.app.about.HelpActivityIn;
 import os.bracelets.parents.app.ble.DeviceListActivity;
 import os.bracelets.parents.app.ble.MyBleGattHelper;
 import os.bracelets.parents.app.contact.ContactActivity;
@@ -196,6 +198,14 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
 //            info = (BaseInfo) getIntent().getSerializableExtra("info");
 //        if (info != null)
 //            mPresenter.loginHx(info);
+
+        boolean firstIn = (boolean) SPUtils.get(this, AppConfig.FIRST_IN, true);
+
+        //程序第一次安装则弹出帮助页面
+        if (firstIn) {
+            startActivity(new Intent(this, HelpActivityIn.class));
+            SPUtils.put(this, AppConfig.FIRST_IN, false);
+        }
     }
 
     @Override
