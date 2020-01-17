@@ -191,20 +191,16 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
             MyApplication.getInstance().setBlueEnable(true);
             MyApplication.getInstance().startScan();
         }
+
         mPresenter.getWeather();
         mPresenter.uploadLocation();
-
-//        if (getIntent().hasExtra("info"))
-//            info = (BaseInfo) getIntent().getSerializableExtra("info");
-//        if (info != null)
-//            mPresenter.loginHx(info);
 
         boolean firstIn = (boolean) SPUtils.get(this, AppConfig.FIRST_IN, true);
 
         //程序第一次安装则弹出帮助页面
         if (firstIn) {
             startActivity(new Intent(this, HelpActivityIn.class));
-            SPUtils.put(this, AppConfig.FIRST_IN, false);
+            SPUtils.put(this, AppConfig.FIRST_IN, true);
         }
     }
 

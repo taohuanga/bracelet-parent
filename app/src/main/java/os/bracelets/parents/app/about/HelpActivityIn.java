@@ -11,6 +11,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
@@ -24,12 +25,10 @@ import os.bracelets.parents.R;
 import os.bracelets.parents.common.BaseActivity;
 import os.bracelets.parents.http.ApiRequest;
 import os.bracelets.parents.http.HttpSubscriber;
-import os.bracelets.parents.utils.TitleBarUtil;
-import os.bracelets.parents.view.TitleBar;
 
 public class HelpActivityIn extends BaseActivity {
 
-//    private TitleBar titleBar;
+    private ImageView ivClose;
 
     private WebView webView;
 
@@ -39,12 +38,13 @@ public class HelpActivityIn extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
+        setFinishOnTouchOutside(false);
         return R.layout.activity_help_in;
     }
 
     @Override
     protected void initView() {
-//        titleBar = findView(R.id.titleBar);
+        ivClose = findView(R.id.ivClose);
         webView = findView(R.id.webView);
         progress = findView(R.id.progress);
         webLayout = findView(R.id.webLayout);
@@ -55,9 +55,8 @@ public class HelpActivityIn extends BaseActivity {
         int heightPixels = outMetrics.heightPixels;
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) webLayout.getLayoutParams();
-
-        params.height = heightPixels * 4 / 5;
-        params.width = widthPixels * 9 / 10;
+        params.height = heightPixels * 5 / 6;
+        params.width = widthPixels * 95 / 100;
         webLayout.setLayoutParams(params);
 
         WebSettings settings = webView.getSettings();
@@ -99,12 +98,13 @@ public class HelpActivityIn extends BaseActivity {
 
     @Override
     protected void initListener() {
-//        titleBar.setLeftClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
