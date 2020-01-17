@@ -200,7 +200,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.Presenter> implem
         //程序第一次安装则弹出帮助页面
         if (firstIn) {
             startActivity(new Intent(this, HelpActivityIn.class));
-            SPUtils.put(this, AppConfig.FIRST_IN, true);
+            SPUtils.put(this, AppConfig.FIRST_IN, false);
         }
     }
 
