@@ -63,16 +63,13 @@ public class HelpActivityIn extends BaseActivity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
-        settings.setSupportZoom(true);
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        settings.setBuiltInZoomControls(true);
-        //设定缩放控件隐藏
-        settings.setDisplayZoomControls(true);
-        //最小缩放等级
-        webView.setInitialScale(50);
 
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);// 缩放至屏幕的大小
+        settings.setSupportZoom(true);//支持缩放
+        settings.setBuiltInZoomControls(true);//设置内置的缩放控件
+        settings.setDisplayZoomControls(false);//隐藏原生的缩放控件
 
     }
 
